@@ -1,8 +1,7 @@
-```
-Network Working Group                                          [Author]
-Internet-Draft                                            [Organization]
-Intended status: Best Current Practice                    [Date]
-Expires: [Expiry Date]
+Network Working Group                                     Terry Sweetser
+Internet-Draft                                            IEISI.ORG
+Intended status: Best Current Practice                    xx-mmm-yyyy
+Expires: xx-mmm-yyyy
 
 
         Operational Guidelines for RPKI Delegated Certification 
@@ -45,36 +44,36 @@ Table of Contents
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Problem Statement . . . . . . . . . . . . . . . . . . . . . .   5
      3.1.  CA Availability Issues  . . . . . . . . . . . . . . . . .   5
-     3.2.  Publication Quality Issues . . . . . . . . . . . . . . . .   6
+     3.2.  Publication Quality Issues . . . . . . . . . . . . . . . .  6
      3.3.  Operational Anti-patterns . . . . . . . . . . . . . . . .   6
-   4.  Operational Requirements for Delegated CAs . . . . . . . . . .   7
+   4.  Operational Requirements for Delegated CAs . . . . . . . . . .  7
      4.1.  Availability and Reliability Standards  . . . . . . . . .   7
-     4.2.  Publication Discipline . . . . . . . . . . . . . . . . . .   8
+     4.2.  Publication Discipline . . . . . . . . . . . . . . . . . .  8
      4.3.  Data Integrity and Consistency  . . . . . . . . . . . . .   9
    5.  Addressing Problematic CA Behaviors . . . . . . . . . . . . .  10
      5.1.  Flapping CA Detection and Mitigation  . . . . . . . . . .  10
-     5.2.  Dead CA Management . . . . . . . . . . . . . . . . . . . .  11
+     5.2.  Dead CA Management . . . . . . . . . . . . . . . . . . . . 11
      5.3.  Performance Issues  . . . . . . . . . . . . . . . . . . .  11
    6.  Monitoring and Alerting Framework . . . . . . . . . . . . . .  12
      6.1.  CA Operator Self-Monitoring . . . . . . . . . . . . . . .  12
      6.2.  Registry Operator Monitoring  . . . . . . . . . . . . . .  13
      6.3.  Validator-side Monitoring . . . . . . . . . . . . . . . .  14
-   7.  CA Lifecycle Management  . . . . . . . . . . . . . . . . . . .  15
+   7.  CA Lifecycle Management  . . . . . . . . . . . . . . . . . . . 15
      7.1.  Pre-Delegation Requirements . . . . . . . . . . . . . . .  15
-     7.2.  Ongoing Operational Standards  . . . . . . . . . . . . . .  16
+     7.2.  Ongoing Operational Standards  . . . . . . . . . . . . . . 16
      7.3.  Graceful Shutdown Procedures  . . . . . . . . . . . . . .  17
-   8.  Registry Operator Responsibilities  . . . . . . . . . . . . . .  18
-     8.1.  Monitoring and Enforcement . . . . . . . . . . . . . . . .  18
+   8.  Registry Operator Responsibilities  . . . . . . . . . . . . .  18
+     8.1.  Monitoring and Enforcement . . . . . . . . . . . . . . .   18
      8.2.  Support and Community Engagement  . . . . . . . . . . . .  19
-   9.  Implementation Considerations . . . . . . . . . . . . . . . . .  20
-     9.1.  Deployment Strategies  . . . . . . . . . . . . . . . . . .  20
+   9.  Implementation Considerations . . . . . . . . . . . . . . . .  20
+     9.1.  Deployment Strategies  . . . . . . . . . . . . . . . . .   20
      9.2.  Tooling and Automation  . . . . . . . . . . . . . . . . .  20
-   10. Security Considerations . . . . . . . . . . . . . . . . . . . .  21
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . . .  22
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . . .  23
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  21
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  23
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  23
      12.2.  Informative References . . . . . . . . . . . . . . . . .  23
-   Appendix A.  Operational Checklists  . . . . . . . . . . . . . . .  25
+   Appendix A.  Operational Checklists  . . . . . . . . . . . . . .   25
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  26
 
 1.  Introduction
@@ -872,11 +871,9 @@ A.3.  Registry Operator Monitoring Checklist
    [ ] Ecosystem health reporting
 
 Authors' Addresses
-
-   [Author Name]
-   [Organization]
-   [Address]
+   Terry Sweetser
+   IEISI.ORG
+   Wynnun, Queensland, Australia
    
-   Email: [email]
-   URI:   [website]
-```
+   Email: tcs@ieisi.org
+   URI:   https://www.ieisi.org/
