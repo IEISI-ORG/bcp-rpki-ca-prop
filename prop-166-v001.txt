@@ -1,0 +1,117 @@
+---------------------------------------------------------------------------------------
+
+prop-166-v001: Revocation of Persistently Non-functional RPKI Certification Authorities
+
+---------------------------------------------------------------------------------------
+
+
+Proposer: Job Snijders (job@sobornost.net)
+
+
+1. Problem statement
+--------------------
+
+APNIC offers users of its RPKI certification service two deployment
+models: "routing management via MyAPNIC" and "Delegated RPKI". In the "MyAPNIC"
+setup, APNIC is responsible for timely issuance and publication of new RPKI
+Manifests and CRLs, but in the "Delegated RPKI" setup resource holders
+themselves manage their CA and issuance schedule.
+
+It is technically possible for Delegated RPKI CA infrastructure to be
+offline or otherwise non-functional for extended periods of time, or for the
+contents of publication repositories to become stale or otherwise invalid.
+
+A one-time Delegated RPKI CA misconfiguration can result in validators
+collectively attempting hundreds of thousands of synchronization attempts, as
+there currently is no 'liveliness' requirement for Delegated RPKI CAs.
+
+This proposal suggests providing a mandate to APNIC to revoke RPKI
+resource certificates associated with longtime non-functional CAs to reduce
+Relying Party workload.
+
+Persistently Non-functional Delegated CAs have subtle adverse effects within
+the RPKI ecosystem which may become more pronounced over time.
+
+
+2. Objective of policy change
+-----------------------------
+
+The objective of this proposal is to reduce futile workloads for RPKI
+Validator instances, given that attempts to fetch & validate data from
+non-functional CAs is a waste of resources.
+
+
+3. Situation in other regions
+-----------------------------
+
+A similar proposal exists in the RIPE region:
+
+https://www.ripe.net/community/policies/proposals/2025-02/
+
+
+4. Proposed policy solution
+---------------------------
+
+If APNIC is unable to discover and validate a Delegated RPKI
+Certification Authority's (CA's) current Manifest and Certification Revocation
+List (CRL) for more than two (2) months, that Delegated CA's resource
+certificate should be revoked by APNIC.
+
+APNIC should make reasonable efforts to discover new Manifests, to
+notify the Delegated CA operator if a current Manifest and CRL cannot be
+validated, and to notify the operator if the delegation is revoked.
+
+This policy proposal does NOT target National Internet Registry (NIR)
+RPKI CAs, the proposal only targets pathologically non-functional CAs that are
+not NIRs.
+
+
+5. Advantages / Disadvantages
+-----------------------------
+
+Advantages
+
+- Non-functional CAs offer nothing of value to validators (RPKI Signed Payloads
+  are not available without a current and valid Manifest).
+
+- RPKI Cache Validator synchronisation becomes more economic with fewer
+  purposeless publication points to traverse.
+
+- Non-functional CAs besmirch RPKI validator syslog message archives and waste
+  CPU cycles and network traffic.
+
+- Revocation is only a minor inconvenience for non-functional CAs (given that
+  the configuration already was broken for an extensive period of time), but a
+  big deal for any Relying Party (RP) - especially when taking into account the
+  many synchronisation attempts made over long periods of time.
+
+- This policy doesn't affect many resource holders; there only is a small group
+  of persistently non-functional CAs, some of which have been non-functional
+  for more than 2 years already.
+
+
+Disadvantages
+
+- Resource holders might require more than 2 months to complete the
+  initial Delegated CA setup.
+
+  [[[ Counterpoint to the above: initial setup procedures usually only takes
+      a few minutes. Resource holders of course are free to simply retry the
+      delegated CA setup procedure following revocation. The goal of this
+      policy is NOT to permanently bar resource holders from setting up
+      Delegated CAs, but to curb persistently non-functional delegations.
+      E.g., "please retry Delegated CA enrollment when you are ready". ]]]
+
+
+6. Impact on APNIC
+------------------
+
+APNIC will need to set up a process to detect and revoke non-functional
+CAs. Industry standard open-source tooling already is available for this task.
+
+7. References
+-------------
+
+An overview of non-functional RPKI CAs is available here: https://console.rpki-client.org/nonfunc.html
+
+The rpki-client software package can detect and report non-functional CAs: https://www.rpki-client.org/
