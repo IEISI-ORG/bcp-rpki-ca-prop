@@ -125,7 +125,9 @@ This is an active Internet-Draft under development. Contributions are welcome:
 ## Current Status
 
 **Draft Status**: Internet-Draft (work in progress)
+
 **Target**: IETF Best Current Practice (BCP)
+
 **Working Group**: SIDROPS (Secure Inter-Domain Routing Operations)
 
 ### Recent Updates
