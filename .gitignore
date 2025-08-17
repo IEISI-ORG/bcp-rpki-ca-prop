@@ -1,1 +1,4 @@
-rpki_ca_bcp_draft.md
+draft*
+*.doc
+*.docx
+*.pdf
