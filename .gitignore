@@ -1,4 +1,15 @@
-draft*
 *.doc
 *.docx
 *.pdf
+
+# NODEJS + NPX
+node_modules/*
+package-lock.json
+package.json
+
+# edit cruft
+tracker.log
+backups/*
+*un~
+*~
+
