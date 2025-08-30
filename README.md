@@ -33,24 +33,6 @@ Current RPKI delegation practices allow for several problematic scenarios:
 - Clear timelines for detection and remediation
 - Balance between operational flexibility and ecosystem protection
 
-## Document Structure
-
-```
-1. Introduction
-2. Terminology
-3. Problem Statement
-4. Operational Requirements for Delegated CAs
-5. Addressing Problematic CA Behaviors
-6. Monitoring and Alerting Framework
-7. CA Lifecycle Management
-8. Registry Operator Responsibilities
-9. Implementation Considerations
-10. Security Considerations
-11. IANA Considerations
-12. References
-Appendix A. Operational Checklists
-```
-
 ## Policy vs. Technical Standards
 
 **Important Note**: This document establishes **technical and operational standards** while leaving **policy decisions** to individual RIRs and NIRs. 
