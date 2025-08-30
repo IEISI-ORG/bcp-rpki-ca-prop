@@ -1,0 +1,2716 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Operational Guidelines for RPKI Delegated Certification Authorities</title>
+<meta content="Terence Charles Sweetser" name="author">
+<meta content="
+       This document provides operational guidelines for Resource Public Key Infrastructure (RPKI) delegated Certification Authorities (CAs) and registry operators managing such delegations. It addresses common operational issues including CA availability problems, publication quality issues, and lifecycle management. The guidelines aim to improve the overall health and efficiency of the RPKI ecosystem by establishing best practices for CA operations and delegation management. 
+    " name="description">
+<meta content="xml2rfc 3.30.0" name="generator">
+<meta content="RPKI" name="keyword">
+<meta content="BGP" name="keyword">
+<meta content="routing security" name="keyword">
+<meta content="certificate authority" name="keyword">
+<meta content="operations" name="keyword">
+<meta content="draft-sweetser-bcp-rpki-ca-00" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.30.0
+    Python 3.13.7
+    ConfigArgParse 1.7.1
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.6
+    lxml 6.0.1
+    platformdirs 4.3.8
+    pycountry 24.6.1
+    PyYAML 6.0.2
+    requests 2.32.5
+    setuptools 80.9.0
+    wcwidth 0.2.13
+-->
+<link href="draft-sweetser-bcp-rpki-ca-operations-00.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">/*
+
+  NOTE: Changes at the bottom of this file overrides some earlier settings.
+
+  Once the style has stabilized and has been adopted as an official RFC style,
+  this can be consolidated so that style settings occur only in one place, but
+  for now the contents of this file consists first of the initial CSS work as
+  provided to the RFC Formatter (xml2rfc) work, followed by itemized and
+  commented changes found necessary during the development of the v3
+  formatters.
+
+*/
+
+/* fonts */
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans'); /* Sans-serif */
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif'); /* Serif (print) */
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono'); /* Monospace */
+
+:root {
+  --font-sans: 'Noto Sans', Arial, Helvetica, sans-serif;
+  --font-serif: 'Noto Serif', 'Times', 'Times New Roman', serif;
+  --font-mono: 'Roboto Mono', Courier, 'Courier New', monospace;
+}
+
+@viewport {
+  zoom: 1.0;
+}
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+/* general and mobile first */
+html {
+}
+body {
+  max-width: 90%;
+  margin: 1.5em auto;
+  color: #222;
+  background-color: #fff;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  overflow-wrap: break-word;
+}
+.ears {
+  display: none;
+}
+
+/* headings */
+#title, h1, h2, h3, h4, h5, h6 {
+  margin: 1em 0 0.5em;
+  font-weight: bold;
+  line-height: 1.3;
+}
+#title {
+  clear: both;
+  border-bottom: 1px solid #ddd;
+  margin: 0 0 0.5em 0;
+  padding: 1em 0 0.5em;
+}
+.author {
+  padding-bottom: 4px;
+}
+h1 {
+  font-size: 26px;
+  margin: 1em 0;
+}
+h2 {
+  font-size: 22px;
+  margin-top: -20px;  /* provide offset for in-page anchors */
+  padding-top: 33px;
+}
+h3 {
+  font-size: 18px;
+  margin-top: -36px;  /* provide offset for in-page anchors */
+  padding-top: 42px;
+}
+h4 {
+  font-size: 16px;
+  margin-top: -36px;  /* provide offset for in-page anchors */
+  padding-top: 42px;
+}
+h5, h6 {
+  font-size: 14px;
+}
+#n-copyright-notice {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+/* general structure */
+p {
+  padding: 0;
+  margin: 0 0 1em 0;
+  text-align: left;
+}
+div, span {
+  position: relative;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 1em 1em 0;
+  margin-bottom: 1.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+@media print {
+  svg {
+    max-height: 850px;
+    max-width: 660px;
+  }
+}
+svg[font-family~="serif" i], svg [font-family~="serif" i] {
+  font-family: var(--font-serif);
+}
+svg[font-family~="sans-serif" i], svg [font-family~="sans-serif" i] {
+  font-family: var(--font-sans);
+}
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 1em 1em 0;
+  margin-bottom: 1.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  display: table;
+  border: none;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 1em 2em;
+}
+ol ol, ul ul, ol ul, ul ol {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+ul.ulBare, li.ulBare {
+  margin-left: 0em !important;
+}
+ul.compact, .ulCompact,
+ol.compact, .olCompact {
+  line-height: 100%;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+/* 
+dl.nohang > dt {
+  float: none;
+}
+*/
+dl > dd {
+  margin-bottom: .8em;
+  min-height: 1.3em;
+}
+dl.compact > dd, .dlCompact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+
+/* links */
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #22e; /* Arlen: WCAG 2019 */
+}
+a[href]:hover {
+  background-color: #f2f2f2;
+}
+figcaption a[href],
+a[href].selfRef {
+  color: #222;
+}
+/* XXX probably not this:
+a.selfRef:hover {
+  background-color: transparent;
+  cursor: default;
+} */
+
+/* Figures */
+tt, code, pre {
+  background-color: #f9f9f9;
+  font-family: var(--font-mono);
+}
+pre {
+  border: 1px solid #eee;
+  margin: 0;
+  padding: 1em;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption {
+  font-style: italic;
+  margin: 0 0 1em 0;
+}
+@media screen {
+  pre {
+    overflow-x: auto;
+    max-width: 100%;
+    max-width: calc(100% - 22px);
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 1.2em 2em;
+}
+blockquote {
+  background-color: #f9f9f9;
+  color: #111; /* Arlen: WCAG 2019 */
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin: 1em 0;
+}
+blockquote > *:last-child {
+  margin-bottom: 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+.xref {
+  overflow-wrap: normal;
+}
+
+/* tables */
+table {
+  width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  border: 1px solid #eee;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5em 0.75em;
+}
+th {
+  text-align: left;
+  background-color: #e9e9e9;
+}
+tr:nth-child(2n+1) > td {
+  background-color: #f5f5f5;
+}
+table caption {
+  font-style: italic;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+table p {
+  /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
+     be allowed within tables more generally, it would be far better to select on a class. */
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  color: #666; /* Arlen: AHDJ 2019 */
+  text-decoration: none;
+  visibility: hidden;
+  user-select: none;
+  -ms-user-select: none;
+  -o-user-select:none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+@media screen {
+  aside:hover > a.pilcrow,
+  p:hover > a.pilcrow,
+  blockquote:hover > a.pilcrow,
+  div:hover > a.pilcrow,
+  li:hover > a.pilcrow,
+  pre:hover > a.pilcrow {
+    visibility: visible;
+  }
+  a.pilcrow:hover {
+    background-color: transparent;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+.bcp14 {
+  font-variant: small-caps;
+}
+
+.role {
+  font-variant: all-small-caps;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: 0.9em;
+}
+#identifiers dt {
+  width: 3em;
+  clear: left;
+}
+#identifiers dd {
+  float: left;
+  margin-bottom: 0;
+}
+/* Fix PDF info block run off issue */
+@media print {
+  #identifiers dd {
+    max-width: 100%;
+  }
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #666; /* Arlen: WCAG 2019 */
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc  {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+nav.toc ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+nav.toc li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 7em;
+}
+.references dd {
+  margin-left: 8em;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.refSubseries {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+.index ul {
+  margin: 0 0 0 1em;
+  padding: 0;
+  list-style: none;
+}
+.index ul ul {
+  margin: 0;
+}
+.index li {
+  margin: 0;
+  text-indent: -2em;
+  padding-left: 2em;
+  padding-bottom: 5px;
+}
+.indexIndex {
+  margin: 0.5em 0 1em;
+}
+.index a {
+  font-weight: 700;
+}
+/* make the index two-column on all but the smallest screens */
+@media (min-width: 600px) {
+  .index ul {
+    -moz-column-count: 2;
+    -moz-column-gap: 20px;
+  }
+  .index ul ul {
+    -moz-column-count: 1;
+    -moz-column-gap: 0;
+  }
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  font-family: var(--font-sans);
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+
+/* temporary notes */
+.rfcEditorRemove::before {
+  position: absolute;
+  top: 0.2em;
+  right: 0.2em;
+  padding: 0.2em;
+  content: "The RFC Editor will remove this note";
+  color: #9e2a00; /* Arlen: WCAG 2019 */
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+}
+.rfcEditorRemove {
+  position: relative;
+  padding-top: 1.8em;
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+  border-radius: 3px;
+}
+.cref {
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 1023px) {
+  body {
+    padding-top: 2em;
+  }
+  #title {
+    padding: 1em 0;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  h2 {
+    font-size: 20px;
+    margin-top: -18px;  /* provide offset for in-page anchors */
+    padding-top: 38px;
+  }
+  #identifiers dd {
+    max-width: 60%;
+  }
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    background-color: inherit;
+    border-bottom: 1px solid #ccc;
+  }
+  #toc h2 {
+    margin: -1px 0 0 0;
+    padding: 4px 0 4px 6px;
+    padding-right: 1em;
+    min-width: 190px;
+    font-size: 1.1em;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 6px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 1024px) {
+  body {
+    max-width: 724px;
+    margin: 42px auto;
+    padding-left: 1.5em;
+    padding-right: 29em;
+  }
+  #toc {
+    position: fixed;
+    top: 42px;
+    right: 42px;
+    width: 25%;
+    margin: 0;
+    padding: 0 1em;
+    z-index: 1;
+  }
+  #toc h2 {
+    border-top: none;
+    border-bottom: 1px solid #ddd;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 0;
+    overflow: auto;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  .breakable pre {
+    break-inside: auto;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+/* This is commented out here, as the string-set: doesn't
+   pass W3C validation currently */
+/*
+.ears thead .left {
+  string-set: ears-top-left content();
+}
+
+.ears thead .center {
+  string-set: ears-top-center content();
+}
+
+.ears thead .right {
+  string-set: ears-top-right content();
+}
+
+.ears tfoot .left {
+  string-set: ears-bottom-left content();
+}
+
+.ears tfoot .center {
+  string-set: ears-bottom-center content();
+}
+
+.ears tfoot .right {
+  string-set: ears-bottom-right content();
+}
+*/
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+  /* The following is commented out here, but set appropriately by in code, as
+     the content depends on the document */
+  /*
+  @top-left {
+    content: 'Internet-Draft';
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-left {
+    content: string(ears-top-left);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-center {
+    content: string(ears-top-center);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-right {
+    content: string(ears-top-right);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @bottom-left {
+    content: string(ears-bottom-left);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-center {
+    content: string(ears-bottom-center);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-right {
+      content: '[Page ' counter(page) ']';
+      vertical-align: top;
+      border-top: solid 1px #ccc;
+  }
+  */
+
+}
+
+/* Changes introduced to fix issues found during implementation */
+/* Make sure links are clickable even if overlapped by following H* */
+a {
+  z-index: 2;
+}
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Leave room in document info to show Internet-Draft on one line */
+#identifiers dt {
+  width: 8em;
+}
+
+/* Don't waste quite as much whitespace between label and value in doc info */
+#identifiers dd {
+  margin-left: 1em;
+}
+
+/* Give floating toc a background color (needed when it's a div inside section */
+#toc {
+  background-color: white;
+}
+
+/* Make the collapsed ToC header render white on gray also when it's a link */
+@media screen and (max-width: 1023px) {
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+}
+
+/* Give the bottom of the ToC some whitespace */
+@media screen and (min-width: 1024px) {
+  #toc {
+    padding: 0 0 1em 1em;
+  }
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* prevent monospace from becoming overly large */
+tt, code, pre {
+  font-size: 95%;
+}
+
+/* Fix the height/width aspect for ascii art*/
+.sourcecode pre,
+.art-text pre {
+  line-height: 1.12;
+}
+
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin-right: 0.5em;
+}
+
+/* Fix the dl styling to match the RFC 7992 attributes */
+dl > dt,
+dl.dlParallel > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+
+/* Provide styling for table cell text alignment */
+table td.text-left,
+table th.text-left {
+  text-align: left;
+}
+table td.text-center,
+table th.text-center {
+  text-align: center;
+}
+table td.text-right,
+table th.text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 30em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Provide table alignment support.  We can't use the alignX classes above
+   since they do unwanted things with caption and other styling. */
+table.right {
+ margin-left: auto;
+ margin-right: 0;
+}
+table.center {
+ margin-left: auto;
+ margin-right: auto;
+}
+table.left {
+ margin-left: 0;
+ margin-right: auto;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+caption a[href] {
+  color: #222;
+}
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+/* Tweak the bcp14 keyword presentation */
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+/* Tweak the invisible space above H* in order not to overlay links in text above */
+ h2 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 31px;
+ }
+ h3 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 24px;
+ }
+ h4 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 24px;
+ }
+/* Float artwork pilcrow to the right */
+@media screen {
+  .artwork a.pilcrow {
+    display: block;
+    line-height: 0.7;
+    margin-top: 0.15em;
+  }
+}
+/* Make pilcrows on dd visible */
+@media screen {
+  dd:hover > a.pilcrow {
+    visibility: visible;
+  }
+}
+/* Make the placement of figcaption match that of a table's caption
+   by removing the figure's added bottom margin */
+.alignLeft.art-text,
+.alignCenter.art-text,
+.alignRight.art-text {
+   margin-bottom: 0;
+}
+.alignLeft,
+.alignCenter,
+.alignRight {
+  margin: 1em 0 0 0;
+}
+/* In print, the pilcrow won't show on hover, so prevent it from taking up space,
+   possibly even requiring a new line */
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+/* Styling for the external metadata */
+div#external-metadata {
+  background-color: #eee;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  display: none;
+}
+div#internal-metadata {
+  padding: 0.5em;                       /* to match the external-metadata padding */
+}
+/* Styling for title RFC Number */
+h1#rfcnum {
+  clear: both;
+  margin: 0 0 -1em;
+  padding: 1em 0 0 0;
+}
+/* Make .olPercent look the same as <ol><li> */
+dl.olPercent > dd {
+  margin-bottom: 0.25em;
+  min-height: initial;
+}
+/* Give aside some styling to set it apart */
+aside {
+  border-left: 1px solid #ddd;
+  margin: 1em 0 1em 2em;
+  padding: 0.2em 2em;
+}
+aside > dl,
+aside > ol,
+aside > ul,
+aside > table,
+aside > p {
+  margin-bottom: 0.5em;
+}
+/* Additional page break settings */
+@media print {
+  figcaption, table caption {
+    page-break-before: avoid;
+  }
+}
+/* Font size adjustments for print */
+@media print {
+  body  { font-size: 10pt;      line-height: normal; max-width: 96%; }
+  h1    { font-size: 1.72em;    padding-top: 1.5em; } /* 1*1.2*1.2*1.2 */
+  h2    { font-size: 1.44em;    padding-top: 1.5em; } /* 1*1.2*1.2 */
+  h3    { font-size: 1.2em;     padding-top: 1.5em; } /* 1*1.2 */
+  h4    { font-size: 1em;       padding-top: 1.5em; }
+  h5, h6 { font-size: 1em;      margin: initial; padding: 0.5em 0 0.3em; }
+}
+/* Sourcecode margin in print, when there's no pilcrow */
+@media print {
+  .artwork,
+  .artwork > pre,
+  .sourcecode {
+    margin-bottom: 1em;
+  }
+}
+/* Avoid narrow tables forcing too narrow table captions, which may render badly */
+table {
+  min-width: 20em;
+}
+/* ol type a */
+ol.type-a { list-style-type: lower-alpha; }
+ol.type-A { list-style-type: upper-alpha; }
+ol.type-i { list-style-type: lower-roman; }
+ol.type-I { list-style-type: upper-roman; }
+/* Apply the print table and row borders in general, on request from the RPC,
+and increase the contrast between border and odd row background slightly */
+table {
+  border: 1px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+}
+tr {
+  break-inside: avoid;
+}
+tr:nth-child(2n+1) > td {
+  background-color: #f8f8f8;
+}
+/* Use style rules to govern display of the TOC. */
+@media screen and (max-width: 1023px) {
+  #toc nav { display: none; }
+  #toc.active nav { display: block; }
+}
+/* Add support for keepWithNext */
+.keepWithNext {
+  break-after: avoid-page;
+  break-after: avoid-page;
+}
+/* Add support for keepWithPrevious */
+.keepWithPrevious {
+  break-before: avoid-page;
+}
+/* Change the approach to avoiding breaks inside artwork etc. */
+figure, pre, table, .artwork, .sourcecode  {
+  break-before: auto;
+  break-after: auto;
+}
+/* Avoid breaks between <dt> and <dd> */
+dl {
+  break-before: auto;
+  break-inside: auto;
+}
+dt {
+  break-before: auto;
+  break-after: avoid-page;
+}
+dd {
+  break-before: avoid-page;
+  break-after: auto;
+  orphans: 3;
+  widows: 3
+}
+span.break, dd.break {
+  margin-bottom: 0;
+  min-height: 0;
+  break-before: auto;
+  break-inside: auto;
+  break-after: auto;
+}
+/* Undo break-before ToC */
+@media print {
+  #toc {
+    break-before: auto;
+  }
+}
+/* Text in compact lists should not get extra bottom margin space,
+   since that would makes the list not compact */
+ul.compact p, .ulCompact p,
+ol.compact p, .olCompact p {
+ margin: 0;
+}
+/* But the list as a whole needs the extra space at the end */
+section ul.compact,
+section .ulCompact,
+section ol.compact,
+section .olCompact {
+  margin-bottom: 1em;                    /* same as p not within ul.compact etc. */
+}
+/* The tt and code background above interferes with for instance table cell
+   backgrounds.  Changed to something a bit more selective. */
+tt, code {
+  background-color: transparent;
+}
+p tt, p code, li tt, li code, dt tt, dt code {
+  background-color: #f8f8f8;
+}
+/* Tweak the pre margin -- 0px doesn't come out well */
+pre {
+   margin-top: 0.5px;
+}
+/* Tweak the compact list text */
+ul.compact, .ulCompact,
+ol.compact, .olCompact,
+dl.compact, .dlCompact {
+  line-height: normal;
+}
+/* Don't add top margin for nested lists */
+li > ul, li > ol, li > dl,
+dd > ul, dd > ol, dd > dl,
+dl > dd > dl {
+  margin-top: initial;
+}
+/* Elements that should not be rendered on the same line as a <dt> */
+/* This should match the element list in writer.text.TextWriter.render_dl() */
+dd > div.artwork:first-child,
+dd > aside:first-child,
+dd > blockquote:first-child,
+dd > figure:first-child,
+dd > ol:first-child,
+dd > div.sourcecode:first-child,
+dd > table:first-child,
+dd > ul:first-child {
+  clear: left;
+}
+/* fix for weird browser behaviour when <dd/> is empty */
+dt+dd:empty::before{
+  content: "\00a0";
+}
+/* Make paragraph spacing inside <li> smaller than in body text, to fit better within the list */
+li > p {
+  margin-bottom: 0.5em
+}
+/* Don't let p margin spill out from inside list items */
+li > p:last-of-type:only-child {
+  margin-bottom: 0;
+}
+</style>
+<link href="rfc-local.css" rel="stylesheet" type="text/css">
+<script type="application/javascript">async function addMetadata(){try{const e=document.styleSheets[0].cssRules;for(let t=0;t<e.length;t++)if(/#identifiers/.exec(e[t].selectorText)){const a=e[t].cssText.replace("#identifiers","#external-updates");document.styleSheets[0].insertRule(a,document.styleSheets[0].cssRules.length)}}catch(e){console.log(e)}const e=document.getElementById("external-metadata");if(e)try{var t,a="",o=function(e){const t=document.getElementsByTagName("meta");for(let a=0;a<t.length;a++)if(t[a].getAttribute("name")===e)return t[a].getAttribute("content");return""}("rfc.number");if(o){t="https://www.rfc-editor.org/rfc/rfc"+o+".json";try{const e=await fetch(t);a=await e.json()}catch(e){t=document.URL.indexOf("html")>=0?document.URL.replace(/html$/,"json"):document.URL+".json";const o=await fetch(t);a=await o.json()}}if(!a)return;e.style.display="block";const s="",d="https://datatracker.ietf.org/doc",n="https://datatracker.ietf.org/ipr/search",c="https://www.rfc-editor.org/info",l=a.doc_id.toLowerCase(),i=a.doc_id.slice(0,3).toLowerCase(),f=a.doc_id.slice(3).replace(/^0+/,""),u={status:"Status",obsoletes:"Obsoletes",obsoleted_by:"Obsoleted By",updates:"Updates",updated_by:"Updated By",see_also:"See Also",errata_url:"Errata"};let h="<dl style='overflow:hidden' id='external-updates'>";["status","obsoletes","obsoleted_by","updates","updated_by","see_also","errata_url"].forEach(e=>{if("status"==e){a[e]=a[e].toLowerCase();var t=a[e].split(" "),o=t.length,w="",p=1;for(let e=0;e<o;e++)p<o?w=w+r(t[e])+" ":w+=r(t[e]),p++;a[e]=w}else if("obsoletes"==e||"obsoleted_by"==e||"updates"==e||"updated_by"==e){var g,m="",b=1;g=a[e].length;for(let t=0;t<g;t++)a[e][t]&&(a[e][t]=String(a[e][t]).toLowerCase(),m=b<g?m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>, ":m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>",b++);a[e]=m}else if("see_also"==e){var y,L="",C=1;y=a[e].length;for(let t=0;t<y;t++)if(a[e][t]){a[e][t]=String(a[e][t]);var _=a[e][t].slice(0,3),v=a[e][t].slice(3).replace(/^0+/,"");L=C<y?"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>, ":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>, ":"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>",C++}a[e]=L}else if("errata_url"==e){var R="";R=a[e]?R+"<a href='"+a[e]+"'>Errata exist</a> | <a href='"+d+"/"+l+"'>Datatracker</a>| <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>":"<a href='"+d+"/"+l+"'>Datatracker</a> | <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>",a[e]=R}""!=a[e]?"Errata"==u[e]?h+=`<dt>More info:</dt><dd>${a[e]}</dd>`:h+=`<dt>${u[e]}:</dt><dd>${a[e]}</dd>`:"Errata"==u[e]&&(h+=`<dt>More info:</dt><dd>${a[e]}</dd>`)}),h+="</dl>",e.innerHTML=h}catch(e){console.log(e)}else console.log("Could not locate metadata <div> element");function r(e){return e.charAt(0).toUpperCase()+e.slice(1)}}window.removeEventListener("load",addMetadata),window.addEventListener("load",addMetadata);</script>
+</head>
+<body class="xml2rfc">
+<script src="metadata.min.js"></script>
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Guidelines for RPKI CA Operators</td>
+<td class="right">August 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Sweetser</td>
+<td class="center">Expires 3 March 2026</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">SIDR Operations</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-sweetser-bcp-rpki-ca-00</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-08-30" class="published">30 August 2025</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Best Current Practice</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2026-03-03">3 March 2026</time></dd>
+<dt class="label-authors">Author:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">T. C. Sweetser</div>
+<div class="org">IEISI</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Operational Guidelines for RPKI Delegated Certification Authorities</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document provides operational guidelines for Resource Public Key Infrastructure (RPKI) delegated Certification Authorities (CAs) and registry operators managing such delegations. It addresses common operational issues including CA availability problems, publication quality issues, and lifecycle management. The guidelines aim to improve the overall health and efficiency of the RPKI ecosystem by establishing best practices for CA operations and delegation management.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 3 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2025 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-recommended-reading" class="internal xref">Recommended Reading</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-problem-statement" class="internal xref">Problem Statement</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-ca-availability-issues" class="internal xref">CA Availability Issues</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-publication-quality-issues" class="internal xref">Publication Quality Issues</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-operational-anti-patterns" class="internal xref">Operational Anti-patterns</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-operational-requirements-fo" class="internal xref">Operational Requirements for Delegated CAs</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-availability-and-reliabilit" class="internal xref">Availability and Reliability Standards</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.1">
+                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-availability-requirements" class="internal xref">Availability Requirements</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.2">
+                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="auto internal xref">5.1.2</a>.  <a href="#name-infrastructure-requirements" class="internal xref">Infrastructure Requirements</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-publication-discipline" class="internal xref">Publication Discipline</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.1">
+                    <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="auto internal xref">5.2.1</a>.  <a href="#name-manifest-management" class="internal xref">Manifest Management</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.2">
+                    <p id="section-toc.1-1.5.2.2.2.2.1"><a href="#section-5.2.2" class="auto internal xref">5.2.2</a>.  <a href="#name-publication-practices" class="internal xref">Publication Practices</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-data-integrity-and-consiste" class="internal xref">Data Integrity and Consistency</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.1">
+                    <p id="section-toc.1-1.5.2.3.2.1.1"><a href="#section-5.3.1" class="auto internal xref">5.3.1</a>.  <a href="#name-validation-requirements" class="internal xref">Validation Requirements</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.2">
+                    <p id="section-toc.1-1.5.2.3.2.2.1"><a href="#section-5.3.2" class="auto internal xref">5.3.2</a>.  <a href="#name-operational-consistency" class="internal xref">Operational Consistency</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-addressing-problematic-ca-b" class="internal xref">Addressing Problematic CA Behaviors</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-flapping-ca-detection-and-m" class="internal xref">Flapping CA Detection and Mitigation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1.2.1">
+                    <p id="section-toc.1-1.6.2.1.2.1.1"><a href="#section-6.1.1" class="auto internal xref">6.1.1</a>.  <a href="#name-flapping-patterns" class="internal xref">Flapping Patterns</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-dead-ca-management" class="internal xref">Dead CA Management</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.1">
+                    <p id="section-toc.1-1.6.2.2.2.1.1"><a href="#section-6.2.1" class="auto internal xref">6.2.1</a>.  <a href="#name-detection-criteria" class="internal xref">Detection Criteria</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.2">
+                    <p id="section-toc.1-1.6.2.2.2.2.1"><a href="#section-6.2.2" class="auto internal xref">6.2.2</a>.  <a href="#name-registry-operator-actions" class="internal xref">Registry Operator Actions</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-performance-issues" class="internal xref">Performance Issues</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3.2.1">
+                    <p id="section-toc.1-1.6.2.3.2.1.1"><a href="#section-6.3.1" class="auto internal xref">6.3.1</a>.  <a href="#name-performance-standards" class="internal xref">Performance Standards</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3.2.2">
+                    <p id="section-toc.1-1.6.2.3.2.2.1"><a href="#section-6.3.2" class="auto internal xref">6.3.2</a>.  <a href="#name-monitoring-and-remediation" class="internal xref">Monitoring and Remediation</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-monitoring-and-alerting-fra" class="internal xref">Monitoring and Alerting Framework</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-ca-operator-self-monitoring" class="internal xref">CA Operator Self-Monitoring</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.1">
+                    <p id="section-toc.1-1.7.2.1.2.1.1"><a href="#section-7.1.1" class="auto internal xref">7.1.1</a>.  <a href="#name-required-monitoring-metrics" class="internal xref">Required Monitoring Metrics</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.2">
+                    <p id="section-toc.1-1.7.2.1.2.2.1"><a href="#section-7.1.2" class="auto internal xref">7.1.2</a>.  <a href="#name-alerting-requirements" class="internal xref">Alerting Requirements</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-registry-operator-monitorin" class="internal xref">Registry Operator Monitoring</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2.2.1">
+                    <p id="section-toc.1-1.7.2.2.2.1.1"><a href="#section-7.2.1" class="auto internal xref">7.2.1</a>.  <a href="#name-monitoring-scope" class="internal xref">Monitoring Scope</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2.2.2">
+                    <p id="section-toc.1-1.7.2.2.2.2.1"><a href="#section-7.2.2" class="auto internal xref">7.2.2</a>.  <a href="#name-automated-detection" class="internal xref">Automated Detection</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-validator-side-monitoring" class="internal xref">Validator-side Monitoring</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3.2.1">
+                    <p id="section-toc.1-1.7.2.3.2.1.1"><a href="#section-7.3.1" class="auto internal xref">7.3.1</a>.  <a href="#name-recommended-metrics" class="internal xref">Recommended Metrics</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3.2.2">
+                    <p id="section-toc.1-1.7.2.3.2.2.1"><a href="#section-7.3.2" class="auto internal xref">7.3.2</a>.  <a href="#name-community-reporting" class="internal xref">Community Reporting</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-ca-lifecycle-management" class="internal xref">CA Lifecycle Management</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-pre-delegation-requirements" class="internal xref">Pre-Delegation Requirements</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
+                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-technical-requirements" class="internal xref">Technical Requirements</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-ongoing-operational-standar" class="internal xref">Ongoing Operational Standards</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.1">
+                    <p id="section-toc.1-1.8.2.2.2.1.1"><a href="#section-8.2.1" class="auto internal xref">8.2.1</a>.  <a href="#name-operational-disciplines" class="internal xref">Operational Disciplines:</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.2">
+                    <p id="section-toc.1-1.8.2.2.2.2.1"><a href="#section-8.2.2" class="auto internal xref">8.2.2</a>.  <a href="#name-reporting-requirements" class="internal xref">Reporting Requirements</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.3">
+                    <p id="section-toc.1-1.8.2.2.2.3.1"><a href="#section-8.2.3" class="auto internal xref">8.2.3</a>.  <a href="#name-continuous-improvement" class="internal xref">Continuous Improvement</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
+                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-graceful-shutdown-procedure" class="internal xref">Graceful Shutdown Procedures</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3.2.1">
+                    <p id="section-toc.1-1.8.2.3.2.1.1"><a href="#section-8.3.1" class="auto internal xref">8.3.1</a>.  <a href="#name-planning-requirements" class="internal xref">Planning Requirements</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3.2.2">
+                    <p id="section-toc.1-1.8.2.3.2.2.1"><a href="#section-8.3.2" class="auto internal xref">8.3.2</a>.  <a href="#name-migration-support" class="internal xref">Migration Support</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3.2.3">
+                    <p id="section-toc.1-1.8.2.3.2.3.1"><a href="#section-8.3.3" class="auto internal xref">8.3.3</a>.  <a href="#name-final-procedures" class="internal xref">Final Procedures</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-registry-operator-responsib" class="internal xref">Registry Operator Responsibilities</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-monitoring-and-enforcement" class="internal xref">Monitoring and Enforcement</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.1">
+                    <p id="section-toc.1-1.9.2.1.2.1.1"><a href="#section-9.1.1" class="auto internal xref">9.1.1</a>.  <a href="#name-monitoring-infrastructure" class="internal xref">Monitoring Infrastructure</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.2">
+                    <p id="section-toc.1-1.9.2.1.2.2.1"><a href="#section-9.1.2" class="auto internal xref">9.1.2</a>.  <a href="#name-enforcement-escalation" class="internal xref">Enforcement Escalation</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.3">
+                    <p id="section-toc.1-1.9.2.1.2.3.1"><a href="#section-9.1.3" class="auto internal xref">9.1.3</a>.  <a href="#name-documentation-and-communica" class="internal xref">Documentation and Communication</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-support-and-community-engag" class="internal xref">Support and Community Engagement</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2.2.1">
+                    <p id="section-toc.1-1.9.2.2.2.1.1"><a href="#section-9.2.1" class="auto internal xref">9.2.1</a>.  <a href="#name-support-services" class="internal xref">Support Services</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2.2.2">
+                    <p id="section-toc.1-1.9.2.2.2.2.1"><a href="#section-9.2.2" class="auto internal xref">9.2.2</a>.  <a href="#name-community-coordination" class="internal xref">Community Coordination</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-deployment-strategies" class="internal xref">Deployment Strategies</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1.2.1">
+                    <p id="section-toc.1-1.10.2.1.2.1.1"><a href="#section-10.1.1" class="auto internal xref">10.1.1</a>.  <a href="#name-phased-implementation" class="internal xref">Phased Implementation</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-tooling-and-automation" class="internal xref">Tooling and Automation</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-operational-security" class="internal xref">Operational Security</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-ecosystem-security" class="internal xref">Ecosystem Security</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.3">
+                <p id="section-toc.1-1.11.2.3.1"><a href="#section-11.3" class="auto internal xref">11.3</a>.  <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.4">
+                <p id="section-toc.1-1.11.2.4.1"><a href="#section-11.4" class="auto internal xref">11.4</a>.  <a href="#name-risk-management" class="internal xref">Risk Management</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
+                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
+                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-operational-checklists" class="internal xref">Operational Checklists</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
+                <p id="section-toc.1-1.14.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-pre-delegation-checklist-fo" class="internal xref">Pre-Delegation Checklist for CA Operators</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
+                <p id="section-toc.1-1.14.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-ongoing-operations-checklis" class="internal xref">Ongoing Operations Checklist for CA Operators</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
+                <p id="section-toc.1-1.14.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-registry-operator-monitoring" class="internal xref">Registry Operator Monitoring Checklist</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">The Resource Public Key Infrastructure (RPKI) <span>[<a href="#RFC6480" class="cite xref">RFC6480</a>]</span> provides a framework for securing Internet routing through cryptographic attestation of IP address and AS number allocations. Regional Internet Registries (RIRs) and National Internet Registries (NIRs) may delegate RPKI certification authority (CA) operations to resource holders, allowing them to manage their own certificate issuance and publication.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">While RPKI delegation provides operational flexibility and autonomy for resource holders, it also introduces potential failure modes that can negatively impact the broader RPKI ecosystem. Poorly operated delegated CAs can cause significant resource waste for RPKI validators, degrade overall system performance, and undermine confidence in RPKI deployment.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document establishes operational guidelines for both delegated CA operators and registry operators managing such delegations. The guidelines address common operational issues including CA availability problems, publication inconsistencies, and lifecycle management challenges.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">The recommendations in this document are based on operational experience from RPKI deployments worldwide and analysis of problematic CA behaviors observed in production systems.A<a href="#section-1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="recommended-reading">
+<section id="section-2">
+      <h2 id="name-recommended-reading">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-recommended-reading" class="section-name selfRef">Recommended Reading</a>
+      </h2>
+<p id="section-2-1"><span>[<a href="#RFC6481" class="cite xref">RFC6481</a>]</span> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing rollovers.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2"><span>[<a href="#RFC8182" class="cite xref">RFC8182</a>]</span> provides details of efficient alternative to <span>[<a href="#RFC5781" class="cite xref">RFC5781</a>]</span>[rsync] and key operational efficiencies like caching and CDN deployment.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">As as of writing this I-D session desynchronization issues are being handled under <span>[<a href="#RFC9697" class="cite xref">RFC9697</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="terminology">
+<section id="section-3">
+      <h2 id="name-terminology">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+      </h2>
+<p id="section-3-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">This document uses the following terms:<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">Delegated CA: A certification authority that has been delegated RPKI certificate issuance authority by a registry operator, and is operated by the resource holder rather than the registry.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">Registry Operator: An organization (typically an RIR or NIR) that delegates RPKI CA authority to resource holders and maintains oversight of such delegations.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">Publication Point: A repository location where RPKI objects (certificates, manifests, CRLs, ROAs, etc.) are published and made available to relying parties.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">Flapping CA: A delegated CA that exhibits rapid or frequent changes in operational state, causing instability for relying party validators.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">Dead CA: A delegated CA that is persistently non-functional or unreachable for extended periods.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">Manifest: An RPKI signed object that lists the contents of a publication repository and provides integrity protection <span>[<a href="#RFC9286" class="cite xref">RFC9286</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-9">Relying Party (RP): An entity that uses RPKI data to make routing decisions, typically through RPKI validator software.<a href="#section-3-9" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="problem-statement">
+<section id="section-4">
+      <h2 id="name-problem-statement">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-problem-statement" class="section-name selfRef">Problem Statement</a>
+      </h2>
+<p id="section-4-1">Current RPKI delegation practices allow for several problematic operational scenarios that negatively impact the RPKI ecosystem.  Analysis of production RPKI systems has identified recurring patterns of CA misbehavior that waste validator resources and degrade system performance.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="ca-availability-issues">
+<section id="section-4.1">
+        <h3 id="name-ca-availability-issues">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-ca-availability-issues" class="section-name selfRef">CA Availability Issues</a>
+        </h3>
+<p id="section-4.1-1">Delegated CAs may experience various availability problems:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">Dead CAs: Some delegated CAs become completely offline for extended periods (weeks to months), yet remain referenced in the RPKI hierarchy. RPKI validators continue attempting to fetch data from these CAs, resulting in hundreds of thousands of failed synchronization attempts over time.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">Flapping CAs: Certain delegated CAs exhibit intermittent availability patterns, rapidly cycling between online and offline states. This "flapping" behavior causes cache thrashing in RPKI validators and creates uncertainty about the current state of published objects.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">Slow CAs: Some delegated CAs respond to requests but with excessive latency, causing validator timeouts and retry storms. These CAs may appear functional but create significant operational burden.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">Partial Failures: Delegated CAs may have some publication endpoints functioning while others fail, leading to inconsistent data availability and validator confusion.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="publication-quality-issues">
+<section id="section-4.2">
+        <h3 id="name-publication-quality-issues">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-publication-quality-issues" class="section-name selfRef">Publication Quality Issues</a>
+        </h3>
+<p id="section-4.2-1">Beyond availability, delegated CAs may exhibit poor publication practices:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">Stale Manifests: CAs that rarely update their manifests cause validators to repeatedly attempt synchronization of unchanged data, wasting network bandwidth and processing resources.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">Inconsistent Publication: CAs may publish incomplete or inconsistent object sets, with manifests referencing objects that are not available or publishing objects not listed in manifests.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">Clock Skew: CAs with incorrect system time may publish objects with validity periods that cause premature expiration or rejection by validators.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.2-5">Malformed Objects: CAs may publish syntactically invalid or incorrectly signed objects, causing validator errors and potentially undermining security.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="operational-anti-patterns">
+<section id="section-4.3">
+        <h3 id="name-operational-anti-patterns">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-operational-anti-patterns" class="section-name selfRef">Operational Anti-patterns</a>
+        </h3>
+<p id="section-4.3-1">Several operational practices by delegated CAs create ecosystem-wide problems:<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">Resource Churn: Frequent unnecessary certificate reissuance creates processing overhead for validators and may indicate poor operational practices.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">Publication Storms: Bulk updates that overwhelm validators or publication infrastructure, often due to poor change management.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">Inconsistent Policies: Conflicting or rapidly changing ROA/ASPA publications that create uncertainty for relying parties.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="operational-requirements-for-delegated-cas">
+<section id="section-5">
+      <h2 id="name-operational-requirements-fo">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-operational-requirements-fo" class="section-name selfRef">Operational Requirements for Delegated CAs</a>
+      </h2>
+<div id="availability-and-reliability-standards">
+<section id="section-5.1">
+        <h3 id="name-availability-and-reliabilit">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-availability-and-reliabilit" class="section-name selfRef">Availability and Reliability Standards</a>
+        </h3>
+<p id="section-5.1-1">Delegated CA operators <span class="bcp14">MUST</span> implement robust infrastructure to ensure reliable service delivery<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<div id="availability-requirements">
+<section id="section-5.1.1">
+          <h4 id="name-availability-requirements">
+<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-availability-requirements" class="section-name selfRef">Availability Requirements</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-5.1.1-1.1">CA operators <span class="bcp14">MUST</span> maintain greater than 99.5% availability for all publication points over any 30-day period.<a href="#section-5.1.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.1.1-1.2">CA operators <span class="bcp14">MUST</span> implement redundant publication infrastructure with automatic failover capabilities.<a href="#section-5.1.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.1.1-1.3">CA operators <span class="bcp14">MUST</span> provide multiple publication endpoints with geographic diversity to minimize single points of failure.<a href="#section-5.1.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.1.1-1.4">CA operators <span class="bcp14">MUST</span> implement comprehensive monitoring with automated alerting for all critical infrastructure components.<a href="#section-5.1.1-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="infrastructure-requirements">
+<section id="section-5.1.2">
+          <h4 id="name-infrastructure-requirements">
+<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-infrastructure-requirements" class="section-name selfRef">Infrastructure Requirements</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-5.1.2-1.1">CA operators <span class="bcp14">SHOULD</span> implement load balancing across publication points to distribute validator traffic.<a href="#section-5.1.2-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.1.2-1.2">CA operators <span class="bcp14">SHOULD</span> use Content Distribution Networks (CDNs) or anycast addressing for global distribution of RPKI objects.<a href="#section-5.1.2-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.1.2-1.3">CA operators <span class="bcp14">SHOULD</span> maintain hot standby systems capable of taking over operations within one hour of primary system failure.<a href="#section-5.1.2-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.1.2-1.4">CA operators <span class="bcp14">SHOULD</span> implement DDoS protection and traffic shaping to handle validator traffic spikes.<a href="#section-5.1.2-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="publication-discipline">
+<section id="section-5.2">
+        <h3 id="name-publication-discipline">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-publication-discipline" class="section-name selfRef">Publication Discipline</a>
+        </h3>
+<p id="section-5.2-1">Delegated CA operators <span class="bcp14">MUST</span> follow disciplined publication practices to minimize validator burden:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<div id="manifest-management">
+<section id="section-5.2.1">
+          <h4 id="name-manifest-management">
+<a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-manifest-management" class="section-name selfRef">Manifest Management</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-5.2.1-1.1">CA operators <span class="bcp14">MUST</span> publish new manifests at regular intervals, <span class="bcp14">RECOMMENDED</span> to be between 4-8 hours for active CAs.<a href="#section-5.2.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.2.1-1.2">CA operators <span class="bcp14">MUST</span> ensure manifest validity periods provide sufficient operational windows, <span class="bcp14">RECOMMENDED</span> minimum of 24 hours.<a href="#section-5.2.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.2.1-1.3">CA operators <span class="bcp14">MUST</span> NOT allow manifest gaps (periods without valid manifests) longer than 24 hours except during planned maintenance.<a href="#section-5.2.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.2.1-1.4">CA operators <span class="bcp14">SHOULD</span> implement manifest publication schedules that are predictable and avoid unnecessary updates.<a href="#section-5.2.1-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="publication-practices">
+<section id="section-5.2.2">
+          <h4 id="name-publication-practices">
+<a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-publication-practices" class="section-name selfRef">Publication Practices</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-5.2.2-1.1">CA operators <span class="bcp14">MUST</span> implement atomic publication updates to prevent temporary inconsistencies between manifests and published objects.<a href="#section-5.2.2-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.2.2-1.2">CA operators <span class="bcp14">MUST</span> maintain consistent object naming and URI structure throughout the CA's operational lifetime.<a href="#section-5.2.2-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.2.2-1.3">CA operators <span class="bcp14">SHOULD</span> NOT publish manifest updates more frequently than every 30 minutes without operational justification.<a href="#section-5.2.2-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.2.2-1.4">CA operators <span class="bcp14">SHOULD</span> batch certificate operations to minimize publication frequency while maintaining security.<a href="#section-5.2.2-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="data-integrity-and-consistency">
+<section id="section-5.3">
+        <h3 id="name-data-integrity-and-consiste">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-data-integrity-and-consiste" class="section-name selfRef">Data Integrity and Consistency</a>
+        </h3>
+<p id="section-5.3-1">Delegated CA operators <span class="bcp14">MUST</span> ensure the integrity and consistency of all published RPKI objects:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<div id="validation-requirements">
+<section id="section-5.3.1">
+          <h4 id="name-validation-requirements">
+<a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a href="#name-validation-requirements" class="section-name selfRef">Validation Requirements</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-5.3.1-1.1">CA operators <span class="bcp14">MUST</span> validate all RPKI objects before publication, including syntax, cryptographic signatures, and logical consistency.<a href="#section-5.3.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.3.1-1.2">CA operators <span class="bcp14">MUST</span> implement automated testing of published repositories using standard RPKI validator software.<a href="#section-5.3.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.3.1-1.3">CA operators <span class="bcp14">MUST</span> maintain audit logs of all certificate operations for a minimum of two years.<a href="#section-5.3.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.3.1-1.4">CA operators <span class="bcp14">MUST</span> ensure accurate time synchronization (NTP) across all infrastructure components with stratum 2 or better accuracy.<a href="#section-5.3.1-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="operational-consistency">
+<section id="section-5.3.2">
+          <h4 id="name-operational-consistency">
+<a href="#section-5.3.2" class="section-number selfRef">5.3.2. </a><a href="#name-operational-consistency" class="section-name selfRef">Operational Consistency</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-5.3.2-1.1">CA operators <span class="bcp14">SHOULD</span> implement configuration management systems to ensure consistent deployments across redundant infrastructure.<a href="#section-5.3.2-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.3.2-1.2">CA operators <span class="bcp14">SHOULD</span> maintain staging environments for testing changes before production deployment.<a href="#section-5.3.2-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.3.2-1.3">CA operators <span class="bcp14">SHOULD</span> implement automated backup and recovery procedures with regular testing of restore capabilities.<a href="#section-5.3.2-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-5.3.2-1.4">CA operators <span class="bcp14">SHOULD</span> coordinate planned maintenance activities with registry operators and the broader community when possible.<a href="#section-5.3.2-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="addressing-problematic-ca-behaviors">
+<section id="section-6">
+      <h2 id="name-addressing-problematic-ca-b">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-addressing-problematic-ca-b" class="section-name selfRef">Addressing Problematic CA Behaviors</a>
+      </h2>
+<div id="flapping-ca-detection-and-mitigation">
+<section id="section-6.1">
+        <h3 id="name-flapping-ca-detection-and-m">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-flapping-ca-detection-and-m" class="section-name selfRef">Flapping CA Detection and Mitigation</a>
+        </h3>
+<p id="section-6.1-1">Flapping behavior represents one of the most disruptive operational problems for RPKI validators. CA operators and registry operators <span class="bcp14">MUST</span> implement measures to detect and prevent flapping behaviors.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<div id="flapping-patterns">
+<section id="section-6.1.1">
+          <h4 id="name-flapping-patterns">
+<a href="#section-6.1.1" class="section-number selfRef">6.1.1. </a><a href="#name-flapping-patterns" class="section-name selfRef">Flapping Patterns</a>
+          </h4>
+<p id="section-6.1.1-1">Common flapping patterns include:<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-6.1.1-2.1">Rapid cycling between online and offline states with periods shorter than typical validator refresh intervals (&lt; 1 hour)<a href="#section-6.1.1-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.1.1-2.2">Publication inconsistencies where repositories alternate between different content states<a href="#section-6.1.1-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.1.1-2.3">Intermittent network connectivity causing sporadic timeouts<a href="#section-6.1.1-2.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.1.1-2.4">Infrastructure instability causing frequent service interruptions<a href="#section-6.1.1-2.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-6.1.1-3">CA Operator Anti-Flapping Measures:<a href="#section-6.1.1-3" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-6.1.1-4.1">CA operators <span class="bcp14">MUST</span> implement circuit breaker patterns for failing dependencies to prevent cascading failures.<a href="#section-6.1.1-4.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.1.1-4.2">CA operators <span class="bcp14">MUST</span> use comprehensive health checks before bringing systems online after maintenance or failures.<a href="#section-6.1.1-4.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.1.1-4.3">CA operators <span class="bcp14">MUST</span> implement graceful degradation procedures rather than hard failures when possible.<a href="#section-6.1.1-4.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.1.1-4.4">CA operators <span class="bcp14">SHOULD</span> implement exponential backoff for automated recovery processes to prevent rapid cycling.<a href="#section-6.1.1-4.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-6.1.1-5">Registry Operator Flapping Detection:<a href="#section-6.1.1-5" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-6.1.1-6.1">Registry operators <span class="bcp14">SHOULD</span> implement automated flapping detection algorithms monitoring CA state changes over time.<a href="#section-6.1.1-6.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.1.1-6.2">Registry operators <span class="bcp14">SHOULD</span> apply progressive operational restrictions for CAs exhibiting flapping behavior.<a href="#section-6.1.1-6.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.1.1-6.3">Registry operators <span class="bcp14">SHOULD</span> require stabilization periods before allowing re-delegation after revocation due to flapping.<a href="#section-6.1.1-6.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="dead-ca-management">
+<section id="section-6.2">
+        <h3 id="name-dead-ca-management">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-dead-ca-management" class="section-name selfRef">Dead CA Management</a>
+        </h3>
+<p id="section-6.2-1">Persistently non-functional CAs create significant waste in the RPKI ecosystem and <span class="bcp14">MUST</span> be managed through clear lifecycle policies.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<div id="detection-criteria">
+<section id="section-6.2.1">
+          <h4 id="name-detection-criteria">
+<a href="#section-6.2.1" class="section-number selfRef">6.2.1. </a><a href="#name-detection-criteria" class="section-name selfRef">Detection Criteria</a>
+          </h4>
+<p id="section-6.2.1-1">A CA <span class="bcp14">SHOULD</span> be considered persistently non-functional if:
+   - Valid manifest and CRL cannot be retrieved for more than 60 days
+   - Multiple publication points are consistently unreachable
+   - Published objects consistently fail validation
+   - No response to operational communications for extended periods<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="registry-operator-actions">
+<section id="section-6.2.2">
+          <h4 id="name-registry-operator-actions">
+<a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-registry-operator-actions" class="section-name selfRef">Registry Operator Actions</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-6.2.2-1.1">Registry operators <span class="bcp14">MUST</span> implement automated monitoring to detect persistently non-functional CAs.<a href="#section-6.2.2-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.2.2-1.2">Registry operators <span class="bcp14">MUST</span> make reasonable efforts to contact CA operators before taking revocation actions.<a href="#section-6.2.2-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.2.2-1.3">Registry operators <span class="bcp14">SHOULD</span> revoke delegations for CAs that remain non-functional for more than 90 days after initial contact attempts.<a href="#section-6.2.2-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.2.2-1.4">Registry operators <span class="bcp14">MUST</span> provide clear communication about revocation policies and procedures to CA operators.<a href="#section-6.2.2-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="performance-issues">
+<section id="section-6.3">
+        <h3 id="name-performance-issues">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-performance-issues" class="section-name selfRef">Performance Issues</a>
+        </h3>
+<p id="section-6.3-1">CA operators <span class="bcp14">MUST</span> ensure their infrastructure provides adequate performance for the global validator ecosystem.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<div id="performance-standards">
+<section id="section-6.3.1">
+          <h4 id="name-performance-standards">
+<a href="#section-6.3.1" class="section-number selfRef">6.3.1. </a><a href="#name-performance-standards" class="section-name selfRef">Performance Standards</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-6.3.1-1.1">Publication points <span class="bcp14">MUST</span> respond to HTTP requests within 10 seconds under normal conditions.<a href="#section-6.3.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.3.1-1.2">Publication points <span class="bcp14">SHOULD</span> support concurrent connections from multiple validators without degradation.<a href="#section-6.3.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.3.1-1.3">Object retrieval <span class="bcp14">SHOULD</span> complete within 30 seconds for typical repository sizes.<a href="#section-6.3.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-6.3.1-1.4">CA operators <span class="bcp14">SHOULD</span> implement caching mechanisms to reduce server load and improve response times.<a href="#section-6.3.1-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="monitoring-and-remediation">
+<section id="section-6.3.2">
+          <h4 id="name-monitoring-and-remediation">
+<a href="#section-6.3.2" class="section-number selfRef">6.3.2. </a><a href="#name-monitoring-and-remediation" class="section-name selfRef">Monitoring and Remediation</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-6.3.2-1.1">
+              <p id="section-6.3.2-1.1.1">CA operators <span class="bcp14">MUST</span> monitor response times and error rates continuously.<a href="#section-6.3.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6.3.2-1.2">
+              <p id="section-6.3.2-1.2.1">CA operators <span class="bcp14">SHOULD</span> implement automated alerting for performance degradation.<a href="#section-6.3.2-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6.3.2-1.3">
+              <p id="section-6.3.2-1.3.1">CA operators <span class="bcp14">MUST</span> have procedures for rapid response to performance issues.<a href="#section-6.3.2-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="monitoring-and-alerting-framework">
+<section id="section-7">
+      <h2 id="name-monitoring-and-alerting-fra">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-monitoring-and-alerting-fra" class="section-name selfRef">Monitoring and Alerting Framework</a>
+      </h2>
+<div id="ca-operator-self-monitoring">
+<section id="section-7.1">
+        <h3 id="name-ca-operator-self-monitoring">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-ca-operator-self-monitoring" class="section-name selfRef">CA Operator Self-Monitoring</a>
+        </h3>
+<p id="section-7.1-1">Delegated CA operators <span class="bcp14">MUST</span> implement comprehensive monitoring of their infrastructure and operations.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<div id="required-monitoring-metrics">
+<section id="section-7.1.1">
+          <h4 id="name-required-monitoring-metrics">
+<a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-required-monitoring-metrics" class="section-name selfRef">Required Monitoring Metrics</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-7.1.1-1.1">Publication point availability and response time from multiple geographic locations<a href="#section-7.1.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.1-1.2">Manifest freshness and validity period remaining<a href="#section-7.1.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.1-1.3">Object count and repository size trends over time<a href="#section-7.1.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.1-1.4">Certificate expiration schedules and renewal status<a href="#section-7.1.1-1.4" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.1-1.5">Error rates and failure patterns across all services<a href="#section-7.1.1-1.5" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.1-1.6">Infrastructure resource utilization (CPU, memory, disk, network)<a href="#section-7.1.1-1.6" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="alerting-requirements">
+<section id="section-7.1.2">
+          <h4 id="name-alerting-requirements">
+<a href="#section-7.1.2" class="section-number selfRef">7.1.2. </a><a href="#name-alerting-requirements" class="section-name selfRef">Alerting Requirements</a>
+          </h4>
+<p id="section-7.1.2-1">CA operators <span class="bcp14">MUST</span> implement alerting for:<a href="#section-7.1.2-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-7.1.2-2.1">Publication point failures (immediate notification)<a href="#section-7.1.2-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.2-2.2">Manifest aging beyond 4-hour threshold<a href="#section-7.1.2-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.2-2.3">Certificate expiration warnings at 30, 7, and 1 day intervals<a href="#section-7.1.2-2.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.2-2.4">Anomalous traffic patterns or potential attacks<a href="#section-7.1.2-2.4" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.2-2.5">Infrastructure failures or resource exhaustion<a href="#section-7.1.2-2.5" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-7.1.2-3">Monitoring Infrastructure:<a href="#section-7.1.2-3" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-7.1.2-4.1">CA operators <span class="bcp14">SHOULD</span> implement redundant monitoring systems to prevent single points of failure.<a href="#section-7.1.2-4.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.2-4.2">CA operators <span class="bcp14">SHOULD</span> use external monitoring services to detect outages from validator perspectives.<a href="#section-7.1.2-4.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.1.2-4.3">CA operators <span class="bcp14">SHOULD</span> maintain historical monitoring data for trend analysis and capacity planning.<a href="#section-7.1.2-4.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="registry-operator-monitoring">
+<section id="section-7.2">
+        <h3 id="name-registry-operator-monitorin">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-registry-operator-monitorin" class="section-name selfRef">Registry Operator Monitoring</a>
+        </h3>
+<p id="section-7.2-1">Registry operators <span class="bcp14">MUST</span> implement monitoring systems to oversee all delegated CAs under their authority.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<div id="monitoring-scope">
+<section id="section-7.2.1">
+          <h4 id="name-monitoring-scope">
+<a href="#section-7.2.1" class="section-number selfRef">7.2.1. </a><a href="#name-monitoring-scope" class="section-name selfRef">Monitoring Scope</a>
+          </h4>
+<p id="section-7.2.1-1">Registry operators <span class="bcp14">MUST</span> monitor:<a href="#section-7.2.1-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-7.2.1-2.1">Availability and response times for all delegated CA publication point<a href="#section-7.2.1-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.1-2.2">Manifest publication frequency and consistency<a href="#section-7.2.1-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.1-2.3">Object validation status and error patterns<a href="#section-7.2.1-2.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.1-2.4">Validator impact metrics (fetch attempts, success rates, timing)<a href="#section-7.2.1-2.4" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.1-2.5">Compliance with operational guidelines and policies<a href="#section-7.2.1-2.5" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="automated-detection">
+<section id="section-7.2.2">
+          <h4 id="name-automated-detection">
+<a href="#section-7.2.2" class="section-number selfRef">7.2.2. </a><a href="#name-automated-detection" class="section-name selfRef">Automated Detection</a>
+          </h4>
+<p id="section-7.2.2-1">Registry operators <span class="bcp14">SHOULD</span> implement automated detection of:<a href="#section-7.2.2-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-7.2.2-2.1">Dead CAs (extended periods of non-functionality)<a href="#section-7.2.2-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.2-2.2">Flapping CAs (rapid state changes)<a href="#section-7.2.2-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.2-2.3">Performance degradation trends<a href="#section-7.2.2-2.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.2-2.4">Policy violations or operational anomalies<a href="#section-7.2.2-2.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-7.2.2-3">Reporting and Communication:<a href="#section-7.2.2-3" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-7.2.2-4.1">Registry operators <span class="bcp14">SHOULD</span> provide operational dashboards for CA operators to monitor their own performance.<a href="#section-7.2.2-4.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.2-4.2">Registry operators <span class="bcp14">SHOULD</span> publish aggregate ecosystem health metrics.<a href="#section-7.2.2-4.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.2.2-4.3">Registry operators <span class="bcp14">MUST</span> maintain communication channels for urgent operational issues.<a href="#section-7.2.2-4.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="validator-side-monitoring">
+<section id="section-7.3">
+        <h3 id="name-validator-side-monitoring">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-validator-side-monitoring" class="section-name selfRef">Validator-side Monitoring</a>
+        </h3>
+<p id="section-7.3-1">RPKI validator operators are encouraged to implement monitoring that
+   can help identify problematic CAs.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<div id="recommended-metrics">
+<section id="section-7.3.1">
+          <h4 id="name-recommended-metrics">
+<a href="#section-7.3.1" class="section-number selfRef">7.3.1. </a><a href="#name-recommended-metrics" class="section-name selfRef">Recommended Metrics</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-7.3.1-1.1">Per-CA fetch success rates and timing<a href="#section-7.3.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.3.1-1.2">Manifest validation patterns and frequency<a href="#section-7.3.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.3.1-1.3">Repository size and change detection<a href="#section-7.3.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.3.1-1.4">Error categorization and frequency analysis<a href="#section-7.3.1-1.4" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.3.1-1.5">Resource consumption per CA<a href="#section-7.3.1-1.5" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="community-reporting">
+<section id="section-7.3.2">
+          <h4 id="name-community-reporting">
+<a href="#section-7.3.2" class="section-number selfRef">7.3.2. </a><a href="#name-community-reporting" class="section-name selfRef">Community Reporting</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-7.3.2-1.1">Validator operators <span class="bcp14">SHOULD</span> report persistent CA issues to registry operators.<a href="#section-7.3.2-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.3.2-1.2">Validator operators <span class="bcp14">MAY</span> implement automated reporting of severe CA performance issues.<a href="#section-7.3.2-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-7.3.2-1.3">Registry operators <span class="bcp14">SHOULD</span> provide mechanisms for community feedback on CA operations.<a href="#section-7.3.2-1.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="ca-lifecycle-management">
+<section id="section-8">
+      <h2 id="name-ca-lifecycle-management">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-ca-lifecycle-management" class="section-name selfRef">CA Lifecycle Management</a>
+      </h2>
+<div id="pre-delegation-requirements">
+<section id="section-8.1">
+        <h3 id="name-pre-delegation-requirements">
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-pre-delegation-requirements" class="section-name selfRef">Pre-Delegation Requirements</a>
+        </h3>
+<p id="section-8.1-1">Registry operators <span class="bcp14">MUST</span> establish clear requirements for CA delegation to ensure operational readiness.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<div id="technical-requirements">
+<section id="section-8.1.1">
+          <h4 id="name-technical-requirements">
+<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-technical-requirements" class="section-name selfRef">Technical Requirements</a>
+          </h4>
+<p id="section-8.1.1-1">Before approving delegation requests, registry operators <span class="bcp14">SHOULD</span> verify:<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-8.1.1-2.1">Stable infrastructure demonstrated for minimum 30-day period<a href="#section-8.1.1-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-2.2">Implementation of monitoring and alerting systems<a href="#section-8.1.1-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-2.3">Documented operational procedures and emergency contacts<a href="#section-8.1.1-2.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-2.4">Backup and recovery capabilities with tested procedures<a href="#section-8.1.1-2.4" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-2.5">Adequate technical expertise and operational resources<a href="#section-8.1.1-2.5" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-8.1.1-3">Documentation Requirements:<a href="#section-8.1.1-3" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-8.1.1-4.1">CA operators <span class="bcp14">MUST</span> provide detailed operational procedures<a href="#section-8.1.1-4.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-4.2">CA operators <span class="bcp14">MUST</span> maintain current emergency contact information<a href="#section-8.1.1-4.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-4.3">CA operators <span class="bcp14">MUST</span> document backup and disaster recovery procedures<a href="#section-8.1.1-4.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-4.4">CA operators <span class="bcp14">SHOULD</span> provide capacity planning and scaling documentation<a href="#section-8.1.1-4.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-8.1.1-5">Validation Process:<a href="#section-8.1.1-5" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-8.1.1-6.1">Registry operators <span class="bcp14">SHOULD</span> implement technical validation of CA infrastructure before delegation.<a href="#section-8.1.1-6.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-6.2">Registry operators <span class="bcp14">MAY</span> require probationary periods for new delegations with enhanced monitoring.<a href="#section-8.1.1-6.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.1.1-6.3">Registry operators <span class="bcp14">SHOULD</span> provide operational guidance and training resources for new CA operators.<a href="#section-8.1.1-6.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="ongoing-operational-standards">
+<section id="section-8.2">
+        <h3 id="name-ongoing-operational-standar">
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-ongoing-operational-standar" class="section-name selfRef">Ongoing Operational Standards</a>
+        </h3>
+<p id="section-8.2-1">Delegated CA operators <span class="bcp14">MUST</span> maintain high operational standards throughout the lifecycle of their delegation.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<div id="operational-disciplines">
+<section id="section-8.2.1">
+          <h4 id="name-operational-disciplines">
+<a href="#section-8.2.1" class="section-number selfRef">8.2.1. </a><a href="#name-operational-disciplines" class="section-name selfRef">Operational Disciplines:</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-8.2.1-1.1">CA operators <span class="bcp14">MUST</span> implement regular infrastructure maintenance windows with advance notification to registry operators.<a href="#section-8.2.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.2.1-1.2">CA operators <span class="bcp14">MUST</span> implement proactive certificate renewal procedures, initiating renewal at least 30 days before expiration.<a href="#section-8.2.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.2.1-1.3">CA operators <span class="bcp14">MUST</span> follow change management procedures for all infrastructure updates.<a href="#section-8.2.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.2.1-1.4">CA operators <span class="bcp14">MUST</span> maintain incident response plans and communication procedures.<a href="#section-8.2.1-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="reporting-requirements">
+<section id="section-8.2.2">
+          <h4 id="name-reporting-requirements">
+<a href="#section-8.2.2" class="section-number selfRef">8.2.2. </a><a href="#name-reporting-requirements" class="section-name selfRef">Reporting Requirements</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-8.2.2-1.1">CA operators <span class="bcp14">SHOULD</span> provide regular operational reports to registry operators.<a href="#section-8.2.2-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.2.2-1.2">CA operators <span class="bcp14">MUST</span> report significant incidents or outages to registry operators within 24 hours.<a href="#section-8.2.2-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.2.2-1.3">CA operators <span class="bcp14">SHOULD</span> participate in operational reviews and community engagement activities.<a href="#section-8.2.2-1.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="continuous-improvement">
+<section id="section-8.2.3">
+          <h4 id="name-continuous-improvement">
+<a href="#section-8.2.3" class="section-number selfRef">8.2.3. </a><a href="#name-continuous-improvement" class="section-name selfRef">Continuous Improvement</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-8.2.3-1.1">CA operators <span class="bcp14">SHOULD</span> regularly review and update operational procedures.<a href="#section-8.2.3-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.2.3-1.2">CA operators <span class="bcp14">SHOULD</span> implement lessons learned from incidents and outages.<a href="#section-8.2.3-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.2.3-1.3">CA operators <span class="bcp14">SHOULD</span> stay current with RPKI operational best practices and security recommendations.<a href="#section-8.2.3-1.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="graceful-shutdown-procedures">
+<section id="section-8.3">
+        <h3 id="name-graceful-shutdown-procedure">
+<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-graceful-shutdown-procedure" class="section-name selfRef">Graceful Shutdown Procedures</a>
+        </h3>
+<p id="section-8.3-1">CA operators planning to discontinue operations <span class="bcp14">MUST</span> follow established procedures to minimize ecosystem disruption.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<div id="planning-requirements">
+<section id="section-8.3.1">
+          <h4 id="name-planning-requirements">
+<a href="#section-8.3.1" class="section-number selfRef">8.3.1. </a><a href="#name-planning-requirements" class="section-name selfRef">Planning Requirements</a>
+          </h4>
+<p id="section-8.3.1-1">For planned CA retirement:<a href="#section-8.3.1-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-8.3.1-2.1">CA operators <span class="bcp14">MUST</span> provide minimum 90-day advance notice to registry operators and affected communities.<a href="#section-8.3.1-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.3.1-2.2">CA operators <span class="bcp14">MUST</span> coordinate with registry operators on migration procedures for dependent resources.<a href="#section-8.3.1-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.3.1-2.3">CA operators <span class="bcp14">SHOULD</span> gradually reduce certificate validity periods to facilitate migration.<a href="#section-8.3.1-2.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.3.1-2.4">CA operators <span class="bcp14">MUST</span> maintain service levels during the shutdown transition period.<a href="#section-8.3.1-2.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="migration-support">
+<section id="section-8.3.2">
+          <h4 id="name-migration-support">
+<a href="#section-8.3.2" class="section-number selfRef">8.3.2. </a><a href="#name-migration-support" class="section-name selfRef">Migration Support</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-8.3.2-1.1">Registry operators <span class="bcp14">SHOULD</span> provide migration assistance and alternative delegation options.<a href="#section-8.3.2-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.3.2-1.2">CA operators <span class="bcp14">SHOULD</span> provide technical assistance for resource migration where possible.<a href="#section-8.3.2-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.3.2-1.3">Registry operators <span class="bcp14">MUST</span> ensure continuity of service for affected resources during transition.<a href="#section-8.3.2-1.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="final-procedures">
+<section id="section-8.3.3">
+          <h4 id="name-final-procedures">
+<a href="#section-8.3.3" class="section-number selfRef">8.3.3. </a><a href="#name-final-procedures" class="section-name selfRef">Final Procedures</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-8.3.3-1.1">CA operators <span class="bcp14">MUST</span> revoke all issued certificates in an orderly manner.<a href="#section-8.3.3-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.3.3-1.2">CA operators <span class="bcp14">MUST</span> coordinate final revocation and cleanup procedures with registry operators.<a href="#section-8.3.3-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-8.3.3-1.3">Registry operators <span class="bcp14">MUST</span> update delegation records and hierarchy information.<a href="#section-8.3.3-1.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="registry-operator-responsibilities">
+<section id="section-9">
+      <h2 id="name-registry-operator-responsib">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-registry-operator-responsib" class="section-name selfRef">Registry Operator Responsibilities</a>
+      </h2>
+<div id="monitoring-and-enforcement">
+<section id="section-9.1">
+        <h3 id="name-monitoring-and-enforcement">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-monitoring-and-enforcement" class="section-name selfRef">Monitoring and Enforcement</a>
+        </h3>
+<p id="section-9.1-1">Registry operators bear responsibility for oversight of delegated CAs and enforcement of operational standards.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<div id="monitoring-infrastructure">
+<section id="section-9.1.1">
+          <h4 id="name-monitoring-infrastructure">
+<a href="#section-9.1.1" class="section-number selfRef">9.1.1. </a><a href="#name-monitoring-infrastructure" class="section-name selfRef">Monitoring Infrastructure</a>
+          </h4>
+<p id="section-9.1.1-1">Registry operators MUST:<a href="#section-9.1.1-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-9.1.1-2.1">Implement automated monitoring of all delegated CAs with appropriate alerting thresholds.<a href="#section-9.1.1-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.1.1-2.2">Establish clear Service Level Agreements (SLAs) and enforcement procedures.<a href="#section-9.1.1-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.1.1-2.3">Provide operational dashboards and reporting for CA operators.<a href="#section-9.1.1-2.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.1.1-2.4">Maintain emergency contact procedures for critical issues.<a href="#section-9.1.1-2.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="enforcement-escalation">
+<section id="section-9.1.2">
+          <h4 id="name-enforcement-escalation">
+<a href="#section-9.1.2" class="section-number selfRef">9.1.2. </a><a href="#name-enforcement-escalation" class="section-name selfRef">Enforcement Escalation</a>
+          </h4>
+<p id="section-9.1.2-1">Registry operators <span class="bcp14">SHOULD</span> implement progressive enforcement:
+   1. Automated monitoring alerts and initial operator notification
+   2. Formal operator notification within 24-48 hours of issue detection
+   3. Public visibility of persistent issues within one week
+   4. Revocation procedures for issues persisting longer than 60-90 days<a href="#section-9.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.1.2-2">The specific timeframes <span class="bcp14">MAY</span>** be adjusted based on the severity of the operational issue and its impact on the RPKI ecosystem.<a href="#section-9.1.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="documentation-and-communication">
+<section id="section-9.1.3">
+          <h4 id="name-documentation-and-communica">
+<a href="#section-9.1.3" class="section-number selfRef">9.1.3. </a><a href="#name-documentation-and-communica" class="section-name selfRef">Documentation and Communication</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-9.1.3-1.1">Registry operators <span class="bcp14">MUST</span> maintain clear documentation of monitoring criteria and enforcement procedures.<a href="#section-9.1.3-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.1.3-1.2">Registry operators <span class="bcp14">MUST</span> provide regular communication about enforcement actions and their rationale.<a href="#section-9.1.3-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.1.3-1.3">Registry operators <span class="bcp14">SHOULD</span> coordinate enforcement actions with other registry operators when appropriate.<a href="#section-9.1.3-1.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="support-and-community-engagement">
+<section id="section-9.2">
+        <h3 id="name-support-and-community-engag">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-support-and-community-engag" class="section-name selfRef">Support and Community Engagement</a>
+        </h3>
+<p id="section-9.2-1">Registry operators <span class="bcp14">SHOULD</span> provide comprehensive support for delegated CA operators.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<div id="support-services">
+<section id="section-9.2.1">
+          <h4 id="name-support-services">
+<a href="#section-9.2.1" class="section-number selfRef">9.2.1. </a><a href="#name-support-services" class="section-name selfRef">Support Services</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-9.2.1-1.1">Registry operators <span class="bcp14">SHOULD</span> maintain comprehensive operational guidance documentation.<a href="#section-9.2.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.2.1-1.2">Registry operators <span class="bcp14">SHOULD</span> provide training and certification programs for CA operators.<a href="#section-9.2.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.2.1-1.3">Registry operators <span class="bcp14">SHOULD</span> maintain community forums and troubleshooting resources.<a href="#section-9.2.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.2.1-1.4">Registry operators <span class="bcp14">SHOULD</span> conduct regular operational reviews and provide feedback to CA operators.<a href="#section-9.2.1-1.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+<div id="community-coordination">
+<section id="section-9.2.2">
+          <h4 id="name-community-coordination">
+<a href="#section-9.2.2" class="section-number selfRef">9.2.2. </a><a href="#name-community-coordination" class="section-name selfRef">Community Coordination</a>
+          </h4>
+<ul class="compact">
+<li class="compact" id="section-9.2.2-1.1">Registry operators <span class="bcp14">SHOULD</span> coordinate with other registry operators on operational standards and procedures.<a href="#section-9.2.2-1.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.2.2-1.2">Registry operators <span class="bcp14">SHOULD</span> participate in operational working groups and standards development.<a href="#section-9.2.2-1.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-9.2.2-1.3">Registry operators <span class="bcp14">SHOULD</span> share operational experience and lessons learned with the broader community.<a href="#section-9.2.2-1.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="implementation-considerations">
+<section id="section-10">
+      <h2 id="name-implementation-consideratio">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
+      </h2>
+<div id="deployment-strategies">
+<section id="section-10.1">
+        <h3 id="name-deployment-strategies">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-deployment-strategies" class="section-name selfRef">Deployment Strategies</a>
+        </h3>
+<p id="section-10.1-1">Organizations implementing these guidelines <span class="bcp14">SHOULD</span> consider phased deployment approaches.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<div id="phased-implementation">
+<section id="section-10.1.1">
+          <h4 id="name-phased-implementation">
+<a href="#section-10.1.1" class="section-number selfRef">10.1.1. </a><a href="#name-phased-implementation" class="section-name selfRef">Phased Implementation</a>
+          </h4>
+<p id="section-10.1.1-1">Phase 1: Establish monitoring and measurement baseline<a href="#section-10.1.1-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-10.1.1-2.1">Implement comprehensive monitoring systems<a href="#section-10.1.1-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-10.1.1-2.2">Establish baseline metrics for current operations<a href="#section-10.1.1-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-10.1.1-2.3">Begin collecting data on CA performance and validator impact<a href="#section-10.1.1-2.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-10.1.1-3">Phase 2: Implement basic operational standards<a href="#section-10.1.1-3" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-10.1.1-4.1">Deploy availability and reliability requirements<a href="#section-10.1.1-4.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-10.1.1-4.2">Establish publication discipline practices<a href="#section-10.1.1-4.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-10.1.1-4.3">Implement automated alerting and response procedures<a href="#section-10.1.1-4.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-10.1.1-5">Phase 3: Advanced operational features<a href="#section-10.1.1-5" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-10.1.1-6.1">Deploy advanced monitoring and analytics<a href="#section-10.1.1-6.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-10.1.1-6.2">Implement predictive failure detection<a href="#section-10.1.1-6.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-10.1.1-6.3">Establish community reporting and feedback mechanisms<a href="#section-10.1.1-6.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-10.1.1-7">Coordination Requirements:<a href="#section-10.1.1-7" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-10.1.1-8.1">Registry operators <span class="bcp14">SHOULD</span> coordinate implementation timelines with CA operators.<a href="#section-10.1.1-8.1" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-10.1.1-8.2">Registry operators <span class="bcp14">SHOULD</span> provide adequate notice for new requirements and enforcement procedures.<a href="#section-10.1.1-8.2" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-10.1.1-8.3">CA operators <span class="bcp14">SHOULD</span> plan infrastructure upgrades to meet new requirements within reasonable timeframes.<a href="#section-10.1.1-8.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="tooling-and-automation">
+<section id="section-10.2">
+        <h3 id="name-tooling-and-automation">
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-tooling-and-automation" class="section-name selfRef">Tooling and Automation</a>
+        </h3>
+<p id="section-10.2-1">Effective implementation of these guidelines requires appropriate tooling and automation.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2-2">Recommended Tools:<a href="#section-10.2-2" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-10.2-3.1">RPKI validator software for continuous validation testing<a href="#section-10.2-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-10.2-3.2">Monitoring systems with RPKI-specific metrics and alerting<a href="#section-10.2-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-10.2-3.3">Configuration management systems for consistent deployments<a href="#section-10.2-3.3" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-10.2-3.4">Automated backup and recovery systems<a href="#section-10.2-3.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-10.2-4">Open Source Resources:<a href="#section-10.2-4" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-10.2-5.1">CA operators <span class="bcp14">SHOULD</span> leverage existing open source RPKI tools where appropriate.<a href="#section-10.2-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-10.2-5.2">The community <span class="bcp14">SHOULD</span> develop and maintain reference implementations of monitoring and validation tools.<a href="#section-10.2-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-10.2-5.3">Registry operators <span class="bcp14">SHOULD</span> contribute to open source tooling development.<a href="#section-10.2-5.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-10.2-6">Integration Considerations:<a href="#section-10.2-6" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-10.2-7.1">Tools <span class="bcp14">SHOULD</span> integrate with existing operational infrastructure.<a href="#section-10.2-7.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-10.2-7.2">Monitoring systems <span class="bcp14">SHOULD</span> provide standard APIs for integration with other operational tools.<a href="#section-10.2-7.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-10.2-7.3">CA operators <span class="bcp14">SHOULD</span> implement automation carefully to avoid creating new failure modes.<a href="#section-10.2-7.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-11">
+      <h2 id="name-security-considerations">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-11-1">Implementation of these operational guidelines has several security implications that <span class="bcp14">MUST</span> be carefully considered.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<div id="operational-security">
+<section id="section-11.1">
+        <h3 id="name-operational-security">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-operational-security" class="section-name selfRef">Operational Security</a>
+        </h3>
+<ul class="compact">
+<li class="compact" id="section-11.1-1.1">Enhanced monitoring may expose operational details that could be useful to attackers.<a href="#section-11.1-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.1-1.2">Automated systems <span class="bcp14">MUST</span> be secured against manipulation or abuse.<a href="#section-11.1-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.1-1.3">Emergency procedures <span class="bcp14">MUST</span> balance rapid response with security controls.<a href="#section-11.1-1.3" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.1-1.4">Key management and rotation procedures <span class="bcp14">MUST</span> be maintained even during operational issues.<a href="#section-11.1-1.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="ecosystem-security">
+<section id="section-11.2">
+        <h3 id="name-ecosystem-security">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-ecosystem-security" class="section-name selfRef">Ecosystem Security</a>
+        </h3>
+<ul class="compact">
+<li class="compact" id="section-11.2-1.1">Revocation procedures <span class="bcp14">MUST</span> not be exploitable for denial of service attacks.<a href="#section-11.2-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.2-1.2">Monitoring systems <span class="bcp14">MUST</span> be protected against false reporting or manipulation.<a href="#section-11.2-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.2-1.3">Community reporting mechanisms <span class="bcp14">MUST</span> prevent abuse while encouraging legitimate feedback.<a href="#section-11.2-1.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="privacy-considerations">
+<section id="section-11.3">
+        <h3 id="name-privacy-considerations">
+<a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
+        </h3>
+<ul class="compact">
+<li class="compact" id="section-11.3-1.1">Monitoring data may contain sensitive operational information.<a href="#section-11.3-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.3-1.2">Public reporting of CA issues <span class="bcp14">MUST</span> balance transparency with operational privacy.<a href="#section-11.3-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.3-1.3">Contact information and communication procedures <span class="bcp14">MUST</span> be protected appropriately.<a href="#section-11.3-1.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="risk-management">
+<section id="section-11.4">
+        <h3 id="name-risk-management">
+<a href="#section-11.4" class="section-number selfRef">11.4. </a><a href="#name-risk-management" class="section-name selfRef">Risk Management</a>
+        </h3>
+<ul class="compact">
+<li class="compact" id="section-11.4-1.1">Organizations <span class="bcp14">MUST</span> balance operational requirements with security controls.<a href="#section-11.4-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.4-1.2">Incident response procedures <span class="bcp14">MUST</span> account for potential security implications.<a href="#section-11.4-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-11.4-1.3">Regular security reviews <span class="bcp14">SHOULD</span> be conducted for operational systems and procedures.<a href="#section-11.4-1.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-12">
+      <h2 id="name-iana-considerations">
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-12-1">This document has no IANA actions.<a href="#section-12-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-13">
+      <h2 id="name-references">
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<section id="section-13.1">
+        <h3 id="name-normative-references">
+<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6480">[RFC6480]</dt>
+        <dd>
+<span class="refAuthor">Lepinski, M.</span> and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"An Infrastructure to Support Secure Internet Routing"</span>, <span class="seriesInfo">RFC 6480</span>, <span class="seriesInfo">DOI 10.17487/RFC6480</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6480">https://www.rfc-editor.org/info/rfc6480</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9286">[RFC9286]</dt>
+      <dd>
+<span class="refAuthor">Austein, R.</span>, <span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Kent, S.</span>, and <span class="refAuthor">M. Lepinski</span>, <span class="refTitle">"Manifests for the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">RFC 9286</span>, <span class="seriesInfo">DOI 10.17487/RFC9286</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9286">https://www.rfc-editor.org/info/rfc9286</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<section id="section-13.2">
+        <h3 id="name-informative-references">
+<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC5781">[RFC5781]</dt>
+        <dd>
+<span class="refAuthor">Weiler, S.</span>, <span class="refAuthor">Ward, D.</span>, and <span class="refAuthor">R. Housley</span>, <span class="refTitle">"The rsync URI Scheme"</span>, <span class="seriesInfo">RFC 5781</span>, <span class="seriesInfo">DOI 10.17487/RFC5781</span>, <time datetime="2010-02" class="refDate">February 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5781">https://www.rfc-editor.org/info/rfc5781</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6481">[RFC6481]</dt>
+        <dd>
+<span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Loomans, R.</span>, and <span class="refAuthor">G. Michaelson</span>, <span class="refTitle">"A Profile for Resource Certificate Repository Structure"</span>, <span class="seriesInfo">RFC 6481</span>, <span class="seriesInfo">DOI 10.17487/RFC6481</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6481">https://www.rfc-editor.org/info/rfc6481</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8182">[RFC8182]</dt>
+        <dd>
+<span class="refAuthor">Bruijnzeels, T.</span>, <span class="refAuthor">Muravskiy, O.</span>, <span class="refAuthor">Weber, B.</span>, and <span class="refAuthor">R. Austein</span>, <span class="refTitle">"The RPKI Repository Delta Protocol (RRDP)"</span>, <span class="seriesInfo">RFC 8182</span>, <span class="seriesInfo">DOI 10.17487/RFC8182</span>, <time datetime="2017-07" class="refDate">July 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8182">https://www.rfc-editor.org/info/rfc8182</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9697">[RFC9697]</dt>
+      <dd>
+<span class="refAuthor">Snijders, J.</span> and <span class="refAuthor">T. de Kock</span>, <span class="refTitle">"Detecting RPKI Repository Delta Protocol (RRDP) Session Desynchronization"</span>, <span class="seriesInfo">RFC 9697</span>, <span class="seriesInfo">DOI 10.17487/RFC9697</span>, <time datetime="2024-12" class="refDate">December 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9697">https://www.rfc-editor.org/info/rfc9697</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</section>
+<div id="operational-checklists">
+<section id="appendix-A">
+      <h2 id="name-operational-checklists">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-operational-checklists" class="section-name selfRef">Operational Checklists</a>
+      </h2>
+<div id="pre-delegation-checklist-for-ca-operators">
+<section id="appendix-A.1">
+        <h3 id="name-pre-delegation-checklist-fo">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-pre-delegation-checklist-fo" class="section-name selfRef">Pre-Delegation Checklist for CA Operators</a>
+        </h3>
+<p id="appendix-A.1-1">Before requesting RPKI delegation, CA operators <span class="bcp14">SHOULD</span> verify:<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-2">Infrastructure Readiness:<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="appendix-A.1-3.1">[ ] Redundant publication infrastructure deployed and tested<a href="#appendix-A.1-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.1-3.2">[ ] Monitoring and alerting systems implemented<a href="#appendix-A.1-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.1-3.3">[ ] Backup and recovery procedures documented and tested<a href="#appendix-A.1-3.3" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.1-3.4">[ ] Emergency contact procedures established<a href="#appendix-A.1-3.4" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.1-3.5">[ ] Technical staff training completed<a href="#appendix-A.1-3.5" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="appendix-A.1-4">Operational Procedures:<a href="#appendix-A.1-4" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="appendix-A.1-5.1">[ ] Certificate lifecycle management procedures documented<a href="#appendix-A.1-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.1-5.2">[ ] Incident response procedures established<a href="#appendix-A.1-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.1-5.3">[ ] Change management procedures implemented<a href="#appendix-A.1-5.3" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.1-5.4">[ ] Security procedures and controls implemented<a href="#appendix-A.1-5.4" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.1-5.5">[ ] Performance monitoring and capacity planning completed<a href="#appendix-A.1-5.5" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="ongoing-operations-checklist-for-ca-operators">
+<section id="appendix-A.2">
+        <h3 id="name-ongoing-operations-checklis">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-ongoing-operations-checklis" class="section-name selfRef">Ongoing Operations Checklist for CA Operators</a>
+        </h3>
+<p id="appendix-A.2-1">Regular operational tasks (monthly):<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="appendix-A.2-2.1">[ ] Review monitoring metrics and trends<a href="#appendix-A.2-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.2-2.2">[ ] Test backup and recovery procedures<a href="#appendix-A.2-2.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.2-2.3">[ ] Review and update operational documentation<a href="#appendix-A.2-2.3" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.2-2.4">[ ] Verify certificate expiration schedules<a href="#appendix-A.2-2.4" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.2-2.5">[ ] Conduct security reviews and updates<a href="#appendix-A.2-2.5" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="appendix-A.2-3">Quarterly tasks:<a href="#appendix-A.2-3" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="appendix-A.2-4.1">[ ] Comprehensive infrastructure review<a href="#appendix-A.2-4.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.2-4.2">[ ] Capacity planning and scaling assessment<a href="#appendix-A.2-4.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.2-4.3">[ ] Emergency procedure testing<a href="#appendix-A.2-4.3" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.2-4.4">[ ] Staff training and certification updates<a href="#appendix-A.2-4.4" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.2-4.5">[ ] Community engagement and feedback review<a href="#appendix-A.2-4.5" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="registry-operator-monitoring-checklist">
+<section id="appendix-A.3">
+        <h3 id="name-registry-operator-monitoring">
+<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-registry-operator-monitoring" class="section-name selfRef">Registry Operator Monitoring Checklist</a>
+        </h3>
+<p id="appendix-A.3-1">Daily monitoring tasks:<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="appendix-A.3-2.1">[ ] Review automated monitoring alerts<a href="#appendix-A.3-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.3-2.2">[ ] Check CA availability and performance metrics<a href="#appendix-A.3-2.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.3-2.3">[ ] Monitor validator impact metrics<a href="#appendix-A.3-2.3" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.3-2.4">[ ] Review community feedback and reports<a href="#appendix-A.3-2.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="appendix-A.3-3">Weekly tasks:<a href="#appendix-A.3-3" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="appendix-A.3-4.1">[ ] Comprehensive CA performance review<a href="#appendix-A.3-4.1" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.3-4.2">[ ] Enforcement action tracking and review<a href="#appendix-A.3-4.2" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.3-4.3">[ ] Communication with problematic CA operators<a href="#appendix-A.3-4.3" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="appendix-A.3-4.4">[ ] Ecosystem health reporting<a href="#appendix-A.3-4.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Terence Charles Sweetser</span></div>
+<div dir="auto" class="left"><span class="org">Internet Engineering &amp; Infrastructure Strategic Initiative</span></div>
+<div dir="auto" class="left">
+<span class="locality">Wynnum, QLD</span>  </div>
+<div dir="auto" class="left"><span class="country-name">Australia</span></div>
+<div class="tel">
+<span>Phone:</span>
+<a href="tel:+61%20447%20069%20725" class="tel">+61 447 069 725</a>
+</div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:tcs@ieisi.org" class="email">tcs@ieisi.org</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
