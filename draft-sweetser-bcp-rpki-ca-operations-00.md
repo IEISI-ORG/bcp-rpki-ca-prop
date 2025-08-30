@@ -10,7 +10,7 @@ date = 2025-08-30T00:00:00Z
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-sweetser-bcp-rpki-ca-00"
+value = "draft-sweetser-bcp-rpki-ca-operations-00"
 stream = "IETF"
 status = "bcp"
 
@@ -37,7 +37,7 @@ This document provides operational guidelines for Resource Public Key Infrastruc
 
 # Introduction
 
-The Resource Public Key Infrastructure (RPKI) [@!RFC6480] provides a framework for securing Internet routing through cryptographic attestation of IP address and AS number allocations. Regional Internet Registries (RIRs) and National Internet Registries (NIRs) may delegate RPKI certification authority (CA) operations to resource holders, allowing them to manage their own certificate issuance and publication.
+The Resource Public Key Infrastructure (RPKI) [@RFC6480] provides a framework for securing Internet routing through cryptographic attestation of IP address and AS number allocations. Regional Internet Registries (RIRs) and National Internet Registries (NIRs) may delegate RPKI certification authority (CA) operations to resource holders, allowing them to manage their own certificate issuance and publication.
 
 While RPKI delegation provides operational flexibility and autonomy for resource holders, it also introduces potential failure modes that can negatively impact the broader RPKI ecosystem. Poorly operated delegated CAs can cause significant resource waste for RPKI validators, degrade overall system performance, and undermine confidence in RPKI deployment.
 
@@ -140,19 +140,19 @@ Delegated CA operators **MUST** follow disciplined publication practices to mini
 
    - CA operators **MUST** publish new manifests at regular intervals, **RECOMMENDED** to be between 4-8 hours for active CAs.
    - CA operators **MUST** ensure manifest validity periods provide sufficient operational windows, **RECOMMENDED** minimum of 24 hours.
-   - CA operators **MUST** NOT allow manifest gaps (periods without valid manifests) longer than 24 hours except during planned maintenance.
+   - CA operators **MUST NOT** allow manifest gaps (periods without valid manifests) longer than 24 hours except during planned maintenance.
    - CA operators **SHOULD** implement manifest publication schedules that are predictable and avoid unnecessary updates.
 
 ### Publication Practices
 
    - CA operators **MUST** implement atomic publication updates to prevent temporary inconsistencies between manifests and published objects.
    - CA operators **MUST** maintain consistent object naming and URI structure throughout the CA's operational lifetime.
-   - CA operators **SHOULD** NOT publish manifest updates more frequently than every 30 minutes without operational justification.
+   - CA operators **SHOULD NOT** publish manifest updates more frequently than every 30 minutes without operational justification.
    - CA operators **SHOULD** batch certificate operations to minimize publication frequency while maintaining security.
 
 ## Data Integrity and Consistency
 
-Delegated CA operators **MUST** ensure the integrity and consistency of all published RPKI objects:
+Delegated CA operators **MUST** ensure the integrity and consistency of all published RPKI objects.
 
 ### Validation Requirements
 
@@ -413,7 +413,7 @@ Registry operators **SHOULD** implement progressive enforcement:
    3. Public visibility of persistent issues within one week
    4. Revocation procedures for issues persisting longer than 60-90 days
 
-The specific timeframes **MAY**** be adjusted based on the severity of the operational issue and its impact on the RPKI ecosystem.
+The specific timeframes **MAY** be adjusted based on the severity of the operational issue and its impact on the RPKI ecosystem.
 
 ### Documentation and Communication
 
@@ -506,7 +506,7 @@ Implementation of these operational guidelines has several security implications
 
 ## Ecosystem Security
 
-   - Revocation procedures **MUST** not be exploitable for denial of service attacks.
+   - Revocation procedures **MUST NOT** be exploitable for denial of service attacks.
    - Monitoring systems **MUST** be protected against false reporting or manipulation.
    - Community reporting mechanisms **MUST** prevent abuse while encouraging legitimate feedback.
 

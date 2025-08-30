@@ -15,7 +15,7 @@
 <meta content="routing security" name="keyword">
 <meta content="certificate authority" name="keyword">
 <meta content="operations" name="keyword">
-<meta content="draft-sweetser-bcp-rpki-ca-00" name="ietf.draft">
+<meta content="draft-sweetser-bcp-rpki-ca-operations-00" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.30.0
     Python 3.13.7
@@ -1235,7 +1235,7 @@ li > p:last-of-type:only-child {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">SIDR Operations</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-sweetser-bcp-rpki-ca-00</dd>
+<dd class="internet-draft">draft-sweetser-bcp-rpki-ca-operations-00</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
 <time datetime="2025-08-30" class="published">30 August 2025</time>
@@ -1596,8 +1596,8 @@ li > p:last-of-type:only-child {
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-recommended-reading" class="section-name selfRef">Recommended Reading</a>
       </h2>
 <p id="section-2-1"><span>[<a href="#RFC6481" class="cite xref">RFC6481</a>]</span> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing rollovers.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2"><span>[<a href="#RFC8182" class="cite xref">RFC8182</a>]</span> provides details of efficient alternative to <span>[<a href="#RFC5781" class="cite xref">RFC5781</a>]</span>[rsync] and key operational efficiencies like caching and CDN deployment.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">As as of writing this I-D session desynchronization issues are being handled under <span>[<a href="#RFC9697" class="cite xref">RFC9697</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-2"><span>[<a href="#RFC8182" class="cite xref">RFC8182</a>]</span> provides details of efficient alternative to rsync<span>[<a href="#RFC5781" class="cite xref">RFC5781</a>]</span> and key operational efficiencies like caching and CDN deployment.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">As as of writing this document, RRDP session desynchronization issues are being handled under <span>[<a href="#RFC9697" class="cite xref">RFC9697</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology">
@@ -1722,7 +1722,7 @@ li > p:last-of-type:only-child {
 </li>
             <li class="compact" id="section-5.2.1-1.2">CA operators <span class="bcp14">MUST</span> ensure manifest validity periods provide sufficient operational windows, <span class="bcp14">RECOMMENDED</span> minimum of 24 hours.<a href="#section-5.2.1-1.2" class="pilcrow">¶</a>
 </li>
-            <li class="compact" id="section-5.2.1-1.3">CA operators <span class="bcp14">MUST</span> NOT allow manifest gaps (periods without valid manifests) longer than 24 hours except during planned maintenance.<a href="#section-5.2.1-1.3" class="pilcrow">¶</a>
+            <li class="compact" id="section-5.2.1-1.3">CA operators <span class="bcp14">MUST NOT</span> allow manifest gaps (periods without valid manifests) longer than 24 hours except during planned maintenance.<a href="#section-5.2.1-1.3" class="pilcrow">¶</a>
 </li>
             <li class="compact" id="section-5.2.1-1.4">CA operators <span class="bcp14">SHOULD</span> implement manifest publication schedules that are predictable and avoid unnecessary updates.<a href="#section-5.2.1-1.4" class="pilcrow">¶</a>
 </li>
@@ -1739,7 +1739,7 @@ li > p:last-of-type:only-child {
 </li>
             <li class="compact" id="section-5.2.2-1.2">CA operators <span class="bcp14">MUST</span> maintain consistent object naming and URI structure throughout the CA's operational lifetime.<a href="#section-5.2.2-1.2" class="pilcrow">¶</a>
 </li>
-            <li class="compact" id="section-5.2.2-1.3">CA operators <span class="bcp14">SHOULD</span> NOT publish manifest updates more frequently than every 30 minutes without operational justification.<a href="#section-5.2.2-1.3" class="pilcrow">¶</a>
+            <li class="compact" id="section-5.2.2-1.3">CA operators <span class="bcp14">SHOULD NOT</span> publish manifest updates more frequently than every 30 minutes without operational justification.<a href="#section-5.2.2-1.3" class="pilcrow">¶</a>
 </li>
             <li class="compact" id="section-5.2.2-1.4">CA operators <span class="bcp14">SHOULD</span> batch certificate operations to minimize publication frequency while maintaining security.<a href="#section-5.2.2-1.4" class="pilcrow">¶</a>
 </li>
@@ -1753,7 +1753,7 @@ li > p:last-of-type:only-child {
         <h3 id="name-data-integrity-and-consiste">
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-data-integrity-and-consiste" class="section-name selfRef">Data Integrity and Consistency</a>
         </h3>
-<p id="section-5.3-1">Delegated CA operators <span class="bcp14">MUST</span> ensure the integrity and consistency of all published RPKI objects:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-1">Delegated CA operators <span class="bcp14">MUST</span> ensure the integrity and consistency of all published RPKI objects.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <div id="validation-requirements">
 <section id="section-5.3.1">
           <h4 id="name-validation-requirements">
@@ -2293,7 +2293,7 @@ li > p:last-of-type:only-child {
    2. Formal operator notification within 24-48 hours of issue detection
    3. Public visibility of persistent issues within one week
    4. Revocation procedures for issues persisting longer than 60-90 days<a href="#section-9.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-9.1.2-2">The specific timeframes <span class="bcp14">MAY</span>** be adjusted based on the severity of the operational issue and its impact on the RPKI ecosystem.<a href="#section-9.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.1.2-2">The specific timeframes <span class="bcp14">MAY</span> be adjusted based on the severity of the operational issue and its impact on the RPKI ecosystem.<a href="#section-9.1.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="documentation-and-communication">
@@ -2479,7 +2479,7 @@ li > p:last-of-type:only-child {
 <a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-ecosystem-security" class="section-name selfRef">Ecosystem Security</a>
         </h3>
 <ul class="compact">
-<li class="compact" id="section-11.2-1.1">Revocation procedures <span class="bcp14">MUST</span> not be exploitable for denial of service attacks.<a href="#section-11.2-1.1" class="pilcrow">¶</a>
+<li class="compact" id="section-11.2-1.1">Revocation procedures <span class="bcp14">MUST NOT</span> be exploitable for denial of service attacks.<a href="#section-11.2-1.1" class="pilcrow">¶</a>
 </li>
           <li class="compact" id="section-11.2-1.2">Monitoring systems <span class="bcp14">MUST</span> be protected against false reporting or manipulation.<a href="#section-11.2-1.2" class="pilcrow">¶</a>
 </li>
@@ -2541,10 +2541,6 @@ li > p:last-of-type:only-child {
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC6480">[RFC6480]</dt>
-        <dd>
-<span class="refAuthor">Lepinski, M.</span> and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"An Infrastructure to Support Secure Internet Routing"</span>, <span class="seriesInfo">RFC 6480</span>, <span class="seriesInfo">DOI 10.17487/RFC6480</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6480">https://www.rfc-editor.org/info/rfc6480</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
@@ -2563,6 +2559,10 @@ li > p:last-of-type:only-child {
 <dt id="RFC5781">[RFC5781]</dt>
         <dd>
 <span class="refAuthor">Weiler, S.</span>, <span class="refAuthor">Ward, D.</span>, and <span class="refAuthor">R. Housley</span>, <span class="refTitle">"The rsync URI Scheme"</span>, <span class="seriesInfo">RFC 5781</span>, <span class="seriesInfo">DOI 10.17487/RFC5781</span>, <time datetime="2010-02" class="refDate">February 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5781">https://www.rfc-editor.org/info/rfc5781</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6480">[RFC6480]</dt>
+        <dd>
+<span class="refAuthor">Lepinski, M.</span> and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"An Infrastructure to Support Secure Internet Routing"</span>, <span class="seriesInfo">RFC 6480</span>, <span class="seriesInfo">DOI 10.17487/RFC6480</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6480">https://www.rfc-editor.org/info/rfc6480</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6481">[RFC6481]</dt>
         <dd>
