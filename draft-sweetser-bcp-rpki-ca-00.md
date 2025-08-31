@@ -10,7 +10,7 @@ date = 2025-08-30T00:00:00Z
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-sweetser-bcp-rpki-ca-operations-00"
+value = "draft-sweetser-bcp-rpki-ca-00"
 stream = "IETF"
 status = "bcp"
 

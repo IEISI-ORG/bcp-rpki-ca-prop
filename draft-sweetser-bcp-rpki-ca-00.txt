@@ -9,7 +9,7 @@ Expires: 3 March 2026
 
 
   Operational Guidelines for RPKI Delegated Certification Authorities
-                draft-sweetser-bcp-rpki-ca-operations-00
+                     draft-sweetser-bcp-rpki-ca-00
 
 Abstract
 
