@@ -28,7 +28,7 @@ jobs:
         run: |
           xml2rfc --text --html --verbose draft-sweetser-bcp-rpki-ca-00.xml
 
-      - name: Validate XML (maybe add ISDITS later?)
+      - name: Validate XML (maybe add IDNITS later?)
         run: |
           xml2rfc --strict draft-sweetser-bcp-rpki-ca-00.xml
 

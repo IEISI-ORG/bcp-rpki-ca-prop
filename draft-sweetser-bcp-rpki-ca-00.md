@@ -47,7 +47,7 @@ The recommendations in this document are based on operational experience from RP
 
 # Recommended Reading
 
-[@RFC6481] and [@BCP174] will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.
+[@RFC6481] and [@RFC6489] will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.
 
 [@RFC8182] provides details of efficient alternative to rsync[@RFC5781] and key operational efficiencies like caching and CDN deployment. 
 
