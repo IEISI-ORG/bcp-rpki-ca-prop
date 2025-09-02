@@ -78,7 +78,7 @@ Table of Contents
      4.3.  Operational Anti-patterns . . . . . . . . . . . . . . . .   6
    5.  Operational Requirements for Delegated CAs  . . . . . . . . .   6
      5.1.  Availability and Reliability Standards  . . . . . . . . .   6
-       5.1.1.  Availability Requirements . . . . . . . . . . . . . .   6
+       5.1.1.  Availability Requirements . . . . . . . . . . . . . .   7
        5.1.2.  Infrastructure Requirements . . . . . . . . . . . . .   7
      5.2.  Publication Discipline  . . . . . . . . . . . . . . . . .   7
        5.2.1.  Manifest Management . . . . . . . . . . . . . . . . .   7
@@ -142,12 +142,11 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
      11.3.  Privacy Considerations . . . . . . . . . . . . . . . . .  17
      11.4.  Risk Management  . . . . . . . . . . . . . . . . . . . .  18
    12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
-   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  18
-     13.1.  Normative References . . . . . . . . . . . . . . . . . .  18
-     13.2.  Informative References . . . . . . . . . . . . . . . . .  18
+   13. Normative References  . . . . . . . . . . . . . . . . . . . .  18
+   14. Informative References  . . . . . . . . . . . . . . . . . . .  18
    Appendix A.  Operational Checklists . . . . . . . . . . . . . . .  19
      A.1.  Pre-Delegation Checklist for CA Operators . . . . . . . .  19
-     A.2.  Ongoing Operations Checklist for CA Operators . . . . . .  19
+     A.2.  Ongoing Operations Checklist for CA Operators . . . . . .  20
      A.3.  Registry Operator Monitoring Checklist  . . . . . . . . .  20
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  20
 
@@ -160,6 +159,7 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
    may delegate RPKI certification authority (CA) operations to resource
    holders, allowing them to manage their own certificate issuance and
    publication.
+
 
 
 
@@ -185,16 +185,19 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
 
    The recommendations in this document are based on operational
    experience from RPKI deployments worldwide and analysis of
-   problematic CA behaviors observed in production systems.A
+   problematic CA behaviors observed in production systems.
 
 2.  Recommended Reading
 
-   [RFC6481] will inform readers of requirements on repository content
-   structure, directory structure, naming of directories and managaing
-   rollovers.
+   [RFC6481] and [RFC6489] will inform readers of requirements on
+   repository content structure, directory structure, naming of
+   directories and managaing key rollovers.
 
    [RFC8182] provides details of efficient alternative to rsync[RFC5781]
    and key operational efficiencies like caching and CDN deployment.
+
+   Read [RFC5280] for the general X.509 PKI framework.  Check [RFC2527]
+   for Certificate Policy and Certificate Practice Statements.
 
    As as of writing this document, RRDP session desynchronization issues
    are being handled under [RFC9697].
@@ -213,9 +216,6 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
    certificate issuance authority by a registry operator, and is
    operated by the resource holder rather than the registry.
 
-   Registry Operator: An organization (typically an RIR or NIR) that
-   delegates RPKI CA authority to resource holders and maintains
-   oversight of such delegations.
 
 
 
@@ -225,6 +225,10 @@ Sweetser                  Expires 3 March 2026                  [Page 4]
 
 Internet-Draft      Guidelines for RPKI CA Operators         August 2025
 
+
+   Registry Operator: An organization (typically an RIR or NIR) that
+   delegates RPKI CA authority to resource holders and maintains
+   oversight of such delegations.
 
    Publication Point: A repository location where RPKI objects
    (certificates, manifests, CRLs, ROAs, etc.) are published and made
@@ -270,10 +274,6 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
    latency, causing validator timeouts and retry storms.  These CAs may
    appear functional but create significant operational burden.
 
-   Partial Failures: Delegated CAs may have some publication endpoints
-   functioning while others fail, leading to inconsistent data
-   availability and validator confusion.
-
 
 
 
@@ -281,6 +281,10 @@ Sweetser                  Expires 3 March 2026                  [Page 5]
 
 Internet-Draft      Guidelines for RPKI CA Operators         August 2025
 
+
+   Partial Failures: Delegated CAs may have some publication endpoints
+   functioning while others fail, leading to inconsistent data
+   availability and validator confusion.
 
 4.2.  Publication Quality Issues
 
@@ -325,10 +329,6 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
    Delegated CA operators MUST implement robust infrastructure to ensure
    reliable service delivery
 
-5.1.1.  Availability Requirements
-
-   *  CA operators MUST maintain greater than 99.5% availability for all
-      publication points over any 30-day period.
 
 
 
@@ -338,6 +338,10 @@ Sweetser                  Expires 3 March 2026                  [Page 6]
 Internet-Draft      Guidelines for RPKI CA Operators         August 2025
 
 
+5.1.1.  Availability Requirements
+
+   *  CA operators MUST maintain greater than 99.5% availability for all
+      publication points over any 30-day period.
    *  CA operators MUST implement redundant publication infrastructure
       with automatic failover capabilities.
    *  CA operators MUST provide multiple publication endpoints with
@@ -382,10 +386,6 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
       than every 30 minutes without operational justification.
    *  CA operators SHOULD batch certificate operations to minimize
       publication frequency while maintaining security.
-
-
-
-
 
 
 
@@ -967,9 +967,7 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
 
    This document has no IANA actions.
 
-13.  References
-
-13.1.  Normative References
+13.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -985,20 +983,22 @@ Internet-Draft      Guidelines for RPKI CA Operators         August 2025
               (RPKI)", RFC 9286, DOI 10.17487/RFC9286, June 2022,
               <https://www.rfc-editor.org/info/rfc9286>.
 
-13.2.  Informative References
+14.  Informative References
+
+   [RFC2527]  Chokhani, S. and W. Ford, "Internet X.509 Public Key
+              Infrastructure Certificate Policy and Certification
+              Practices Framework", RFC 2527, DOI 10.17487/RFC2527,
+              March 1999, <https://www.rfc-editor.org/info/rfc2527>.
+
+   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <https://www.rfc-editor.org/info/rfc5280>.
 
    [RFC5781]  Weiler, S., Ward, D., and R. Housley, "The rsync URI
               Scheme", RFC 5781, DOI 10.17487/RFC5781, February 2010,
               <https://www.rfc-editor.org/info/rfc5781>.
-
-   [RFC6480]  Lepinski, M. and S. Kent, "An Infrastructure to Support
-              Secure Internet Routing", RFC 6480, DOI 10.17487/RFC6480,
-              February 2012, <https://www.rfc-editor.org/info/rfc6480>.
-
-   [RFC6481]  Huston, G., Loomans, R., and G. Michaelson, "A Profile for
-              Resource Certificate Repository Structure", RFC 6481,
-              DOI 10.17487/RFC6481, February 2012,
-              <https://www.rfc-editor.org/info/rfc6481>.
 
 
 
@@ -1009,6 +1009,21 @@ Sweetser                  Expires 3 March 2026                 [Page 18]
 
 Internet-Draft      Guidelines for RPKI CA Operators         August 2025
 
+
+   [RFC6480]  Lepinski, M. and S. Kent, "An Infrastructure to Support
+              Secure Internet Routing", RFC 6480, DOI 10.17487/RFC6480,
+              February 2012, <https://www.rfc-editor.org/info/rfc6480>.
+
+   [RFC6481]  Huston, G., Loomans, R., and G. Michaelson, "A Profile for
+              Resource Certificate Repository Structure", RFC 6481,
+              DOI 10.17487/RFC6481, February 2012,
+              <https://www.rfc-editor.org/info/rfc6481>.
+
+   [RFC6489]  Huston, G., Michaelson, G., and S. Kent, "Certification
+              Authority (CA) Key Rollover in the Resource Public Key
+              Infrastructure (RPKI)", BCP 174, RFC 6489,
+              DOI 10.17487/RFC6489, February 2012,
+              <https://www.rfc-editor.org/info/rfc6489>.
 
    [RFC8182]  Bruijnzeels, T., Muravskiy, O., Weber, B., and R. Austein,
               "The RPKI Repository Delta Protocol (RRDP)", RFC 8182,
@@ -1042,6 +1057,15 @@ A.1.  Pre-Delegation Checklist for CA Operators
    *  [ ] Security procedures and controls implemented
    *  [ ] Performance monitoring and capacity planning completed
 
+
+
+
+
+Sweetser                  Expires 3 March 2026                 [Page 19]
+
+Internet-Draft      Guidelines for RPKI CA Operators         August 2025
+
+
 A.2.  Ongoing Operations Checklist for CA Operators
 
    Regular operational tasks (monthly):
@@ -1058,14 +1082,6 @@ A.2.  Ongoing Operations Checklist for CA Operators
    *  [ ] Capacity planning and scaling assessment
    *  [ ] Emergency procedure testing
    *  [ ] Staff training and certification updates
-
-
-
-Sweetser                  Expires 3 March 2026                 [Page 19]
-
-Internet-Draft      Guidelines for RPKI CA Operators         August 2025
-
-
    *  [ ] Community engagement and feedback review
 
 A.3.  Registry Operator Monitoring Checklist
@@ -1092,22 +1108,6 @@ Author's Address
    Australia
    Phone: +61 447 069 725
    Email: tcs@ieisi.org
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -9,7 +9,7 @@
 <meta content="
        This document provides operational guidelines for Resource Public Key Infrastructure (RPKI) delegated Certification Authorities (CAs) and registry operators managing such delegations. It addresses common operational issues including CA availability problems, publication quality issues, and lifecycle management. The guidelines aim to improve the overall health and efficiency of the RPKI ecosystem by establishing best practices for CA operations and delegation management. 
     " name="description">
-<meta content="xml2rfc 3.30.0" name="generator">
+<meta content="xml2rfc 3.20.0" name="generator">
 <meta content="RPKI" name="keyword">
 <meta content="BGP" name="keyword">
 <meta content="routing security" name="keyword">
@@ -17,19 +17,20 @@
 <meta content="operations" name="keyword">
 <meta content="draft-sweetser-bcp-rpki-ca-00" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.0
-    Python 3.13.7
-    ConfigArgParse 1.7.1
-    google-i18n-address 3.1.1
-    intervaltree 3.1.0
-    Jinja2 3.1.6
-    lxml 6.0.1
+  xml2rfc 3.20.0
+    Python 3.12.3
+    ConfigArgParse 1.7
+    google-i18n-address 2.4.0
+    intervaltree 3.0.2
+    Jinja2 3.1.2
+    lxml 5.2.1
     platformdirs 4.3.8
-    pycountry 24.6.1
-    PyYAML 6.0.2
-    requests 2.32.5
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    pycountry 23.12.11
+    PyYAML 6.0.1
+    requests 2.31.0
+    setuptools 68.1.2
+    six 1.16.0
+    wcwidth 0.2.5
 -->
 <link href="draft-sweetser-bcp-rpki-ca-00.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -162,12 +163,6 @@ div {
 }
 svg {
   display: block;
-}
-@media print {
-  svg {
-    max-height: 850px;
-    max-width: 660px;
-  }
 }
 svg[font-family~="serif" i], svg [font-family~="serif" i] {
   font-family: var(--font-serif);
@@ -321,9 +316,6 @@ cite {
   text-align: right;
   font-style: italic;
 }
-.xref {
-  overflow-wrap: normal;
-}
 
 /* tables */
 table {
@@ -412,7 +404,7 @@ hr {
 /* Fix PDF info block run off issue */
 @media print {
   #identifiers dd {
-    max-width: 100%;
+    float: none;
   }
 }
 #identifiers .authors .author {
@@ -1088,7 +1080,7 @@ table {
 ol.type-a { list-style-type: lower-alpha; }
 ol.type-A { list-style-type: upper-alpha; }
 ol.type-i { list-style-type: lower-roman; }
-ol.type-I { list-style-type: upper-roman; }
+ol.type-I { list-style-type: lower-roman; }
 /* Apply the print table and row borders in general, on request from the RPC,
 and increase the contrast between border and odd row background slightly */
 table {
@@ -1168,7 +1160,7 @@ section .olCompact {
 tt, code {
   background-color: transparent;
 }
-p tt, p code, li tt, li code, dt tt, dt code {
+p tt, p code, li tt, li code {
   background-color: #f8f8f8;
 }
 /* Tweak the pre margin -- 0px doesn't come out well */
@@ -1191,7 +1183,6 @@ dl > dd > dl {
 /* This should match the element list in writer.text.TextWriter.render_dl() */
 dd > div.artwork:first-child,
 dd > aside:first-child,
-dd > blockquote:first-child,
 dd > figure:first-child,
 dd > ol:first-child,
 dd > div.sourcecode:first-child,
@@ -1548,32 +1539,27 @@ li > p:last-of-type:only-child {
             <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
-                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
-                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-operational-checklists" class="internal xref">Operational Checklists</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-operational-checklists" class="internal xref">Operational Checklists</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
-                <p id="section-toc.1-1.14.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-pre-delegation-checklist-fo" class="internal xref">Pre-Delegation Checklist for CA Operators</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
+                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-pre-delegation-checklist-fo" class="internal xref">Pre-Delegation Checklist for CA Operators</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
-                <p id="section-toc.1-1.14.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-ongoing-operations-checklis" class="internal xref">Ongoing Operations Checklist for CA Operators</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
+                <p id="section-toc.1-1.15.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-ongoing-operations-checklis" class="internal xref">Ongoing Operations Checklist for CA Operators</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
-                <p id="section-toc.1-1.14.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-registry-operator-monitoring" class="internal xref">Registry Operator Monitoring Checklist</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3">
+                <p id="section-toc.1-1.15.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-registry-operator-monitoring" class="internal xref">Registry Operator Monitoring Checklist</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1587,7 +1573,7 @@ li > p:last-of-type:only-child {
 <p id="section-1-1">The Resource Public Key Infrastructure (RPKI) <span>[<a href="#RFC6480" class="cite xref">RFC6480</a>]</span> provides a framework for securing Internet routing through cryptographic attestation of IP address and AS number allocations. Regional Internet Registries (RIRs) and National Internet Registries (NIRs) may delegate RPKI certification authority (CA) operations to resource holders, allowing them to manage their own certificate issuance and publication.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">While RPKI delegation provides operational flexibility and autonomy for resource holders, it also introduces potential failure modes that can negatively impact the broader RPKI ecosystem. Poorly operated delegated CAs can cause significant resource waste for RPKI validators, degrade overall system performance, and undermine confidence in RPKI deployment.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">This document establishes operational guidelines for both delegated CA operators and registry operators managing such delegations. The guidelines address common operational issues including CA availability problems, publication inconsistencies, and lifecycle management challenges.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">The recommendations in this document are based on operational experience from RPKI deployments worldwide and analysis of problematic CA behaviors observed in production systems.A<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-4">The recommendations in this document are based on operational experience from RPKI deployments worldwide and analysis of problematic CA behaviors observed in production systems.<a href="#section-1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="recommended-reading">
@@ -1595,9 +1581,10 @@ li > p:last-of-type:only-child {
       <h2 id="name-recommended-reading">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-recommended-reading" class="section-name selfRef">Recommended Reading</a>
       </h2>
-<p id="section-2-1"><span>[<a href="#RFC6481" class="cite xref">RFC6481</a>]</span> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing rollovers.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-1"><span>[<a href="#RFC6481" class="cite xref">RFC6481</a>]</span> and <span>[<a href="#RFC6489" class="cite xref">RFC6489</a>]</span> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2"><span>[<a href="#RFC8182" class="cite xref">RFC8182</a>]</span> provides details of efficient alternative to rsync<span>[<a href="#RFC5781" class="cite xref">RFC5781</a>]</span> and key operational efficiencies like caching and CDN deployment.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">As as of writing this document, RRDP session desynchronization issues are being handled under <span>[<a href="#RFC9697" class="cite xref">RFC9697</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-3">Read <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> for the general X.509 PKI framework. Check <span>[<a href="#RFC2527" class="cite xref">RFC2527</a>]</span> for Certificate Policy and Certificate Practice Statements.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">As as of writing this document, RRDP session desynchronization issues are being handled under <span>[<a href="#RFC9697" class="cite xref">RFC9697</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology">
@@ -2529,55 +2516,62 @@ li > p:last-of-type:only-child {
 </section>
 </div>
 <section id="section-13">
-      <h2 id="name-references">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-references" class="section-name selfRef">References</a>
+      <h2 id="name-normative-references">
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
-<section id="section-13.1">
-        <h3 id="name-normative-references">
-<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
-        </h3>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9286">[RFC9286]</dt>
-      <dd>
+    <dd>
 <span class="refAuthor">Austein, R.</span>, <span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Kent, S.</span>, and <span class="refAuthor">M. Lepinski</span>, <span class="refTitle">"Manifests for the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">RFC 9286</span>, <span class="seriesInfo">DOI 10.17487/RFC9286</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9286">https://www.rfc-editor.org/info/rfc9286</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
-<section id="section-13.2">
-        <h3 id="name-informative-references">
-<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
-        </h3>
+<section id="section-14">
+      <h2 id="name-informative-references">
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+      </h2>
 <dl class="references">
+<dt id="RFC2527">[RFC2527]</dt>
+      <dd>
+<span class="refAuthor">Chokhani, S.</span> and <span class="refAuthor">W. Ford</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate Policy and Certification Practices Framework"</span>, <span class="seriesInfo">RFC 2527</span>, <span class="seriesInfo">DOI 10.17487/RFC2527</span>, <time datetime="1999-03" class="refDate">March 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2527">https://www.rfc-editor.org/info/rfc2527</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5280">[RFC5280]</dt>
+      <dd>
+<span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5280">https://www.rfc-editor.org/info/rfc5280</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC5781">[RFC5781]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Weiler, S.</span>, <span class="refAuthor">Ward, D.</span>, and <span class="refAuthor">R. Housley</span>, <span class="refTitle">"The rsync URI Scheme"</span>, <span class="seriesInfo">RFC 5781</span>, <span class="seriesInfo">DOI 10.17487/RFC5781</span>, <time datetime="2010-02" class="refDate">February 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5781">https://www.rfc-editor.org/info/rfc5781</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6480">[RFC6480]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Lepinski, M.</span> and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"An Infrastructure to Support Secure Internet Routing"</span>, <span class="seriesInfo">RFC 6480</span>, <span class="seriesInfo">DOI 10.17487/RFC6480</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6480">https://www.rfc-editor.org/info/rfc6480</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6481">[RFC6481]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Loomans, R.</span>, and <span class="refAuthor">G. Michaelson</span>, <span class="refTitle">"A Profile for Resource Certificate Repository Structure"</span>, <span class="seriesInfo">RFC 6481</span>, <span class="seriesInfo">DOI 10.17487/RFC6481</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6481">https://www.rfc-editor.org/info/rfc6481</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC6489">[RFC6489]</dt>
+      <dd>
+<span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Michaelson, G.</span>, and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"Certification Authority (CA) Key Rollover in the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">BCP 174</span>, <span class="seriesInfo">RFC 6489</span>, <span class="seriesInfo">DOI 10.17487/RFC6489</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6489">https://www.rfc-editor.org/info/rfc6489</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8182">[RFC8182]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Bruijnzeels, T.</span>, <span class="refAuthor">Muravskiy, O.</span>, <span class="refAuthor">Weber, B.</span>, and <span class="refAuthor">R. Austein</span>, <span class="refTitle">"The RPKI Repository Delta Protocol (RRDP)"</span>, <span class="seriesInfo">RFC 8182</span>, <span class="seriesInfo">DOI 10.17487/RFC8182</span>, <time datetime="2017-07" class="refDate">July 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8182">https://www.rfc-editor.org/info/rfc8182</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9697">[RFC9697]</dt>
-      <dd>
+    <dd>
 <span class="refAuthor">Snijders, J.</span> and <span class="refAuthor">T. de Kock</span>, <span class="refTitle">"Detecting RPKI Repository Delta Protocol (RRDP) Session Desynchronization"</span>, <span class="seriesInfo">RFC 9697</span>, <span class="seriesInfo">DOI 10.17487/RFC9697</span>, <time datetime="2024-12" class="refDate">December 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9697">https://www.rfc-editor.org/info/rfc9697</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
-</section>
 </section>
 <div id="operational-checklists">
 <section id="appendix-A">
