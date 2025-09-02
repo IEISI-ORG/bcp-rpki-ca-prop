@@ -47,12 +47,13 @@ The recommendations in this document are based on operational experience from RP
 
 # Recommended Reading
 
-[@RFC6481] will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing rollovers.
+[@RFC6481] and [@BCP174] will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.
 
 [@RFC8182] provides details of efficient alternative to rsync[@RFC5781] and key operational efficiencies like caching and CDN deployment. 
 
-As as of writing this document, RRDP session desynchronization issues are being handled under [@RFC9697].
+[@RFC5280] for the general X.509 PKI framework. [@RFC2527] for Certificate Policy and Certificate Practice Statements.
 
+As as of writing this document, RRDP session desynchronization issues are being handled under [@RFC9697].
 
 # Terminology
 
