@@ -37,11 +37,12 @@ jobs:
         run: |
           xml2rfc --strict draft-sweetser-bcp-rpki-ca-00.xml
 
-      - name: Upload artifacts (if successful)
+      - name: Safekeeping in artefacts (if we make it this far)
         uses: actions/upload-artifact@v4
         with:
           name: ietf-draft-outputs
           path: |
+            draft-sweetser-bcp-rpki-ca-00.md
             draft-sweetser-bcp-rpki-ca-00.xml
             draft-sweetser-bcp-rpki-ca-00.txt
             draft-sweetser-bcp-rpki-ca-00.html
