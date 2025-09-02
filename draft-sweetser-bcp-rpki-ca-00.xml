@@ -34,10 +34,16 @@
 </section>
 
 <section anchor="recommended-reading"><name>Recommended Reading</name>
-<t><xref target="RFC6481"></xref> and <xref target="RFC6489"></xref> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.</t>
+<t>[!@RFC6481] and <xref target="RFC6489"></xref> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.</t>
+<t><xref target="RFC6487"></xref></t>
+<t>[!@RFC3647]</t>
 <t><xref target="RFC8182"></xref> provides details of efficient alternative to rsync<xref target="RFC5781"></xref> and key operational efficiencies like caching and CDN deployment.</t>
 <t>Read <xref target="RFC5280"></xref> for the general X.509 PKI framework. Check <xref target="RFC2527"></xref> for Certificate Policy and Certificate Practice Statements.</t>
 <t>As as of writing this document, RRDP session desynchronization issues are being handled under <xref target="RFC9697"></xref>.</t>
+<t>TODO: <xref target="RFC8211"></xref> needs to handled and analyzed for anti-patterns.</t>
+<t>TODO: <xref target="CURE-NDSS24"></xref></t>
+<t>TODO: <xref target="LOV-ASIACCS25"></xref></t>
+<t>TODO: <xref target="DURUMERIC-IMC13"></xref></t>
 </section>
 
 <section anchor="terminology"><name>Terminology</name>
@@ -47,7 +53,7 @@
 <t>Registry Operator: An organization (typically an RIR or NIR) that delegates RPKI CA authority to resource holders and maintains oversight of such delegations.</t>
 <t>Publication Point: A repository location where RPKI objects (certificates, manifests, CRLs, ROAs, etc.) are published and made available to relying parties.</t>
 <t>Flapping CA: A delegated CA that exhibits rapid or frequent changes in operational state, causing instability for relying party validators.</t>
-<t>Dead CA: A delegated CA that is persistently non-functional or unreachable for extended periods.</t>
+<t>Dead CA: A delegated CA that is persistently non-functional or unreachable for extended periods <xref target="DEAD-CA"></xref>.</t>
 <t>Manifest: An RPKI signed object that lists the contents of a publication repository and provides integrity protection <xref target="RFC9286"></xref>.</t>
 <t>Relying Party (RP): An entity that uses RPKI data to make routing decisions, typically through RPKI validator software.</t>
 </section>
@@ -57,7 +63,7 @@
 
 <section anchor="ca-availability-issues"><name>CA Availability Issues</name>
 <t>Delegated CAs may experience various availability problems:</t>
-<t>Dead CAs: Some delegated CAs become completely offline for extended periods (weeks to months), yet remain referenced in the RPKI hierarchy. RPKI validators continue attempting to fetch data from these CAs, resulting in hundreds of thousands of failed synchronization attempts over time.</t>
+<t>Dead CAs: Some delegated CAs become completely offline for extended periods (weeks to months), yet remain referenced in the RPKI hierarchy. RPKI validators continue attempting to fetch data from these CAs, resulting in hundreds of thousands of failed synchronization attempts over time <xref target="DEAD-CA"></xref>.</t>
 <t>Flapping CAs: Certain delegated CAs exhibit intermittent availability patterns, rapidly cycling between online and offline states. This &quot;flapping&quot; behavior causes cache thrashing in RPKI validators and creates uncertainty about the current state of published objects.</t>
 <t>Slow CAs: Some delegated CAs respond to requests but with excessive latency, causing validator timeouts and retry storms. These CAs may appear functional but create significant operational burden.</t>
 <t>Partial Failures: Delegated CAs may have some publication endpoints functioning while others fail, leading to inconsistent data availability and validator confusion.</t>
@@ -608,13 +614,65 @@
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.9286.xml"/>
 </references>
 <references><name>Informative References</name>
+<reference anchor="CURE-NDSS24" target="https://dx.doi.org/10.14722/ndss.2024.241093">
+  <front>
+    <title>The CURE to Vulnerabilities in RPKI Validation</title>
+    <author fullname="Donika Mirdita" initials="D." surname="Mirdita"></author>
+    <author fullname="Haya Schulmann" initials="H." surname="Schulmann"></author>
+    <author fullname="Niklas Vogel" initials="N." surname="Vogel"></author>
+    <author fullname="Michael Waidner" initials="M." surname="Waidner"></author>
+    <date year="2024" month="February"></date>
+  </front>
+  <seriesInfo name="In Proceedings of" value="the Network and Distributed System Security (NDSS) Symposium 2024"></seriesInfo>
+</reference>
+<reference anchor="DEAD-CA" target="https://console.rpki-client.org/nonfunc.html">
+  <front>
+    <title>Non-functional RPKI Certification Authorities</title>
+    <author fullname="Job Snijders" initials="J." surname="Snijders">
+      <address>
+        <email>job@sobornost.net</email>
+        <uri>https://sobornost.net/~job/</uri>
+      </address>
+    </author>
+    <date year="2025" month="Sep" day="2"></date>
+  </front>
+</reference>
+<reference anchor="DURUMERIC-IMC13" target="https://doi.org/10.1145/2504730.2504755">
+  <front>
+    <title>Analysis of the HTTPS Certificate Ecosystem</title>
+    <author fullname="Zakir Durumeric" initials="Z." surname="Durumeric"></author>
+    <author fullname="James Kasten" initials="J." surname="Kasten"></author>
+    <author fullname="David Adrian" initials="D." surname="Adrian"></author>
+    <author fullname="J. Alex Halderman" initials="J. A." surname="Halderman"></author>
+    <author fullname="Michael Bailey" initials="M." surname="Bailey"></author>
+    <author fullname="Frank Li" initials="F." surname="Li"></author>
+    <author fullname="Elie Bursztein" initials="E." surname="Bursztein"></author>
+    <author fullname="Matt Mastrianni" initials="M." surname="Mastrianni"></author>
+    <author fullname="Dan Boneh" initials="D." surname="Boneh"></author>
+    <author fullname="Peter L. Williams" initials="P. L." surname="Williams"></author>
+    <date year="2013" month="October"></date>
+  </front>
+  <seriesInfo name="DOI" value="10.1145/2504730.2504755"></seriesInfo>
+  <seriesInfo name="In Proceedings of" value="the ACM Internet Measurement Conference (IMC &#39;13)"></seriesInfo>
+</reference>
+<reference anchor="LOV-ASIACCS25" target="https://arxiv.org/abs/2502.03378">
+  <front>
+    <title>Learning to Identify Conflicts in RPKI</title>
+    <author fullname="Haya Schulmann" initials="H." surname="Schulmann"></author>
+    <author fullname="Shujie Zhao" initials="S." surname="Zhao"></author>
+    <date year="2025" month="February"></date>
+  </front>
+  <seriesInfo name="arXiv" value="2502.03378"></seriesInfo>
+  <annotation>To appear in the Proceedings of the ACM Asia Conference on Computer and Communications Security (ASIA CCS &#39;25).</annotation>
+</reference>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2527.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5781.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6480.xml"/>
-<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6481.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6487.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6489.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8182.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8211.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.9697.xml"/>
 </references>
 

@@ -47,13 +47,25 @@ The recommendations in this document are based on operational experience from RP
 
 # Recommended Reading
 
-[@RFC6481] and [@RFC6489] will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.
+[!@RFC6481] and [@RFC6489] will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.
+
+[@RFC6487]
+
+[!@RFC3647]
 
 [@RFC8182] provides details of efficient alternative to rsync[@RFC5781] and key operational efficiencies like caching and CDN deployment. 
 
 Read [@RFC5280] for the general X.509 PKI framework. Check [@RFC2527] for Certificate Policy and Certificate Practice Statements.
 
 As as of writing this document, RRDP session desynchronization issues are being handled under [@RFC9697].
+
+TODO: [@RFC8211] needs to handled and analyzed for anti-patterns.
+
+TODO: [@CURE-NDSS24]
+
+TODO: [@LOV-ASIACCS25]
+
+TODO: [@DURUMERIC-IMC13]
 
 # Terminology
 
@@ -69,7 +81,7 @@ Publication Point: A repository location where RPKI objects (certificates, manif
 
 Flapping CA: A delegated CA that exhibits rapid or frequent changes in operational state, causing instability for relying party validators.
 
-Dead CA: A delegated CA that is persistently non-functional or unreachable for extended periods.
+Dead CA: A delegated CA that is persistently non-functional or unreachable for extended periods [@DEAD-CA].
 
 Manifest: An RPKI signed object that lists the contents of a publication repository and provides integrity protection [@!RFC9286].
 
@@ -83,7 +95,7 @@ Current RPKI delegation practices allow for several problematic operational scen
 
 Delegated CAs may experience various availability problems:
 
-Dead CAs: Some delegated CAs become completely offline for extended periods (weeks to months), yet remain referenced in the RPKI hierarchy. RPKI validators continue attempting to fetch data from these CAs, resulting in hundreds of thousands of failed synchronization attempts over time.
+Dead CAs: Some delegated CAs become completely offline for extended periods (weeks to months), yet remain referenced in the RPKI hierarchy. RPKI validators continue attempting to fetch data from these CAs, resulting in hundreds of thousands of failed synchronization attempts over time [@DEAD-CA].
 
 Flapping CAs: Certain delegated CAs exhibit intermittent availability patterns, rapidly cycling between online and offline states. This "flapping" behavior causes cache thrashing in RPKI validators and creates uncertainty about the current state of published objects.
 
@@ -584,4 +596,60 @@ Weekly tasks:
   - [ ] Enforcement action tracking and review
   - [ ] Communication with problematic CA operators
   - [ ] Ecosystem health reporting
+
+
+<reference anchor='DEAD-CA' target='https://console.rpki-client.org/nonfunc.html'>
+    <front>
+        <title>Non-functional RPKI Certification Authorities</title>
+        <author initials='J.' surname='Snijders' fullname='Job Snijders'>
+            <address>
+                <email>job@sobornost.net</email>
+                <uri>https://sobornost.net/~job/</uri>
+            </address>
+        </author>
+        <date year='2025' month="Sep" day="2"/>
+    </front>
+</reference>
+
+<reference anchor="CURE-NDSS24" target="https://dx.doi.org/10.14722/ndss.2024.241093">
+  <front>
+    <title>The CURE to Vulnerabilities in RPKI Validation</title>
+    <author fullname="Donika Mirdita" initials="D." surname="Mirdita"/>
+    <author fullname="Haya Schulmann" initials="H." surname="Schulmann"/>
+    <author fullname="Niklas Vogel" initials="N." surname="Vogel"/>
+    <author fullname="Michael Waidner" initials="M." surname="Waidner"/>
+    <date month="February" year="2024"/>
+  </front>
+  <seriesInfo name="In Proceedings of" value="the Network and Distributed System Security (NDSS) Symposium 2024"/>
+</reference>
+
+<reference anchor="LOV-ASIACCS25" target="https://arxiv.org/abs/2502.03378">
+  <front>
+    <title>Learning to Identify Conflicts in RPKI</title>
+    <author fullname="Haya Schulmann" initials="H." surname="Schulmann"/>
+    <author fullname="Shujie Zhao" initials="S." surname="Zhao"/>
+    <date month="February" year="2025"/>
+  </front>
+  <seriesInfo name="arXiv" value="2502.03378"/>
+  <annotation>To appear in the Proceedings of the ACM Asia Conference on Computer and Communications Security (ASIA CCS '25).</annotation>
+</reference>
+
+<reference anchor="DURUMERIC-IMC13" target="https://doi.org/10.1145/2504730.2504755">
+  <front>
+    <title>Analysis of the HTTPS Certificate Ecosystem</title>
+    <author fullname="Zakir Durumeric" initials="Z." surname="Durumeric"/>
+    <author fullname="James Kasten" initials="J." surname="Kasten"/>
+    <author fullname="David Adrian" initials="D." surname="Adrian"/>
+    <author fullname="J. Alex Halderman" initials="J. A." surname="Halderman"/>
+    <author fullname="Michael Bailey" initials="M." surname="Bailey"/>
+    <author fullname="Frank Li" initials="F." surname="Li"/>
+    <author fullname="Elie Bursztein" initials="E." surname="Bursztein"/>
+    <author fullname="Matt Mastrianni" initials="M." surname="Mastrianni"/>
+    <author fullname="Dan Boneh" initials="D." surname="Boneh"/>
+    <author fullname="Peter L. Williams" initials="P. L." surname="Williams"/>
+    <date month="October" year="2013"/>
+  </front>
+  <seriesInfo name="DOI" value="10.1145/2504730.2504755"/>
+  <seriesInfo name="In Proceedings of" value="the ACM Internet Measurement Conference (IMC '13)"/>
+</reference>
 
