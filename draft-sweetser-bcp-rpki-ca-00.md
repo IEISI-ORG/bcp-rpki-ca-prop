@@ -51,7 +51,7 @@ The recommendations in this document are based on operational experience from RP
 
 [@RFC8182] provides details of efficient alternative to rsync[@RFC5781] and key operational efficiencies like caching and CDN deployment. 
 
-[@RFC5280] for the general X.509 PKI framework. [@RFC2527] for Certificate Policy and Certificate Practice Statements.
+Read [@RFC5280] for the general X.509 PKI framework. Check [@RFC2527] for Certificate Policy and Certificate Practice Statements.
 
 As as of writing this document, RRDP session desynchronization issues are being handled under [@RFC9697].
 

@@ -40,3 +40,9 @@ jobs:
             draft-sweetser-bcp-rpki-ca-00.xml
             draft-sweetser-bcp-rpki-ca-00.txt
             draft-sweetser-bcp-rpki-ca-00.html
+
+      - name: Commit those files
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: Automated update of xml/txt/html versions
+
