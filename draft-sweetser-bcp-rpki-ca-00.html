@@ -24,7 +24,7 @@
     intervaltree 3.0.2
     Jinja2 3.1.2
     lxml 5.2.1
-    platformdirs 4.3.8
+    platformdirs 4.4.0
     pycountry 23.12.11
     PyYAML 6.0.1
     requests 2.31.0
@@ -1581,10 +1581,16 @@ li > p:last-of-type:only-child {
       <h2 id="name-recommended-reading">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-recommended-reading" class="section-name selfRef">Recommended Reading</a>
       </h2>
-<p id="section-2-1"><span>[<a href="#RFC6481" class="cite xref">RFC6481</a>]</span> and <span>[<a href="#RFC6489" class="cite xref">RFC6489</a>]</span> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2"><span>[<a href="#RFC8182" class="cite xref">RFC8182</a>]</span> provides details of efficient alternative to rsync<span>[<a href="#RFC5781" class="cite xref">RFC5781</a>]</span> and key operational efficiencies like caching and CDN deployment.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">Read <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> for the general X.509 PKI framework. Check <span>[<a href="#RFC2527" class="cite xref">RFC2527</a>]</span> for Certificate Policy and Certificate Practice Statements.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">As as of writing this document, RRDP session desynchronization issues are being handled under <span>[<a href="#RFC9697" class="cite xref">RFC9697</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-1">[!@RFC6481] and <span>[<a href="#RFC6489" class="cite xref">RFC6489</a>]</span> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2"><span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span><a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">[!@RFC3647]<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4"><span>[<a href="#RFC8182" class="cite xref">RFC8182</a>]</span> provides details of efficient alternative to rsync<span>[<a href="#RFC5781" class="cite xref">RFC5781</a>]</span> and key operational efficiencies like caching and CDN deployment.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">Read <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> for the general X.509 PKI framework. Check <span>[<a href="#RFC2527" class="cite xref">RFC2527</a>]</span> for Certificate Policy and Certificate Practice Statements.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">As as of writing this document, RRDP session desynchronization issues are being handled under <span>[<a href="#RFC9697" class="cite xref">RFC9697</a>]</span>.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">TODO: <span>[<a href="#RFC8211" class="cite xref">RFC8211</a>]</span> needs to handled and analyzed for anti-patterns.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-8">TODO: <span>[<a href="#CURE-NDSS24" class="cite xref">CURE-NDSS24</a>]</span><a href="#section-2-8" class="pilcrow">¶</a></p>
+<p id="section-2-9">TODO: <span>[<a href="#LOV-ASIACCS25" class="cite xref">LOV-ASIACCS25</a>]</span><a href="#section-2-9" class="pilcrow">¶</a></p>
+<p id="section-2-10">TODO: <span>[<a href="#DURUMERIC-IMC13" class="cite xref">DURUMERIC-IMC13</a>]</span><a href="#section-2-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology">
@@ -1598,7 +1604,7 @@ li > p:last-of-type:only-child {
 <p id="section-3-4">Registry Operator: An organization (typically an RIR or NIR) that delegates RPKI CA authority to resource holders and maintains oversight of such delegations.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <p id="section-3-5">Publication Point: A repository location where RPKI objects (certificates, manifests, CRLs, ROAs, etc.) are published and made available to relying parties.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <p id="section-3-6">Flapping CA: A delegated CA that exhibits rapid or frequent changes in operational state, causing instability for relying party validators.<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">Dead CA: A delegated CA that is persistently non-functional or unreachable for extended periods.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-7">Dead CA: A delegated CA that is persistently non-functional or unreachable for extended periods <span>[<a href="#DEAD-CA" class="cite xref">DEAD-CA</a>]</span>.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">Manifest: An RPKI signed object that lists the contents of a publication repository and provides integrity protection <span>[<a href="#RFC9286" class="cite xref">RFC9286</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <p id="section-3-9">Relying Party (RP): An entity that uses RPKI data to make routing decisions, typically through RPKI validator software.<a href="#section-3-9" class="pilcrow">¶</a></p>
 </section>
@@ -1615,7 +1621,7 @@ li > p:last-of-type:only-child {
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-ca-availability-issues" class="section-name selfRef">CA Availability Issues</a>
         </h3>
 <p id="section-4.1-1">Delegated CAs may experience various availability problems:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">Dead CAs: Some delegated CAs become completely offline for extended periods (weeks to months), yet remain referenced in the RPKI hierarchy. RPKI validators continue attempting to fetch data from these CAs, resulting in hundreds of thousands of failed synchronization attempts over time.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">Dead CAs: Some delegated CAs become completely offline for extended periods (weeks to months), yet remain referenced in the RPKI hierarchy. RPKI validators continue attempting to fetch data from these CAs, resulting in hundreds of thousands of failed synchronization attempts over time <span>[<a href="#DEAD-CA" class="cite xref">DEAD-CA</a>]</span>.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">Flapping CAs: Certain delegated CAs exhibit intermittent availability patterns, rapidly cycling between online and offline states. This "flapping" behavior causes cache thrashing in RPKI validators and creates uncertainty about the current state of published objects.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.1-4">Slow CAs: Some delegated CAs respond to requests but with excessive latency, causing validator timeouts and retry storms. These CAs may appear functional but create significant operational burden.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 <p id="section-4.1-5">Partial Failures: Delegated CAs may have some publication endpoints functioning while others fail, leading to inconsistent data availability and validator confusion.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
@@ -2539,6 +2545,23 @@ li > p:last-of-type:only-child {
 <a href="#section-14" class="section-number selfRef">14. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
       </h2>
 <dl class="references">
+<dt id="CURE-NDSS24">[CURE-NDSS24]</dt>
+      <dd>
+<span class="refAuthor">Mirdita, D.</span>, <span class="refAuthor">Schulmann, H.</span>, <span class="refAuthor">Vogel, N.</span>, and <span class="refAuthor">M. Waidner</span>, <span class="refTitle">"The CURE to Vulnerabilities in RPKI Validation"</span>, <span class="seriesInfo">In Proceedings of the Network and Distributed System Security (NDSS) Symposium 2024</span>, <time datetime="2024-02" class="refDate">February 2024</time>, <span>&lt;<a href="https://dx.doi.org/10.14722/ndss.2024.241093">https://dx.doi.org/10.14722/ndss.2024.241093</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DEAD-CA">[DEAD-CA]</dt>
+      <dd>
+<span class="refAuthor">Snijders, J.</span>, <span class="refTitle">"Non-functional RPKI Certification Authorities"</span>, <time datetime="2025-09-02" class="refDate">2 September 2025</time>, <span>&lt;<a href="https://console.rpki-client.org/nonfunc.html">https://console.rpki-client.org/nonfunc.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DURUMERIC-IMC13">[DURUMERIC-IMC13]</dt>
+      <dd>
+<span class="refAuthor">Durumeric, Z.</span>, <span class="refAuthor">Kasten, J.</span>, <span class="refAuthor">Adrian, D.</span>, <span class="refAuthor">Halderman, J. A.</span>, <span class="refAuthor">Bailey, M.</span>, <span class="refAuthor">Li, F.</span>, <span class="refAuthor">Bursztein, E.</span>, <span class="refAuthor">Mastrianni, M.</span>, <span class="refAuthor">Boneh, D.</span>, and <span class="refAuthor">P. L. Williams</span>, <span class="refTitle">"Analysis of the HTTPS Certificate Ecosystem"</span>, <span class="seriesInfo">DOI 10.1145/2504730.2504755</span>, <span class="seriesInfo">In Proceedings of the ACM Internet Measurement Conference (IMC '13)</span>, <time datetime="2013-10" class="refDate">October 2013</time>, <span>&lt;<a href="https://doi.org/10.1145/2504730.2504755">https://doi.org/10.1145/2504730.2504755</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="LOV-ASIACCS25">[LOV-ASIACCS25]</dt>
+      <dd>
+<span class="refAuthor">Schulmann, H.</span> and <span class="refAuthor">S. Zhao</span>, <span class="refTitle">"Learning to Identify Conflicts in RPKI"</span>, <span class="seriesInfo">arXiv 2502.03378</span>, <time datetime="2025-02" class="refDate">February 2025</time>, <span>&lt;<a href="https://arxiv.org/abs/2502.03378">https://arxiv.org/abs/2502.03378</a>&gt;</span>. <span class="annotation">To appear in the Proceedings of the ACM Asia Conference on Computer and Communications Security (ASIA CCS '25).</span>
+      </dd>
+<dd class="break"></dd>
 <dt id="RFC2527">[RFC2527]</dt>
       <dd>
 <span class="refAuthor">Chokhani, S.</span> and <span class="refAuthor">W. Ford</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate Policy and Certification Practices Framework"</span>, <span class="seriesInfo">RFC 2527</span>, <span class="seriesInfo">DOI 10.17487/RFC2527</span>, <time datetime="1999-03" class="refDate">March 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2527">https://www.rfc-editor.org/info/rfc2527</a>&gt;</span>. </dd>
@@ -2555,9 +2578,9 @@ li > p:last-of-type:only-child {
       <dd>
 <span class="refAuthor">Lepinski, M.</span> and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"An Infrastructure to Support Secure Internet Routing"</span>, <span class="seriesInfo">RFC 6480</span>, <span class="seriesInfo">DOI 10.17487/RFC6480</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6480">https://www.rfc-editor.org/info/rfc6480</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC6481">[RFC6481]</dt>
+<dt id="RFC6487">[RFC6487]</dt>
       <dd>
-<span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Loomans, R.</span>, and <span class="refAuthor">G. Michaelson</span>, <span class="refTitle">"A Profile for Resource Certificate Repository Structure"</span>, <span class="seriesInfo">RFC 6481</span>, <span class="seriesInfo">DOI 10.17487/RFC6481</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6481">https://www.rfc-editor.org/info/rfc6481</a>&gt;</span>. </dd>
+<span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Michaelson, G.</span>, and <span class="refAuthor">R. Loomans</span>, <span class="refTitle">"A Profile for X.509 PKIX Resource Certificates"</span>, <span class="seriesInfo">RFC 6487</span>, <span class="seriesInfo">DOI 10.17487/RFC6487</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6487">https://www.rfc-editor.org/info/rfc6487</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6489">[RFC6489]</dt>
       <dd>
@@ -2566,6 +2589,10 @@ li > p:last-of-type:only-child {
 <dt id="RFC8182">[RFC8182]</dt>
       <dd>
 <span class="refAuthor">Bruijnzeels, T.</span>, <span class="refAuthor">Muravskiy, O.</span>, <span class="refAuthor">Weber, B.</span>, and <span class="refAuthor">R. Austein</span>, <span class="refTitle">"The RPKI Repository Delta Protocol (RRDP)"</span>, <span class="seriesInfo">RFC 8182</span>, <span class="seriesInfo">DOI 10.17487/RFC8182</span>, <time datetime="2017-07" class="refDate">July 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8182">https://www.rfc-editor.org/info/rfc8182</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8211">[RFC8211]</dt>
+      <dd>
+<span class="refAuthor">Kent, S.</span> and <span class="refAuthor">D. Ma</span>, <span class="refTitle">"Adverse Actions by a Certification Authority (CA) or Repository Manager in the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">RFC 8211</span>, <span class="seriesInfo">DOI 10.17487/RFC8211</span>, <time datetime="2017-09" class="refDate">September 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8211">https://www.rfc-editor.org/info/rfc8211</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9697">[RFC9697]</dt>
     <dd>
