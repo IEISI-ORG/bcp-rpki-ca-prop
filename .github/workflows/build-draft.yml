@@ -17,7 +17,7 @@ jobs:
 
       - name: Install Tools
         run: |
-          apt-get install -y --no-install-recommends mmark xml2rfc
+          sudo apt-get install -y --no-install-recommends mmark xml2rfc
 
       - name: Convert Markdown to XML (using mmark)
         run: |
