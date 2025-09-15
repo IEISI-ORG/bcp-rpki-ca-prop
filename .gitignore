@@ -12,6 +12,7 @@ package.json
 tracker.log
 backups/*
 reports/*
+monitoring/rpki_report*txt
 *un~
 *~
 

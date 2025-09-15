@@ -1,0 +1,161 @@
+
+RPKI Validation Errors - Summary Report
+=======================================
+Generated: 2025-09-15 14:42:34 UTC
+Total CAs with errors: 41
+Total errors: 413
+
+BREAKDOWN BY CA:
+
+rsync.paas.rpki.ripe.net: 125 errors
+  HIGH: 98
+  MEDIUM: 27
+
+rpki-repo.registro.br: 61 errors
+  HIGH: 48
+  MEDIUM: 2
+  LOW: 11
+
+rpki.apnic.net: 23 errors
+  MEDIUM: 23
+
+rpki-rps.arin.net: 20 errors
+  HIGH: 18
+  MEDIUM: 2
+
+rpki.cnnic.cn: 16 errors
+  HIGH: 14
+  MEDIUM: 2
+
+rpki-01.pdxnet.uk: 13 errors
+  HIGH: 12
+  LOW: 1
+
+rpki.afrinic.net: 12 errors
+  MEDIUM: 12
+
+rpki.sub.apnic.net: 10 errors
+  HIGH: 10
+
+rpki.leitecastro.com: 9 errors
+  MEDIUM: 4
+  LOW: 5
+
+rsync.rpki.tianhai.link: 9 errors
+  HIGH: 4
+  MEDIUM: 4
+  LOW: 1
+
+rpki.netiface.net: 8 errors
+  MEDIUM: 4
+  LOW: 4
+
+oto.wakuwaku.ne.jp: 8 errors
+  MEDIUM: 4
+  LOW: 4
+
+sakuya.nat.moe: 7 errors
+  LOW: 7
+
+rpki.admin.freerangecloud.com: 7 errors
+  MEDIUM: 6
+  LOW: 1
+
+rpki.0i1.eu: 6 errors
+  MEDIUM: 2
+  LOW: 4
+
+rpki.zappiehost.com: 6 errors
+  HIGH: 2
+  MEDIUM: 2
+  LOW: 2
+
+krill.rpki-measurement.site: 6 errors
+  MEDIUM: 2
+  LOW: 4
+
+krill.ca-bc-01.ssmidge.xyz: 6 errors
+  MEDIUM: 5
+  LOW: 1
+
+repo.rpki.space: 6 errors
+  MEDIUM: 5
+  LOW: 1
+
+rpki-repo.as207960.net: 4 errors
+  HIGH: 4
+
+repo-rpki.idnic.net: 4 errors
+  MEDIUM: 4
+
+krill.signalx.cloud: 4 errors
+  MEDIUM: 3
+  LOW: 1
+
+pub.krill.ausra.cloud: 3 errors
+  HIGH: 2
+  LOW: 1
+
+rpki.folf.systems: 3 errors
+  HIGH: 2
+  LOW: 1
+
+rpki.tools.westconnect.ca: 3 errors
+  HIGH: 2
+  LOW: 1
+
+repodepot.wildtky.com: 3 errors
+  HIGH: 2
+  LOW: 1
+
+rpki-rsync.us-east-2.amazonaws.com: 3 errors
+  MEDIUM: 3
+
+rpki.qs.nu: 3 errors
+  HIGH: 2
+  LOW: 1
+
+rpki.fengrui.link: 3 errors
+  MEDIUM: 2
+  LOW: 1
+
+repo.kagl.me: 2 errors
+  HIGH: 1
+  LOW: 1
+
+rpki-repo.canops.org: 2 errors
+  MEDIUM: 1
+  LOW: 1
+
+chloe.sobornost.net: 2 errors
+  MEDIUM: 2
+
+rpki.ripe.net: 2 errors
+  MEDIUM: 2
+
+ca.rg.net: 2 errors
+  LOW: 2
+
+cloudie-repo.rpki.app: 2 errors
+  HIGH: 2
+
+krill.accuristechnologies.ca: 2 errors
+  HIGH: 2
+
+rpki-rsync.warpnet.xyz: 2 errors
+  MEDIUM: 1
+  LOW: 1
+
+krill.rg.net: 2 errors
+  MEDIUM: 1
+  LOW: 1
+
+rpki.sailx.co: 2 errors
+  MEDIUM: 1
+  LOW: 1
+
+rpki-pp.com: 1 errors
+  LOW: 1
+
+rpki.athene-center.net: 1 errors
+  MEDIUM: 1
