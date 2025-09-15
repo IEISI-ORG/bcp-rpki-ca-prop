@@ -13,6 +13,7 @@ tracker.log
 backups/*
 reports/*
 monitoring/rpki_report*txt
+monitoring/rpki_summary*txt
 *un~
 *~
 
