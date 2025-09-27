@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- name="GENERATOR" content="github.com/mmarkdown/mmark Mmark Markdown Processor - mmark.miek.nl" -->
+<rfc version="3" ipr="trust200902" docName="draft-sweetser-bcp-rpki-ca-01" submissionType="IETF" category="bcp" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true">
+
+<front>
+<title abbrev="Guidelines for RPKI CA Operators">Operational Guidelines for RPKI Delegated Certification Authorities</title><seriesInfo value="draft-sweetser-bcp-rpki-ca-01" stream="IETF" status="bcp" name="Internet-Draft"></seriesInfo>
+<author initials="T. C." surname="Sweetser" fullname="Terence Charles Sweetser"><organization abbrev="IEISI">Internet Engineering &amp; Infrastructure Strategic Initiative</organization><address><postal><street></street>
+<city>Wynnum, QLD</city>
+<country>Australia</country>
+</postal><phone>+61 447 069 725</phone>
+<email>tcs@ieisi.org</email>
+<uri>https://about.me/terry.sweetser</uri>
+</address></author><date year="2025" month="September" day="27"></date>
+<area>Internet</area>
+<workgroup>SIDR Operations</workgroup>
+<keyword>RPKI</keyword>
+<keyword>BGP</keyword>
+<keyword>routing security</keyword>
+<keyword>certificate authority</keyword>
+<keyword>operations</keyword>
+
+<abstract>
+<t>This document provides operational guidelines for Resource Public Key Infrastructure (RPKI) delegated Certification Authorities (CAs) and registry operators managing such delegations. It addresses common operational issues including CA availability problems, publication quality issues, and lifecycle management. The guidelines aim to improve the overall health and efficiency of the RPKI ecosystem by establishing best practices for CA operations and delegation management.</t>
+</abstract>
+
+</front>
+
+<middle>
+
+<section anchor="introduction"><name>Introduction</name>
+<t>The Resource Public Key Infrastructure (RPKI) <xref target="RFC6480"></xref> provides a framework for securing Internet routing through cryptographic attestation of IP address and AS number allocations. Regional Internet Registries (RIRs) and National Internet Registries (NIRs) may delegate RPKI certification authority (CA) operations to resource holders, allowing them to manage their own certificate issuance and publication.</t>
+<t>While RPKI delegation provides operational flexibility and autonomy for resource holders, it also introduces potential failure modes that can negatively impact the broader RPKI ecosystem. Poorly operated delegated CAs can cause significant resource waste for RPKI validators, degrade overall system performance, and undermine confidence in RPKI deployment.</t>
+<t>This document establishes operational guidelines for both delegated CA operators and registry operators managing such delegations. The guidelines address common operational issues including CA availability problems, publication inconsistencies, and lifecycle management challenges.</t>
+<t>The recommendations in this document are based on operational experience from RPKI deployments worldwide and analysis of problematic CA behaviors observed in production systems.</t>
+</section>
+
+<section anchor="recommended-reading"><name>Recommended Reading</name>
+<t><xref target="RFC6481"></xref> and <xref target="RFC6489"></xref> will inform readers of requirements on repository content structure, directory structure, naming of directories and managaing key rollovers.</t>
+<t><xref target="RFC8182"></xref> provides details of efficient alternative to rsync<xref target="RFC5781"></xref> and key operational efficiencies like caching and CDN deployment.</t>
+<t><xref target="CURE-NDSS24"></xref> provides statistical data and security analysis of RPKI performance.  With code at <eref target="https://github.com/rp-cure/rp-cure">https://github.com/rp-cure/rp-cure</eref>.</t>
+</section>
+
+<section anchor="terminology"><name>Terminology</name>
+<t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;, &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT RECOMMENDED&quot;, &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when, and only when, they appear in all capitals, as shown here.</t>
+<t>This document uses the following terms:</t>
+<t>Delegated CA: A certification authority that has been delegated RPKI certificate issuance authority by a registry operator,
+and is operated by the resource holder rather than the registry <xref target="RFC3647"></xref><xref target="RFC5280"></xref>.</t>
+<t>Registry Operator: An organization (typically an RIR or NIR) that delegates RPKI CA authority to resource holders and maintains oversight of such delegations <xref target="RFC7020"></xref><xref target="RFC6484"></xref>.</t>
+<t>Publication Point: A repository location where RPKI objects (certificates, manifests, CRLs, ROAs, etc.) are published
+and made available to relying parties <xref target="RFC8181"></xref><xref target="I-D.ietf-sidrops-publication-server-bcp"></xref>.</t>
+<t>Flapping CA: A delegated CA that exhibits rapid or frequent changes in operational state, causing instability for relying party validators <xref target="RFC8211"></xref>.</t>
+<t>Dead CA: A delegated CA that is persistently non-functional or unreachable for extended periods <xref target="DEAD-CA"></xref>.</t>
+<t>Manifest: An RPKI signed object that lists the contents of a publication repository and provides integrity protection <xref target="RFC9286"></xref>.</t>
+<t>Relying Party (RP): An entity that uses RPKI data to make routing decisions, typically through RPKI validator software <xref target="RFC6480"></xref>.</t>
+</section>
+
+<section anchor="problem-statement"><name>Problem Statement</name>
+<t>Current RPKI delegation practices allow for several problematic operational scenarios that negatively impact the RPKI ecosystem.  Analysis of production RPKI systems has identified recurring patterns of CA misbehavior that waste validator resources and degrade system performance.</t>
+
+<section anchor="ca-availability-issues"><name>CA Availability Issues</name>
+<t>Delegated CAs may experience various availability problems:</t>
+<t>Dead CAs: Some delegated CAs become completely offline for extended periods (weeks to months), yet remain referenced in the RPKI hierarchy. RPKI validators continue attempting to fetch data from these CAs, resulting in hundreds of thousands of failed synchronization attempts over time <xref target="DEAD-CA"></xref>.</t>
+<t>Flapping CAs: Certain delegated CAs exhibit intermittent availability patterns, rapidly cycling between online and offline states. This &quot;flapping&quot; behavior causes cache thrashing in RPKI validators and creates uncertainty about the current state of published objects.</t>
+<t>Slow CAs: Some delegated CAs respond to requests but with excessive latency, causing validator timeouts and retry storms. These CAs may appear functional but create significant operational burden.</t>
+<t>Partial Failures: Delegated CAs may have some publication endpoints functioning while others fail, leading to inconsistent data availability and validator confusion.</t>
+</section>
+
+<section anchor="publication-quality-issues"><name>Publication Quality Issues</name>
+<t>Beyond availability, delegated CAs may exhibit poor publication practices:</t>
+<t>Stale Manifests: CAs that rarely update their manifests cause validators to repeatedly attempt synchronization of unchanged data, wasting network bandwidth and processing resources.</t>
+<t>Inconsistent Publication: CAs may publish incomplete or inconsistent object sets, with manifests referencing objects that are not available or publishing objects not listed in manifests.</t>
+<t>Clock Skew: CAs with incorrect system time may publish objects with validity periods that cause premature expiration or rejection by validators.</t>
+<t>Malformed Objects: CAs may publish syntactically invalid or incorrectly signed objects, causing validator errors and potentially undermining security.</t>
+</section>
+
+<section anchor="operational-anti-patterns"><name>Operational Anti-patterns</name>
+<t>Several operational practices by delegated CAs create ecosystem-wide problems:</t>
+<t>Resource Churn: Frequent unnecessary certificate reissuance creates processing overhead for validators and may indicate poor operational practices.</t>
+<t>Publication Storms: Bulk updates that overwhelm validators or publication infrastructure, often due to poor change management.</t>
+<t>Inconsistent Policies: Conflicting or rapidly changing ROA/ASPA publications that create uncertainty for relying parties.</t>
+</section>
+</section>
+
+<section anchor="operational-requirements-for-delegated-cas"><name>Operational Requirements for Delegated CAs</name>
+
+<section anchor="availability-and-reliability-standards"><name>Availability and Reliability Standards</name>
+<t>Delegated CA operators <bcp14>MUST</bcp14> implement robust infrastructure to ensure reliable service delivery</t>
+
+<section anchor="availability-requirements"><name>Availability Requirements</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> maintain greater than 99.5% availability for all publication points over any 30-day period.</li>
+<li>CA operators <bcp14>MUST</bcp14> implement redundant publication infrastructure with automatic failover capabilities.</li>
+<li>CA operators <bcp14>MUST</bcp14> provide multiple publication endpoints with geographic diversity to minimize single points of failure.</li>
+<li>CA operators <bcp14>MUST</bcp14> implement comprehensive monitoring with automated alerting for all critical infrastructure components.</li>
+</ul>
+</section>
+
+<section anchor="infrastructure-requirements"><name>Infrastructure Requirements</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>SHOULD</bcp14> implement load balancing across publication points to distribute validator traffic.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> use Content Distribution Networks (CDNs) or anycast addressing for global distribution of RPKI objects.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> maintain hot standby systems capable of taking over operations within one hour of primary system failure.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> implement DDoS protection and traffic shaping to handle validator traffic spikes.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="publication-discipline"><name>Publication Discipline</name>
+<t>Delegated CA operators <bcp14>MUST</bcp14> follow disciplined publication practices to minimize validator burden:</t>
+
+<section anchor="manifest-management"><name>Manifest Management</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> publish new manifests at regular intervals, <bcp14>RECOMMENDED</bcp14> to be between 4-8 hours for active CAs.</li>
+<li>CA operators <bcp14>MUST</bcp14> ensure manifest validity periods provide sufficient operational windows, <bcp14>RECOMMENDED</bcp14> minimum of 24 hours.</li>
+<li>CA operators <bcp14>MUST NOT</bcp14> allow manifest gaps (periods without valid manifests) longer than 24 hours except during planned maintenance.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> implement manifest publication schedules that are predictable and avoid unnecessary updates.</li>
+</ul>
+</section>
+
+<section anchor="publication-practices"><name>Publication Practices</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> implement atomic publication updates to prevent temporary inconsistencies between manifests and published objects.</li>
+<li>CA operators <bcp14>MUST</bcp14> maintain consistent object naming and URI structure throughout the CA's operational lifetime.</li>
+<li>CA operators <bcp14>SHOULD NOT</bcp14> publish manifest updates more frequently than every 30 minutes without operational justification.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> batch certificate operations to minimize publication frequency while maintaining security.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="data-integrity-and-consistency"><name>Data Integrity and Consistency</name>
+<t>Delegated CA operators <bcp14>MUST</bcp14> ensure the integrity and consistency of all published RPKI objects.</t>
+
+<section anchor="validation-requirements"><name>Validation Requirements</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> validate all RPKI objects before publication, including syntax, cryptographic signatures, and logical consistency.</li>
+<li>CA operators <bcp14>MUST</bcp14> implement automated testing of published repositories using standard RPKI validator software.</li>
+<li>CA operators <bcp14>MUST</bcp14> maintain audit logs of all certificate operations for a minimum of two years.</li>
+<li>CA operators <bcp14>MUST</bcp14> ensure accurate time synchronization (NTP) across all infrastructure components with stratum 2 or better accuracy.</li>
+</ul>
+</section>
+
+<section anchor="operational-consistency"><name>Operational Consistency</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>SHOULD</bcp14> implement configuration management systems to ensure consistent deployments across redundant infrastructure.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> maintain staging environments for testing changes before production deployment.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> implement automated backup and recovery procedures with regular testing of restore capabilities.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> coordinate planned maintenance activities with registry operators and the broader community when possible.</li>
+</ul>
+</section>
+</section>
+</section>
+
+<section anchor="addressing-problematic-ca-behaviors"><name>Addressing Problematic CA Behaviors</name>
+
+<section anchor="flapping-ca-detection-and-mitigation"><name>Flapping CA Detection and Mitigation</name>
+<t>Flapping behavior represents one of the most disruptive operational problems for RPKI validators. CA operators and registry operators <bcp14>MUST</bcp14> implement measures to detect and prevent flapping behaviors.</t>
+
+<section anchor="flapping-patterns"><name>Flapping Patterns</name>
+<t>Common flapping patterns include:</t>
+
+<ul spacing="compact">
+<li>Rapid cycling between online and offline states with periods shorter than typical validator refresh intervals (&lt; 1 hour)</li>
+<li>Publication inconsistencies where repositories alternate between different content states</li>
+<li>Intermittent network connectivity causing sporadic timeouts</li>
+<li>Infrastructure instability causing frequent service interruptions</li>
+</ul>
+<t>CA Operator Anti-Flapping Measures:</t>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> implement circuit breaker patterns for failing dependencies to prevent cascading failures.</li>
+<li>CA operators <bcp14>MUST</bcp14> use comprehensive health checks before bringing systems online after maintenance or failures.</li>
+<li>CA operators <bcp14>MUST</bcp14> implement graceful degradation procedures rather than hard failures when possible.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> implement exponential backoff for automated recovery processes to prevent rapid cycling.</li>
+</ul>
+<t>Registry Operator Flapping Detection:</t>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>SHOULD</bcp14> implement automated flapping detection algorithms monitoring CA state changes over time.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> apply progressive operational restrictions for CAs exhibiting flapping behavior.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> require stabilization periods before allowing re-delegation after revocation due to flapping.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="dead-ca-management"><name>Dead CA Management</name>
+<t>Persistently non-functional CAs create significant waste in the RPKI ecosystem and <bcp14>MUST</bcp14> be managed through clear lifecycle policies.</t>
+
+<section anchor="detection-criteria"><name>Detection Criteria</name>
+<t>A CA <bcp14>SHOULD</bcp14> be considered persistently non-functional if:
+   - Valid manifest and CRL cannot be retrieved for more than 60 days
+   - Multiple publication points are consistently unreachable
+   - Published objects consistently fail validation
+   - No response to operational communications for extended periods</t>
+</section>
+
+<section anchor="registry-operator-actions"><name>Registry Operator Actions</name>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>MUST</bcp14> implement automated monitoring to detect persistently non-functional CAs.</li>
+<li>Registry operators <bcp14>MUST</bcp14> make reasonable efforts to contact CA operators before taking revocation actions.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> revoke delegations for CAs that remain non-functional for more than 90 days after initial contact attempts.</li>
+<li>Registry operators <bcp14>MUST</bcp14> provide clear communication about revocation policies and procedures to CA operators.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="performance-issues"><name>Performance Issues</name>
+<t>CA operators <bcp14>MUST</bcp14> ensure their infrastructure provides adequate performance for the global validator ecosystem.</t>
+
+<section anchor="performance-standards"><name>Performance Standards</name>
+
+<ul spacing="compact">
+<li>Publication points <bcp14>MUST</bcp14> respond to HTTP requests within 10 seconds under normal conditions.</li>
+<li>Publication points <bcp14>SHOULD</bcp14> support concurrent connections from multiple validators without degradation.</li>
+<li>Object retrieval <bcp14>SHOULD</bcp14> complete within 30 seconds for typical repository sizes.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> implement caching mechanisms to reduce server load and improve response times.</li>
+</ul>
+</section>
+
+<section anchor="monitoring-and-remediation"><name>Monitoring and Remediation</name>
+
+<ul>
+<li><t>CA operators <bcp14>MUST</bcp14> monitor response times and error rates continuously.</t>
+</li>
+<li><t>CA operators <bcp14>SHOULD</bcp14> implement automated alerting for performance degradation.</t>
+</li>
+<li><t>CA operators <bcp14>MUST</bcp14> have procedures for rapid response to performance issues.</t>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+<section anchor="monitoring-and-alerting-framework"><name>Monitoring and Alerting Framework</name>
+
+<section anchor="ca-operator-self-monitoring"><name>CA Operator Self-Monitoring</name>
+<t>Delegated CA operators <bcp14>MUST</bcp14> implement comprehensive monitoring of their infrastructure and operations.</t>
+
+<section anchor="required-monitoring-metrics"><name>Required Monitoring Metrics</name>
+
+<ul spacing="compact">
+<li>Publication point availability and response time from multiple geographic locations</li>
+<li>Manifest freshness and validity period remaining</li>
+<li>Object count and repository size trends over time</li>
+<li>Certificate expiration schedules and renewal status</li>
+<li>Error rates and failure patterns across all services</li>
+<li>Infrastructure resource utilization (CPU, memory, disk, network)</li>
+</ul>
+</section>
+
+<section anchor="alerting-requirements"><name>Alerting Requirements</name>
+<t>CA operators <bcp14>MUST</bcp14> implement alerting for:</t>
+
+<ul spacing="compact">
+<li>Publication point failures (immediate notification)</li>
+<li>Manifest aging beyond 4-hour threshold</li>
+<li>Certificate expiration warnings at 30, 7, and 1 day intervals</li>
+<li>Anomalous traffic patterns or potential attacks</li>
+<li>Infrastructure failures or resource exhaustion</li>
+</ul>
+<t>Monitoring Infrastructure:</t>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>SHOULD</bcp14> implement redundant monitoring systems to prevent single points of failure.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> use external monitoring services to detect outages from validator perspectives.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> maintain historical monitoring data for trend analysis and capacity planning.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="registry-operator-monitoring"><name>Registry Operator Monitoring</name>
+<t>Registry operators <bcp14>MUST</bcp14> implement monitoring systems to oversee all delegated CAs under their authority.</t>
+
+<section anchor="monitoring-scope"><name>Monitoring Scope</name>
+<t>Registry operators <bcp14>MUST</bcp14> monitor:</t>
+
+<ul spacing="compact">
+<li>Availability and response times for all delegated CA publication point</li>
+<li>Manifest publication frequency and consistency</li>
+<li>Object validation status and error patterns</li>
+<li>Validator impact metrics (fetch attempts, success rates, timing)</li>
+<li>Compliance with operational guidelines and policies</li>
+</ul>
+</section>
+
+<section anchor="automated-detection"><name>Automated Detection</name>
+<t>Registry operators <bcp14>SHOULD</bcp14> implement automated detection of:</t>
+
+<ul spacing="compact">
+<li>Dead CAs (extended periods of non-functionality)</li>
+<li>Flapping CAs (rapid state changes)</li>
+<li>Performance degradation trends</li>
+<li>Policy violations or operational anomalies</li>
+</ul>
+<t>Reporting and Communication:</t>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>SHOULD</bcp14> provide operational dashboards for CA operators to monitor their own performance.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> publish aggregate ecosystem health metrics.</li>
+<li>Registry operators <bcp14>MUST</bcp14> maintain communication channels for urgent operational issues.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="validator-side-monitoring"><name>Validator-side Monitoring</name>
+<t>RPKI validator operators are encouraged to implement monitoring that
+   can help identify problematic CAs.</t>
+
+<section anchor="recommended-metrics"><name>Recommended Metrics</name>
+
+<ul spacing="compact">
+<li>Per-CA fetch success rates and timing</li>
+<li>Manifest validation patterns and frequency</li>
+<li>Repository size and change detection</li>
+<li>Error categorization and frequency analysis</li>
+<li>Resource consumption per CA</li>
+</ul>
+</section>
+
+<section anchor="community-reporting"><name>Community Reporting</name>
+
+<ul spacing="compact">
+<li>Validator operators <bcp14>SHOULD</bcp14> report persistent CA issues to registry operators.</li>
+<li>Validator operators <bcp14>MAY</bcp14> implement automated reporting of severe CA performance issues.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> provide mechanisms for community feedback on CA operations.</li>
+</ul>
+</section>
+</section>
+</section>
+
+<section anchor="ca-lifecycle-management"><name>CA Lifecycle Management</name>
+
+<section anchor="pre-delegation-requirements"><name>Pre-Delegation Requirements</name>
+<t>Registry operators <bcp14>MUST</bcp14> establish clear requirements for CA delegation to ensure operational readiness.</t>
+
+<section anchor="technical-requirements"><name>Technical Requirements</name>
+<t>Before approving delegation requests, registry operators <bcp14>SHOULD</bcp14> verify:</t>
+
+<ul spacing="compact">
+<li>Stable infrastructure demonstrated for minimum 30-day period</li>
+<li>Implementation of monitoring and alerting systems</li>
+<li>Documented operational procedures and emergency contacts</li>
+<li>Backup and recovery capabilities with tested procedures</li>
+<li>Adequate technical expertise and operational resources</li>
+</ul>
+<t>Documentation Requirements:</t>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> provide detailed operational procedures</li>
+<li>CA operators <bcp14>MUST</bcp14> maintain current emergency contact information</li>
+<li>CA operators <bcp14>MUST</bcp14> document backup and disaster recovery procedures</li>
+<li>CA operators <bcp14>SHOULD</bcp14> provide capacity planning and scaling documentation</li>
+</ul>
+<t>Validation Process:</t>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>SHOULD</bcp14> implement technical validation of CA infrastructure before delegation.</li>
+<li>Registry operators <bcp14>MAY</bcp14> require probationary periods for new delegations with enhanced monitoring.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> provide operational guidance and training resources for new CA operators.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="ongoing-operational-standards"><name>Ongoing Operational Standards</name>
+<t>Delegated CA operators <bcp14>MUST</bcp14> maintain high operational standards throughout the lifecycle of their delegation.</t>
+
+<section anchor="operational-disciplines"><name>Operational Disciplines:</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> implement regular infrastructure maintenance windows with advance notification to registry operators.</li>
+<li>CA operators <bcp14>MUST</bcp14> implement proactive certificate renewal procedures, initiating renewal at least 30 days before expiration.</li>
+<li>CA operators <bcp14>MUST</bcp14> follow change management procedures for all infrastructure updates.</li>
+<li>CA operators <bcp14>MUST</bcp14> maintain incident response plans and communication procedures.</li>
+</ul>
+</section>
+
+<section anchor="reporting-requirements"><name>Reporting Requirements</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>SHOULD</bcp14> provide regular operational reports to registry operators.</li>
+<li>CA operators <bcp14>MUST</bcp14> report significant incidents or outages to registry operators within 24 hours.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> participate in operational reviews and community engagement activities.</li>
+</ul>
+</section>
+
+<section anchor="continuous-improvement"><name>Continuous Improvement</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>SHOULD</bcp14> regularly review and update operational procedures.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> implement lessons learned from incidents and outages.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> stay current with RPKI operational best practices and security recommendations.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="graceful-shutdown-procedures"><name>Graceful Shutdown Procedures</name>
+<t>CA operators planning to discontinue operations <bcp14>MUST</bcp14> follow established procedures to minimize ecosystem disruption.</t>
+
+<section anchor="planning-requirements"><name>Planning Requirements</name>
+<t>For planned CA retirement:</t>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> provide minimum 90-day advance notice to registry operators and affected communities.</li>
+<li>CA operators <bcp14>MUST</bcp14> coordinate with registry operators on migration procedures for dependent resources.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> gradually reduce certificate validity periods to facilitate migration.</li>
+<li>CA operators <bcp14>MUST</bcp14> maintain service levels during the shutdown transition period.</li>
+</ul>
+</section>
+
+<section anchor="migration-support"><name>Migration Support</name>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>SHOULD</bcp14> provide migration assistance and alternative delegation options.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> provide technical assistance for resource migration where possible.</li>
+<li>Registry operators <bcp14>MUST</bcp14> ensure continuity of service for affected resources during transition.</li>
+</ul>
+</section>
+
+<section anchor="final-procedures"><name>Final Procedures</name>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>MUST</bcp14> revoke all issued certificates in an orderly manner.</li>
+<li>CA operators <bcp14>MUST</bcp14> coordinate final revocation and cleanup procedures with registry operators.</li>
+<li>Registry operators <bcp14>MUST</bcp14> update delegation records and hierarchy information.</li>
+</ul>
+</section>
+</section>
+</section>
+
+<section anchor="registry-operator-responsibilities"><name>Registry Operator Responsibilities</name>
+
+<section anchor="monitoring-and-enforcement"><name>Monitoring and Enforcement</name>
+<t>Registry operators bear responsibility for oversight of delegated CAs and enforcement of operational standards.</t>
+
+<section anchor="monitoring-infrastructure"><name>Monitoring Infrastructure</name>
+<t>Registry operators MUST:</t>
+
+<ul spacing="compact">
+<li>Implement automated monitoring of all delegated CAs with appropriate alerting thresholds.</li>
+<li>Establish clear Service Level Agreements (SLAs) and enforcement procedures.</li>
+<li>Provide operational dashboards and reporting for CA operators.</li>
+<li>Maintain emergency contact procedures for critical issues.</li>
+</ul>
+</section>
+
+<section anchor="enforcement-escalation"><name>Enforcement Escalation</name>
+<t>Registry operators <bcp14>SHOULD</bcp14> implement progressive enforcement:
+   1. Automated monitoring alerts and initial operator notification
+   2. Formal operator notification within 24-48 hours of issue detection
+   3. Public visibility of persistent issues within one week
+   4. Revocation procedures for issues persisting longer than 60-90 days</t>
+<t>The specific timeframes <bcp14>MAY</bcp14> be adjusted based on the severity of the operational issue and its impact on the RPKI ecosystem.</t>
+</section>
+
+<section anchor="documentation-and-communication"><name>Documentation and Communication</name>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>MUST</bcp14> maintain clear documentation of monitoring criteria and enforcement procedures.</li>
+<li>Registry operators <bcp14>MUST</bcp14> provide regular communication about enforcement actions and their rationale.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> coordinate enforcement actions with other registry operators when appropriate.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="support-and-community-engagement"><name>Support and Community Engagement</name>
+<t>Registry operators <bcp14>SHOULD</bcp14> provide comprehensive support for delegated CA operators.</t>
+
+<section anchor="support-services"><name>Support Services</name>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>SHOULD</bcp14> maintain comprehensive operational guidance documentation.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> provide training and certification programs for CA operators.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> maintain community forums and troubleshooting resources.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> conduct regular operational reviews and provide feedback to CA operators.</li>
+</ul>
+</section>
+
+<section anchor="community-coordination"><name>Community Coordination</name>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>SHOULD</bcp14> coordinate with other registry operators on operational standards and procedures.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> participate in operational working groups and standards development.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> share operational experience and lessons learned with the broader community.</li>
+</ul>
+</section>
+</section>
+</section>
+
+<section anchor="implementation-considerations"><name>Implementation Considerations</name>
+
+<section anchor="deployment-strategies"><name>Deployment Strategies</name>
+<t>Organizations implementing these guidelines <bcp14>SHOULD</bcp14> consider phased deployment approaches.</t>
+
+<section anchor="phased-implementation"><name>Phased Implementation</name>
+<t>Phase 1: Establish monitoring and measurement baseline</t>
+
+<ul spacing="compact">
+<li>Implement comprehensive monitoring systems</li>
+<li>Establish baseline metrics for current operations</li>
+<li>Begin collecting data on CA performance and validator impact</li>
+</ul>
+<t>Phase 2: Implement basic operational standards</t>
+
+<ul spacing="compact">
+<li>Deploy availability and reliability requirements</li>
+<li>Establish publication discipline practices</li>
+<li>Implement automated alerting and response procedures</li>
+</ul>
+<t>Phase 3: Advanced operational features</t>
+
+<ul spacing="compact">
+<li>Deploy advanced monitoring and analytics</li>
+<li>Implement predictive failure detection</li>
+<li>Establish community reporting and feedback mechanisms</li>
+</ul>
+<t>Coordination Requirements:</t>
+
+<ul spacing="compact">
+<li>Registry operators <bcp14>SHOULD</bcp14> coordinate implementation timelines with CA operators.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> provide adequate notice for new requirements and enforcement procedures.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> plan infrastructure upgrades to meet new requirements within reasonable timeframes.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="tooling-and-automation"><name>Tooling and Automation</name>
+<t>Effective implementation of these guidelines requires appropriate tooling and automation.</t>
+<t>Recommended Tools:</t>
+
+<ul spacing="compact">
+<li>RPKI validator software for continuous validation testing</li>
+<li>Monitoring systems with RPKI-specific metrics and alerting</li>
+<li>Configuration management systems for consistent deployments</li>
+<li>Automated backup and recovery systems</li>
+</ul>
+<t>Open Source Resources:</t>
+
+<ul spacing="compact">
+<li>CA operators <bcp14>SHOULD</bcp14> leverage existing open source RPKI tools where appropriate.</li>
+<li>The community <bcp14>SHOULD</bcp14> develop and maintain reference implementations of monitoring and validation tools.</li>
+<li>Registry operators <bcp14>SHOULD</bcp14> contribute to open source tooling development.</li>
+</ul>
+<t>Integration Considerations:</t>
+
+<ul spacing="compact">
+<li>Tools <bcp14>SHOULD</bcp14> integrate with existing operational infrastructure.</li>
+<li>Monitoring systems <bcp14>SHOULD</bcp14> provide standard APIs for integration with other operational tools.</li>
+<li>CA operators <bcp14>SHOULD</bcp14> implement automation carefully to avoid creating new failure modes.</li>
+</ul>
+</section>
+</section>
+
+<section anchor="iana-considerations"><name>IANA Considerations</name>
+<t>This document has no IANA actions.</t>
+</section>
+
+<section anchor="security-considerations"><name>Security Considerations</name>
+<t>Implementation of these operational guidelines has several security implications that <bcp14>MUST</bcp14> be carefully considered.</t>
+<t>Operational Security</t>
+
+<ul spacing="compact">
+<li>Enhanced monitoring may expose operational details that could be useful to attackers.</li>
+<li>Automated systems <bcp14>MUST</bcp14> be secured against manipulation or abuse.</li>
+<li>Emergency procedures <bcp14>MUST</bcp14> balance rapid response with security controls.</li>
+<li>Key management and rotation procedures <bcp14>MUST</bcp14> be maintained even during operational issues.</li>
+</ul>
+<t>Ecosystem Security</t>
+
+<ul spacing="compact">
+<li>Revocation procedures <bcp14>MUST NOT</bcp14> be exploitable for denial of service attacks.</li>
+<li>Monitoring systems <bcp14>MUST</bcp14> be protected against false reporting or manipulation.</li>
+<li>Community reporting mechanisms <bcp14>MUST</bcp14> prevent abuse while encouraging legitimate feedback.</li>
+</ul>
+<t>Privacy Considerations</t>
+
+<ul spacing="compact">
+<li>Monitoring data may contain sensitive operational information.</li>
+<li>Public reporting of CA issues <bcp14>MUST</bcp14> balance transparency with operational privacy.</li>
+<li>Contact information and communication procedures <bcp14>MUST</bcp14> be protected appropriately.</li>
+</ul>
+<t>Risk Management</t>
+
+<ul spacing="compact">
+<li>Organizations <bcp14>MUST</bcp14> balance operational requirements with security controls.</li>
+<li>Incident response procedures <bcp14>MUST</bcp14> account for potential security implications.</li>
+<li>Regular security reviews <bcp14>SHOULD</bcp14> be conducted for operational systems and procedures.</li>
+</ul>
+</section>
+
+</middle>
+
+<back>
+<references><name>References</name>
+<references><name>Normative References</name>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-publication-server-bcp.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+</references>
+<references><name>Informative References</name>
+<reference anchor="CURE-NDSS24" target="https://dx.doi.org/10.14722/ndss.2024.241093">
+  <front>
+    <title>The CURE to Vulnerabilities in RPKI Validation</title>
+    <author fullname="Donika Mirdita" initials="D." surname="Mirdita"></author>
+    <author fullname="Haya Schulmann" initials="H." surname="Schulmann"></author>
+    <author fullname="Niklas Vogel" initials="N." surname="Vogel"></author>
+    <author fullname="Michael Waidner" initials="M." surname="Waidner"></author>
+    <date year="2024" month="February"></date>
+  </front>
+  <seriesInfo name="In Proceedings of" value="the Network and Distributed System Security (NDSS) Symposium 2024"></seriesInfo>
+</reference>
+<reference anchor="DEAD-CA" target="https://console.rpki-client.org/nonfunc.html">
+  <front>
+    <title>Non-functional RPKI Certification Authorities</title>
+    <author fullname="Job Snijders" initials="J." surname="Snijders">
+      <address>
+        <email>job@sobornost.net</email>
+        <uri>https://sobornost.net/~job/</uri>
+      </address>
+    </author>
+    <date year="2025" month="Sep" day="2"></date>
+  </front>
+</reference>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3647.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5781.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6480.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6481.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6484.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6489.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.7020.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8181.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8182.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8211.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9286.xml"/>
+</references>
+</references>
+
+<section anchor="github"><name>GITHUB</name>
+<t>This I-D and related documents, code and AI analysis are available at <eref target="https://github.com/IEISI-ORG/bcp-rpki-ca-prop">https://github.com/IEISI-ORG/bcp-rpki-ca-prop</eref> .</t>
+</section>
+
+</back>
+
+</rfc>
