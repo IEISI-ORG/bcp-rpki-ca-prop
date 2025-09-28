@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- name="GENERATOR" content="github.com/mmarkdown/mmark Mmark Markdown Processor - mmark.miek.nl" -->
-<rfc version="3" ipr="trust200902" docName="draft-sweetser-bcp-rpki-ca-01" submissionType="IETF" category="bcp" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true">
+<rfc version="3" ipr="trust200902" docName="draft-sweetser-bcp-rpki-ca-01" submissionType="IETF" category="bcp" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true" consensus="true">
 
 <front>
 <title abbrev="Guidelines for RPKI CA Operators">Operational Guidelines for RPKI Delegated Certification Authorities</title><seriesInfo value="draft-sweetser-bcp-rpki-ca-01" stream="IETF" status="bcp" name="Internet-Draft"></seriesInfo>
@@ -596,11 +596,10 @@ and made available to relying parties <xref target="RFC8181"></xref><xref target
 </middle>
 
 <back>
-<references><name>References</name>
 <references><name>Normative References</name>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sidrops-publication-server-bcp.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sidrops-publication-server-bcp.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
 </references>
 <references><name>Informative References</name>
 <reference anchor="CURE-NDSS24" target="https://dx.doi.org/10.14722/ndss.2024.241093">
@@ -626,19 +625,18 @@ and made available to relying parties <xref target="RFC8181"></xref><xref target
     <date year="2025" month="Sep" day="2"></date>
   </front>
 </reference>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3647.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5781.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6480.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6481.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6484.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6489.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.7020.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8181.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8182.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8211.xml"/>
-<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9286.xml"/>
-</references>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3647.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5781.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6480.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6481.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6484.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6489.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7020.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8181.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8182.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8211.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.9286.xml"/>
 </references>
 
 <section anchor="github"><name>GITHUB</name>

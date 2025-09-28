@@ -9,7 +9,7 @@
 <meta content="
        This document provides operational guidelines for Resource Public Key Infrastructure (RPKI) delegated Certification Authorities (CAs) and registry operators managing such delegations. It addresses common operational issues including CA availability problems, publication quality issues, and lifecycle management. The guidelines aim to improve the overall health and efficiency of the RPKI ecosystem by establishing best practices for CA operations and delegation management. 
     " name="description">
-<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="xml2rfc 3.20.0" name="generator">
 <meta content="RPKI" name="keyword">
 <meta content="BGP" name="keyword">
 <meta content="routing security" name="keyword">
@@ -17,19 +17,20 @@
 <meta content="operations" name="keyword">
 <meta content="draft-sweetser-bcp-rpki-ca-01" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.2
-    Python 3.13.5
-    ConfigArgParse 1.7.1
-    google-i18n-address 3.1.1
-    intervaltree 3.1.0
-    Jinja2 3.1.6
-    lxml 6.0.2
+  xml2rfc 3.20.0
+    Python 3.12.3
+    ConfigArgParse 1.7
+    google-i18n-address 2.4.0
+    intervaltree 3.0.2
+    Jinja2 3.1.2
+    lxml 5.2.1
     platformdirs 4.4.0
-    pycountry 24.6.1
-    PyYAML 6.0.3
-    requests 2.32.3
-    setuptools 80.9.0
-    wcwidth 0.2.14
+    pycountry 23.12.11
+    PyYAML 6.0.1
+    requests 2.31.0
+    setuptools 68.1.2
+    six 1.16.0
+    wcwidth 0.2.5
 -->
 <link href="draft-sweetser-bcp-rpki-ca-01.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -162,12 +163,6 @@ div {
 }
 svg {
   display: block;
-}
-@media print {
-  svg {
-    max-height: 850px;
-    max-width: 660px;
-  }
 }
 svg[font-family~="serif" i], svg [font-family~="serif" i] {
   font-family: var(--font-serif);
@@ -321,9 +316,6 @@ cite {
   text-align: right;
   font-style: italic;
 }
-.xref {
-  overflow-wrap: normal;
-}
 
 /* tables */
 table {
@@ -412,7 +404,7 @@ hr {
 /* Fix PDF info block run off issue */
 @media print {
   #identifiers dd {
-    max-width: 100%;
+    float: none;
   }
 }
 #identifiers .authors .author {
@@ -1088,7 +1080,7 @@ table {
 ol.type-a { list-style-type: lower-alpha; }
 ol.type-A { list-style-type: upper-alpha; }
 ol.type-i { list-style-type: lower-roman; }
-ol.type-I { list-style-type: upper-roman; }
+ol.type-I { list-style-type: lower-roman; }
 /* Apply the print table and row borders in general, on request from the RPC,
 and increase the contrast between border and odd row background slightly */
 table {
@@ -1168,7 +1160,7 @@ section .olCompact {
 tt, code {
   background-color: transparent;
 }
-p tt, p code, li tt, li code, dt tt, dt code {
+p tt, p code, li tt, li code {
   background-color: #f8f8f8;
 }
 /* Tweak the pre margin -- 0px doesn't come out well */
@@ -1191,7 +1183,6 @@ dl > dd > dl {
 /* This should match the element list in writer.text.TextWriter.render_dl() */
 dd > div.artwork:first-child,
 dd > aside:first-child,
-dd > blockquote:first-child,
 dd > figure:first-child,
 dd > ol:first-child,
 dd > div.sourcecode:first-child,
@@ -1216,6 +1207,7 @@ li > p:last-of-type:only-child {
 <script type="application/javascript">async function addMetadata(){try{const e=document.styleSheets[0].cssRules;for(let t=0;t<e.length;t++)if(/#identifiers/.exec(e[t].selectorText)){const a=e[t].cssText.replace("#identifiers","#external-updates");document.styleSheets[0].insertRule(a,document.styleSheets[0].cssRules.length)}}catch(e){console.log(e)}const e=document.getElementById("external-metadata");if(e)try{var t,a="",o=function(e){const t=document.getElementsByTagName("meta");for(let a=0;a<t.length;a++)if(t[a].getAttribute("name")===e)return t[a].getAttribute("content");return""}("rfc.number");if(o){t="https://www.rfc-editor.org/rfc/rfc"+o+".json";try{const e=await fetch(t);a=await e.json()}catch(e){t=document.URL.indexOf("html")>=0?document.URL.replace(/html$/,"json"):document.URL+".json";const o=await fetch(t);a=await o.json()}}if(!a)return;e.style.display="block";const s="",d="https://datatracker.ietf.org/doc",n="https://datatracker.ietf.org/ipr/search",c="https://www.rfc-editor.org/info",l=a.doc_id.toLowerCase(),i=a.doc_id.slice(0,3).toLowerCase(),f=a.doc_id.slice(3).replace(/^0+/,""),u={status:"Status",obsoletes:"Obsoletes",obsoleted_by:"Obsoleted By",updates:"Updates",updated_by:"Updated By",see_also:"See Also",errata_url:"Errata"};let h="<dl style='overflow:hidden' id='external-updates'>";["status","obsoletes","obsoleted_by","updates","updated_by","see_also","errata_url"].forEach(e=>{if("status"==e){a[e]=a[e].toLowerCase();var t=a[e].split(" "),o=t.length,w="",p=1;for(let e=0;e<o;e++)p<o?w=w+r(t[e])+" ":w+=r(t[e]),p++;a[e]=w}else if("obsoletes"==e||"obsoleted_by"==e||"updates"==e||"updated_by"==e){var g,m="",b=1;g=a[e].length;for(let t=0;t<g;t++)a[e][t]&&(a[e][t]=String(a[e][t]).toLowerCase(),m=b<g?m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>, ":m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>",b++);a[e]=m}else if("see_also"==e){var y,L="",C=1;y=a[e].length;for(let t=0;t<y;t++)if(a[e][t]){a[e][t]=String(a[e][t]);var _=a[e][t].slice(0,3),v=a[e][t].slice(3).replace(/^0+/,"");L=C<y?"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>, ":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>, ":"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>",C++}a[e]=L}else if("errata_url"==e){var R="";R=a[e]?R+"<a href='"+a[e]+"'>Errata exist</a> | <a href='"+d+"/"+l+"'>Datatracker</a>| <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>":"<a href='"+d+"/"+l+"'>Datatracker</a> | <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>",a[e]=R}""!=a[e]?"Errata"==u[e]?h+=`<dt>More info:</dt><dd>${a[e]}</dd>`:h+=`<dt>${u[e]}:</dt><dd>${a[e]}</dd>`:"Errata"==u[e]&&(h+=`<dt>More info:</dt><dd>${a[e]}</dd>`)}),h+="</dl>",e.innerHTML=h}catch(e){console.log(e)}else console.log("Could not locate metadata <div> element");function r(e){return e.charAt(0).toUpperCase()+e.slice(1)}}window.removeEventListener("load",addMetadata),window.addEventListener("load",addMetadata);</script>
 </head>
 <body class="xml2rfc">
+<script src="metadata.min.js"></script>
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
@@ -1533,21 +1525,16 @@ li > p:last-of-type:only-child {
             <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
-                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
-                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-github" class="internal xref">GITHUB</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.15.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-github" class="internal xref">GITHUB</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -2481,91 +2468,86 @@ and made available to relying parties <span>[<a href="#RFC8181" class="cite xref
 </section>
 </div>
 <section id="section-13">
-      <h2 id="name-references">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-references" class="section-name selfRef">References</a>
+      <h2 id="name-normative-references">
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
-<section id="section-13.1">
-        <h3 id="name-normative-references">
-<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
-        </h3>
 <dl class="references">
 <dt id="I-D.ietf-sidrops-publication-server-bcp">[I-D.ietf-sidrops-publication-server-bcp]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Bruijnzeels, T.</span>, <span class="refAuthor">de Kock, T.</span>, <span class="refAuthor">Hill, F.</span>, <span class="refAuthor">Harrison, T.</span>, and <span class="refAuthor">J. Snijders</span>, <span class="refTitle">"RPKI Publication Server Best Current Practices"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-sidrops-publication-server-bcp-04</span>, <time datetime="2025-09-15" class="refDate">15 September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-sidrops-publication-server-bcp-04">https://datatracker.ietf.org/doc/html/draft-ietf-sidrops-publication-server-bcp-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-      <dd>
+    <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
-<section id="section-13.2">
-        <h3 id="name-informative-references">
-<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
-        </h3>
+<section id="section-14">
+      <h2 id="name-informative-references">
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+      </h2>
 <dl class="references">
 <dt id="CURE-NDSS24">[CURE-NDSS24]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Mirdita, D.</span>, <span class="refAuthor">Schulmann, H.</span>, <span class="refAuthor">Vogel, N.</span>, and <span class="refAuthor">M. Waidner</span>, <span class="refTitle">"The CURE to Vulnerabilities in RPKI Validation"</span>, <span class="seriesInfo">In Proceedings of the Network and Distributed System Security (NDSS) Symposium 2024</span>, <time datetime="2024-02" class="refDate">February 2024</time>, <span>&lt;<a href="https://dx.doi.org/10.14722/ndss.2024.241093">https://dx.doi.org/10.14722/ndss.2024.241093</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="DEAD-CA">[DEAD-CA]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Snijders, J.</span>, <span class="refTitle">"Non-functional RPKI Certification Authorities"</span>, <time datetime="2025-09-02" class="refDate">2 September 2025</time>, <span>&lt;<a href="https://console.rpki-client.org/nonfunc.html">https://console.rpki-client.org/nonfunc.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC3647">[RFC3647]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Chokhani, S.</span>, <span class="refAuthor">Ford, W.</span>, <span class="refAuthor">Sabett, R.</span>, <span class="refAuthor">Merrill, C.</span>, and <span class="refAuthor">S. Wu</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate Policy and Certification Practices Framework"</span>, <span class="seriesInfo">RFC 3647</span>, <span class="seriesInfo">DOI 10.17487/RFC3647</span>, <time datetime="2003-11" class="refDate">November 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3647">https://www.rfc-editor.org/info/rfc3647</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5280">[RFC5280]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5280">https://www.rfc-editor.org/info/rfc5280</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5781">[RFC5781]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Weiler, S.</span>, <span class="refAuthor">Ward, D.</span>, and <span class="refAuthor">R. Housley</span>, <span class="refTitle">"The rsync URI Scheme"</span>, <span class="seriesInfo">RFC 5781</span>, <span class="seriesInfo">DOI 10.17487/RFC5781</span>, <time datetime="2010-02" class="refDate">February 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5781">https://www.rfc-editor.org/info/rfc5781</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6480">[RFC6480]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Lepinski, M.</span> and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"An Infrastructure to Support Secure Internet Routing"</span>, <span class="seriesInfo">RFC 6480</span>, <span class="seriesInfo">DOI 10.17487/RFC6480</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6480">https://www.rfc-editor.org/info/rfc6480</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6481">[RFC6481]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Loomans, R.</span>, and <span class="refAuthor">G. Michaelson</span>, <span class="refTitle">"A Profile for Resource Certificate Repository Structure"</span>, <span class="seriesInfo">RFC 6481</span>, <span class="seriesInfo">DOI 10.17487/RFC6481</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6481">https://www.rfc-editor.org/info/rfc6481</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6484">[RFC6484]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Kent, S.</span>, <span class="refAuthor">Kong, D.</span>, <span class="refAuthor">Seo, K.</span>, and <span class="refAuthor">R. Watro</span>, <span class="refTitle">"Certificate Policy (CP) for the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">BCP 173</span>, <span class="seriesInfo">RFC 6484</span>, <span class="seriesInfo">DOI 10.17487/RFC6484</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6484">https://www.rfc-editor.org/info/rfc6484</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6489">[RFC6489]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Michaelson, G.</span>, and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"Certification Authority (CA) Key Rollover in the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">BCP 174</span>, <span class="seriesInfo">RFC 6489</span>, <span class="seriesInfo">DOI 10.17487/RFC6489</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6489">https://www.rfc-editor.org/info/rfc6489</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7020">[RFC7020]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Housley, R.</span>, <span class="refAuthor">Curran, J.</span>, <span class="refAuthor">Huston, G.</span>, and <span class="refAuthor">D. Conrad</span>, <span class="refTitle">"The Internet Numbers Registry System"</span>, <span class="seriesInfo">RFC 7020</span>, <span class="seriesInfo">DOI 10.17487/RFC7020</span>, <time datetime="2013-08" class="refDate">August 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7020">https://www.rfc-editor.org/info/rfc7020</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8181">[RFC8181]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Weiler, S.</span>, <span class="refAuthor">Sonalker, A.</span>, and <span class="refAuthor">R. Austein</span>, <span class="refTitle">"A Publication Protocol for the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">RFC 8181</span>, <span class="seriesInfo">DOI 10.17487/RFC8181</span>, <time datetime="2017-07" class="refDate">July 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8181">https://www.rfc-editor.org/info/rfc8181</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8182">[RFC8182]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Bruijnzeels, T.</span>, <span class="refAuthor">Muravskiy, O.</span>, <span class="refAuthor">Weber, B.</span>, and <span class="refAuthor">R. Austein</span>, <span class="refTitle">"The RPKI Repository Delta Protocol (RRDP)"</span>, <span class="seriesInfo">RFC 8182</span>, <span class="seriesInfo">DOI 10.17487/RFC8182</span>, <time datetime="2017-07" class="refDate">July 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8182">https://www.rfc-editor.org/info/rfc8182</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8211">[RFC8211]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Kent, S.</span> and <span class="refAuthor">D. Ma</span>, <span class="refTitle">"Adverse Actions by a Certification Authority (CA) or Repository Manager in the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">RFC 8211</span>, <span class="seriesInfo">DOI 10.17487/RFC8211</span>, <time datetime="2017-09" class="refDate">September 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8211">https://www.rfc-editor.org/info/rfc8211</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9286">[RFC9286]</dt>
-      <dd>
+    <dd>
 <span class="refAuthor">Austein, R.</span>, <span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Kent, S.</span>, and <span class="refAuthor">M. Lepinski</span>, <span class="refTitle">"Manifests for the Resource Public Key Infrastructure (RPKI)"</span>, <span class="seriesInfo">RFC 9286</span>, <span class="seriesInfo">DOI 10.17487/RFC9286</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9286">https://www.rfc-editor.org/info/rfc9286</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
-</section>
 </section>
 <div id="github">
 <section id="appendix-A">
