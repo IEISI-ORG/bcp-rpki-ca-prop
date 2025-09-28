@@ -26,26 +26,26 @@ jobs:
 
       - name: Convert Markdown to XML (using mmark)
         run: |
-          # Assuming the draft is versioned at 00
-          mmark draft-sweetser-bcp-rpki-ca-00.md > draft-sweetser-bcp-rpki-ca-00.xml
+          # Assuming the draft is versioned at 01
+          mmark draft-sweetser-bcp-rpki-ca-01.md > draft-sweetser-bcp-rpki-ca-01.xml
 
       - name: Generate IETF formats (using xml2rfc)
         run: |
-          xml2rfc --text --html --verbose draft-sweetser-bcp-rpki-ca-00.xml
+          xml2rfc --text --html --v3 draft-sweetser-bcp-rpki-ca-01.xml
 
       - name: Validate XML (maybe add IDNITS later?)
         run: |
-          xml2rfc --strict draft-sweetser-bcp-rpki-ca-00.xml
+          xml2rfc --strict draft-sweetser-bcp-rpki-ca-01.xml
 
       - name: Safekeeping in artefacts (if we make it this far)
         uses: actions/upload-artifact@v4
         with:
           name: ietf-draft-outputs
           path: |
-            draft-sweetser-bcp-rpki-ca-00.md
-            draft-sweetser-bcp-rpki-ca-00.xml
-            draft-sweetser-bcp-rpki-ca-00.txt
-            draft-sweetser-bcp-rpki-ca-00.html
+            draft-sweetser-bcp-rpki-ca-01.md
+            draft-sweetser-bcp-rpki-ca-01.xml
+            draft-sweetser-bcp-rpki-ca-01.txt
+            draft-sweetser-bcp-rpki-ca-01.html
 
       - name: Commit those files
         uses: stefanzweifel/git-auto-commit-action@v6
