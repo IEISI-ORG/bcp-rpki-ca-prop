@@ -52,7 +52,7 @@ The recommendations in this document are based on operational experience from RP
 
 [@RFC8182] provides details of efficient alternative to rsync[@RFC5781] and key operational efficiencies like caching and CDN deployment. 
 
-[@CURE-NDSS24] provides statistical data and security analysis of RPKI performance.  With code at https://github.com/rp-cure/rp-cure.
+[@CURE-NDSS24] provides statistical data and security analysis of RPKI performance, with code at [RP-CURE].
 
 # Terminology
 
@@ -553,6 +553,18 @@ Risk Management
     <date month="February" year="2024"/>
   </front>
   <seriesInfo name="In Proceedings of" value="the Network and Distributed System Security (NDSS) Symposium 2024"/>
+</reference>
+
+<reference anchor="RP-CURE" target="https://github.com/rp-cure/rp-cure">
+  <front>
+    <title>CURE: RPKI Publication Point Emulator and Vulnerability Testing Tool</title>
+    <author>
+      <organization>Fraunhofer SIT and ATHENE Center for Applied Cybersecurity Research</organization>
+    </author>
+    <date year="2023"/>
+  </front>
+  <seriesInfo name="GitHub Repository" value="rp-cure/rp-cure"/>
+  <format type="HTML" target="https://github.com/rp-cure/rp-cure"/>
 </reference>
 
 # GITHUB
