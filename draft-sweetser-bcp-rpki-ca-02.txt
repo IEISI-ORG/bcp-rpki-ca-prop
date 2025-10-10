@@ -138,9 +138,8 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2025
      10.2.  Tooling and Automation . . . . . . . . . . . . . . . . .  16
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
    12. Security Considerations . . . . . . . . . . . . . . . . . . .  17
-   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  18
-     13.1.  Normative References . . . . . . . . . . . . . . . . . .  18
-     13.2.  Informative References . . . . . . . . . . . . . . . . .  18
+   13. Normative References  . . . . . . . . . . . . . . . . . . . .  18
+   14. Informative References  . . . . . . . . . . . . . . . . . . .  18
    Appendix A.  GITHUB . . . . . . . . . . . . . . . . . . . . . . .  20
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  20
 
@@ -160,6 +159,7 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2025
    delegated CAs can cause significant resource waste for RPKI
    validators, degrade overall system performance, and undermine
    confidence in RPKI deployment.
+
 
 
 
@@ -957,9 +957,7 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2025
    *  Regular security reviews SHOULD be conducted for operational
       systems and procedures.
 
-13.  References
-
-13.1.  Normative References
+13.  Normative References
 
    [I-D.ietf-sidrops-publication-server-bcp]
               Bruijnzeels, T., de Kock, T., Hill, F., Harrison, T., and
@@ -978,7 +976,7 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2025
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-13.2.  Informative References
+14.  Informative References
 
    [CURE-NDSS24]
               Mirdita, D., Schulmann, H., Vogel, N., and M. Waidner,
@@ -1002,6 +1000,8 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2025
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/info/rfc5280>.
+
+
 
 
 
