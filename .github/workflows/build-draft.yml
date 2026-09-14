@@ -24,13 +24,52 @@ jobs:
         run: |
           sudo apt-get install -y --no-install-recommends mmark xml2rfc
 
-      - name: Determine current draft version
-        id: draft
+      - name: Determine current draft file
+        id: current
         run: |
-          # Picks the highest-numbered draft-sweetser-bcp-rpki-ca-NN.md in the repo root,
-          # so this workflow doesn't need updating on every renewal.
+          # Picks the highest-numbered draft-sweetser-bcp-rpki-ca-NN.md in the repo root.
           FILE=$(ls draft-sweetser-bcp-rpki-ca-??.md | sort | tail -n1)
           echo "stem=${FILE%.md}" >> "$GITHUB_OUTPUT"
+
+      - name: Auto-bump version if draft content changed
+        id: draft
+        run: |
+          # On a push to main, compares the draft body (excluding the date/value
+          # frontmatter lines this step itself rewrites, so its own edits never
+          # trigger a repeat bump) against the hash recorded at the last bump. If
+          # it differs, renames the four build files to the next revision number
+          # and updates the frontmatter -- so branch work only ever becomes a new
+          # revision at the point it's merged to main, never while on a branch or PR.
+          STEM="${{ steps.current.outputs.stem }}"
+          FILE="${STEM}.md"
+          BODY_HASH=$(grep -vE '^(date = |value = "draft-sweetser-bcp-rpki-ca-)' "${FILE}" | sha256sum | cut -d' ' -f1)
+          STORED_HASH=""
+          if [ -f .ietf-content-hash ]; then
+            STORED_HASH=$(cat .ietf-content-hash)
+          fi
+
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ] && [ -n "${STORED_HASH}" ] && [ "${BODY_HASH}" != "${STORED_HASH}" ]; then
+            CURRENT_NUM=$(echo "${STEM}" | grep -oE '[0-9]+$')
+            NEXT_NUM=$(printf "%02d" $((10#${CURRENT_NUM} + 1)))
+            NEXT_STEM="draft-sweetser-bcp-rpki-ca-${NEXT_NUM}"
+            echo "Draft content changed: bumping ${STEM} -> ${NEXT_STEM}"
+            for ext in md xml txt html; do
+              if [ -f "${STEM}.${ext}" ]; then
+                git mv "${STEM}.${ext}" "${NEXT_STEM}.${ext}"
+              fi
+            done
+            TODAY=$(date -u +%Y-%m-%dT00:00:00Z)
+            sed -i "s/^date = .*/date = ${TODAY}/" "${NEXT_STEM}.md"
+            sed -i "s/value = \"draft-sweetser-bcp-rpki-ca-[0-9]*\"/value = \"${NEXT_STEM}\"/" "${NEXT_STEM}.md"
+            echo "${BODY_HASH}" > .ietf-content-hash
+            echo "stem=${NEXT_STEM}" >> "$GITHUB_OUTPUT"
+          else
+            echo "stem=${STEM}" >> "$GITHUB_OUTPUT"
+            if [ -z "${STORED_HASH}" ]; then
+              # First run with this feature enabled: record the baseline without bumping.
+              echo "${BODY_HASH}" > .ietf-content-hash
+            fi
+          fi
 
       - name: Convert Markdown to XML (using mmark)
         run: |
