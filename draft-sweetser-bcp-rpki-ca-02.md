@@ -158,6 +158,7 @@ Delegated CA operators **MUST** ensure the integrity and consistency of all publ
    - CA operators **MUST** implement automated testing of published repositories using standard RPKI validator software.
    - CA operators **MUST** maintain audit logs of all certificate operations; retention **SHOULD** be at least two years, subject to any longer period set by registry or jurisdictional requirements.
    - CA operators **MUST** synchronize time (NTP) across all infrastructure components; stratum 2 or better accuracy is **RECOMMENDED**.
+   - CA operators using GPS-derived time sources **SHOULD** keep receiver hardware and firmware current to correctly handle the GPS week-number rollover, which recurs approximately every 19.6 years (a 1024-week cycle) and can cause outdated receivers to report an incorrect date.
 
 ### Operational Consistency
 

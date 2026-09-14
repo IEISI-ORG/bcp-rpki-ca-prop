@@ -1731,6 +1731,8 @@ and made available to relying parties <span>[<a href="#RFC8181" class="cite xref
 </li>
             <li class="compact" id="section-4.3.1-1.4">CA operators <span class="bcp14">MUST</span> synchronize time (NTP) across all infrastructure components; stratum 2 or better accuracy is <span class="bcp14">RECOMMENDED</span>.<a href="#section-4.3.1-1.4" class="pilcrow">¶</a>
 </li>
+            <li class="compact" id="section-4.3.1-1.5">CA operators using GPS-derived time sources <span class="bcp14">SHOULD</span> keep receiver hardware and firmware current to correctly handle the GPS week-number rollover, which recurs approximately every 19.6 years (a 1024-week cycle) and can cause outdated receivers to report an incorrect date.<a href="#section-4.3.1-1.5" class="pilcrow">¶</a>
+</li>
           </ul>
 </section>
 </div>

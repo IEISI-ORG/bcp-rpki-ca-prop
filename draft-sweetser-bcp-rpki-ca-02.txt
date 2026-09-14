@@ -84,7 +84,7 @@ Table of Contents
        4.2.2.  Publication Practices . . . . . . . . . . . . . . . .   8
      4.3.  Data Integrity and Consistency  . . . . . . . . . . . . .   8
        4.3.1.  Validation Requirements . . . . . . . . . . . . . . .   8
-       4.3.2.  Operational Consistency . . . . . . . . . . . . . . .   8
+       4.3.2.  Operational Consistency . . . . . . . . . . . . . . .   9
    5.  Addressing Problematic CA Behaviors . . . . . . . . . . . . .   9
      5.1.  Flapping CA Detection and Mitigation  . . . . . . . . . .   9
        5.1.1.  Flapping Patterns . . . . . . . . . . . . . . . . . .   9
@@ -97,7 +97,7 @@ Table of Contents
    6.  Monitoring and Alerting Framework . . . . . . . . . . . . . .  11
      6.1.  Core Health Indicators  . . . . . . . . . . . . . . . . .  11
      6.2.  CA Operator Self-Monitoring . . . . . . . . . . . . . . .  11
-       6.2.1.  Required Monitoring Metrics . . . . . . . . . . . . .  11
+       6.2.1.  Required Monitoring Metrics . . . . . . . . . . . . .  12
        6.2.2.  Alerting Requirements . . . . . . . . . . . . . . . .  12
      6.3.  Registry Operator Monitoring  . . . . . . . . . . . . . .  12
        6.3.1.  Monitoring Scope  . . . . . . . . . . . . . . . . . .  12
@@ -436,11 +436,11 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
       longer period set by registry or jurisdictional requirements.
    *  CA operators MUST synchronize time (NTP) across all infrastructure
       components; stratum 2 or better accuracy is RECOMMENDED.
-
-4.3.2.  Operational Consistency
-
-   *  CA operators SHOULD implement configuration management systems to
-      ensure consistent deployments across redundant infrastructure.
+   *  CA operators using GPS-derived time sources SHOULD keep receiver
+      hardware and firmware current to correctly handle the GPS week-
+      number rollover, which recurs approximately every 19.6 years (a
+      1024-week cycle) and can cause outdated receivers to report an
+      incorrect date.
 
 
 
@@ -450,6 +450,10 @@ Sweetser                  Expires 18 March 2027                 [Page 8]
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
 
+4.3.2.  Operational Consistency
+
+   *  CA operators SHOULD implement configuration management systems to
+      ensure consistent deployments across redundant infrastructure.
    *  CA operators SHOULD maintain staging environments for testing
       changes before production deployment.
    *  CA operators SHOULD implement automated backup and recovery
@@ -493,10 +497,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
       algorithms monitoring CA state changes over time.
    *  Registry operators SHOULD apply progressive operational
       restrictions for CAs exhibiting flapping behavior.
-   *  Registry operators SHOULD require stabilization periods before
-      allowing re-delegation after revocation due to flapping.
-
-
 
 
 
@@ -505,6 +505,9 @@ Sweetser                  Expires 18 March 2027                 [Page 9]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   *  Registry operators SHOULD require stabilization periods before
+      allowing re-delegation after revocation due to flapping.
 
 5.2.  Dead CA Management
 
@@ -550,10 +553,7 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
       seconds under normal conditions.
    *  Publication points SHOULD support concurrent connections from
       multiple validators without degradation.
-   *  Object retrieval SHOULD complete within 30 seconds for typical
-      repository sizes.
-   *  CA operators SHOULD implement caching mechanisms to reduce server
-      load and improve response times.
+
 
 
 
@@ -561,6 +561,11 @@ Sweetser                  Expires 18 March 2027                [Page 10]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   *  Object retrieval SHOULD complete within 30 seconds for typical
+      repository sizes.
+   *  CA operators SHOULD implement caching mechanisms to reduce server
+      load and improve response times.
 
 5.3.2.  Monitoring and Remediation
 
@@ -606,17 +611,14 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    their infrastructure and operations, covering the indicators in
    Section 6.1 from the CA's own vantage point.
 
-6.2.1.  Required Monitoring Metrics
-
-
-
-
 
 
 Sweetser                  Expires 18 March 2027                [Page 11]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+6.2.1.  Required Monitoring Metrics
 
    *  Publication point availability and response time from multiple
       geographic locations, per the monitoring guidance in
@@ -664,8 +666,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    *  Object validation status and error patterns
    *  Validator impact metrics (fetch attempts, success rates, timing)
    *  Compliance with operational guidelines and policies
-
-
 
 
 

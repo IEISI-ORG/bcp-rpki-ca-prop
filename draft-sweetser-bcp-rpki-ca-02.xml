@@ -137,6 +137,7 @@ and made available to relying parties <xref target="RFC8181"></xref><xref target
 <li>CA operators <bcp14>MUST</bcp14> implement automated testing of published repositories using standard RPKI validator software.</li>
 <li>CA operators <bcp14>MUST</bcp14> maintain audit logs of all certificate operations; retention <bcp14>SHOULD</bcp14> be at least two years, subject to any longer period set by registry or jurisdictional requirements.</li>
 <li>CA operators <bcp14>MUST</bcp14> synchronize time (NTP) across all infrastructure components; stratum 2 or better accuracy is <bcp14>RECOMMENDED</bcp14>.</li>
+<li>CA operators using GPS-derived time sources <bcp14>SHOULD</bcp14> keep receiver hardware and firmware current to correctly handle the GPS week-number rollover, which recurs approximately every 19.6 years (a 1024-week cycle) and can cause outdated receivers to report an incorrect date.</li>
 </ul>
 </section>
 
