@@ -44,6 +44,8 @@ While RPKI delegation provides operational flexibility and autonomy for resource
 
 This document establishes operational guidelines for both delegated CA operators and registry operators managing such delegations. The guidelines address common operational issues including CA availability problems, publication inconsistencies, and lifecycle management challenges.
 
+This document is complementary to [@I-D.ietf-sidrops-publication-server-bcp], which addresses the operation of RFC 8181 publication engines and their RRDP and rsync repositories. This document instead addresses the lifecycle management of delegated CAs and the oversight responsibilities of registry operators; where the two overlap on publication-engine mechanics, this document defers to that one.
+
 The recommendations in this document are based on operational experience from RPKI deployments worldwide and analysis of problematic CA behaviors observed in production systems.
 
 Readers unfamiliar with RPKI repository mechanics may wish to consult [@RFC6481] and [@RFC6489] for repository content structure, directory naming, and key rollover requirements, and [@RFC8182] for the RPKI Repository Delta Protocol (RRDP), an efficient alternative to rsync [@RFC5781] supporting caching and CDN deployment. [@CURE-NDSS24] provides statistical and security analysis of RPKI validator performance, with accompanying code at [@RP-CURE].
@@ -52,7 +54,7 @@ Readers unfamiliar with RPKI repository mechanics may wish to consult [@RFC6481]
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all capitals, as shown here.
 
-This document uses the following terms; see [@I-D.yan-sidrops-rpki-terminology] for a broader RPKI vocabulary reference.
+This document uses the following terms:
 
 Delegated CA: A certification authority that has been delegated RPKI certificate issuance authority by a registry operator,
 and is operated by the resource holder rather than the registry [@RFC3647][@RFC5280].
@@ -117,8 +119,8 @@ Delegated CA operators **MUST** implement robust infrastructure to ensure reliab
 ### Availability Requirements
 
    - CA operators **SHOULD** maintain high availability (for example, greater than 99.5%) for all publication points over any 30-day period; specific availability targets and their enforcement are a registry-operator policy decision.
-   - CA operators **MUST** implement redundant publication infrastructure with automatic failover capabilities.
-   - CA operators **MUST** provide multiple publication endpoints with geographic diversity to minimize single points of failure.
+   - CA operators **SHOULD** implement redundant publication infrastructure with automatic failover capabilities; the appropriate degree of redundancy depends on operator scale and is a registry-operator policy decision rather than a global mandate.
+   - CA operators **SHOULD** provide multiple publication endpoints with geographic diversity to minimize single points of failure, where operator scale and resources make this practical.
    - CA operators **MUST** implement comprehensive monitoring with automated alerting for all critical infrastructure components.
 
 ### Infrastructure Requirements
@@ -232,9 +234,21 @@ CA operators **MUST** ensure their infrastructure provides adequate performance 
 
 # Monitoring and Alerting Framework
 
+## Core Health Indicators
+
+The monitoring guidance in this section is built around a common set of externally-observable health indicators, consistent with metrics formalized in documents such as [@I-D.fu-sidrops-rpki-repositories-monitoring]:
+
+   - Publication point reachability and response time
+   - Manifest freshness relative to its validity window
+   - Frequency and duration of unreachable states, and repeated transitions between reachable and unreachable states (see (#flapping-ca-detection-and-mitigation))
+   - Object and manifest consistency: referenced objects present, hashes valid, no orphaned or missing objects
+   - Validator-side fetch failures and the resource impact they impose on relying parties
+
+CA operators, registry operators, and validator operators each observe these indicators from a different vantage point. The following subsections specify what each **MUST** or **SHOULD** monitor and act on.
+
 ## CA Operator Self-Monitoring
 
-Delegated CA operators **MUST** implement comprehensive monitoring of their infrastructure and operations.
+Delegated CA operators **MUST** implement comprehensive monitoring of their infrastructure and operations, covering the indicators in (#core-health-indicators) from the CA's own vantage point.
 
 ### Required Monitoring Metrics
 
@@ -263,7 +277,7 @@ Monitoring Infrastructure:
 
 ## Registry Operator Monitoring
 
-   Registry operators **MUST** implement monitoring systems to oversee all delegated CAs under their authority.
+   Registry operators **MUST** implement monitoring systems to oversee all delegated CAs under their authority, covering the indicators in (#core-health-indicators) aggregated across the delegated CA population.
 
 ### Monitoring Scope
 
@@ -293,7 +307,7 @@ Reporting and Communication:
 ## Validator-side Monitoring
 
    RPKI validator operators are encouraged to implement monitoring that
-   can help identify problematic CAs. [@I-D.fu-sidrops-rpki-repositories-monitoring] defines a candidate set of externally-observable repository-health metrics (reachability, availability, content-integrity, and churn ratios) that validator operators **MAY** adopt as a starting point for the metrics below.
+   can help identify problematic CAs, observing the indicators in (#core-health-indicators) from the relying-party vantage point. [@I-D.fu-sidrops-rpki-repositories-monitoring] defines a candidate set of externally-observable repository-health metrics (reachability, availability, content-integrity, and churn ratios) that validator operators **MAY** adopt as a starting point for the metrics below.
 
 ### Recommended Metrics
 
@@ -401,8 +415,9 @@ Registry operators **MUST** implement the monitoring capabilities described in (
 Registry operators **SHOULD** implement progressive enforcement:
    1. Automated monitoring alerts and initial operator notification
    2. Formal operator notification within 24-48 hours of issue detection
-   3. Public visibility of persistent issues within one week
-   4. Revocation procedures for issues persisting longer than 60-90 days (see (#dead-ca-management))
+   3. An observation period allowing the operator to respond and remediate before further escalation
+   4. Public visibility of persistent issues within one week
+   5. Revocation procedures for issues persisting longer than 60-90 days (see (#dead-ca-management))
 
 The specific timeframes **MAY** be adjusted based on the severity of the operational issue and its impact on the RPKI ecosystem.
 
