@@ -10,7 +10,7 @@ date = 2026-09-14T00:00:00Z
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-sweetser-bcp-rpki-ca-03"
+value = "draft-sweetser-bcp-rpki-ca-02"
 stream = "IETF"
 status = "bcp"
 
@@ -52,7 +52,7 @@ Readers unfamiliar with RPKI repository mechanics may wish to consult [@RFC6481]
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all capitals, as shown here.
 
-This document uses the following terms; see [@I-D.yan-sidrops-rpki-terminology] for a broader RPKI vocabulary reference.
+This document uses the following terms:
 
 Delegated CA: A certification authority that has been delegated RPKI certificate issuance authority by a registry operator,
 and is operated by the resource holder rather than the registry [@RFC3647][@RFC5280].
