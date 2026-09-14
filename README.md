@@ -106,7 +106,7 @@ This is an active Internet-Draft under development. Contributions are welcome:
 
 ## Current Status
 
-**Draft Status**: draft-sweetser-bcp-rpki-ca-03, renewing after the -01 submission expired on 2026-03-31
+**Draft Status**: draft-sweetser-bcp-rpki-ca-02, renewing after the -01 submission expired on 2026-03-31 (the datatracker's submission API requires strictly sequential revisions, so this renewal is numbered -02 despite an earlier, never-submitted local -02 build having existed in this repo's history)
 
 **Target**: IETF Best Current Practice (BCP)
 

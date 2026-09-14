@@ -1,6 +1,6 @@
 # Plan: reconcile draft-03 with draft-ietf-sidrops-publication-server-bcp
 
-**Status:** applied 2026-09-14. All 7 edits below are live in draft-sweetser-bcp-rpki-ca-03.md; rebuilt via mmark + xml2rfc --strict, citation resolves, idnits clean except the known UNEXPECTED_DOC_VERSION nit.
+**Status:** applied 2026-09-14. All 7 edits below are live in draft-sweetser-bcp-rpki-ca-02.md; rebuilt via mmark + xml2rfc --strict, citation resolves. (Originally built as -03; renumbered to -02 after the datatracker's submission API rejected -03 as a non-sequential revision — see README.md for the correction.)
 
 ## Why
 
