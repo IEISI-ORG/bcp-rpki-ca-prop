@@ -87,7 +87,7 @@ Table of Contents
        4.3.2.  Operational Consistency . . . . . . . . . . . . . . .   8
    5.  Addressing Problematic CA Behaviors . . . . . . . . . . . . .   8
      5.1.  Flapping CA Detection and Mitigation  . . . . . . . . . .   8
-       5.1.1.  Flapping Patterns . . . . . . . . . . . . . . . . . .   8
+       5.1.1.  Flapping Patterns . . . . . . . . . . . . . . . . . .   9
      5.2.  Dead CA Management  . . . . . . . . . . . . . . . . . . .   9
        5.2.1.  Detection Criteria  . . . . . . . . . . . . . . . . .   9
        5.2.2.  Registry Operator Actions . . . . . . . . . . . . . .   9
@@ -95,7 +95,7 @@ Table of Contents
        5.3.1.  Performance Standards . . . . . . . . . . . . . . . .  10
        5.3.2.  Monitoring and Remediation  . . . . . . . . . . . . .  10
    6.  Monitoring and Alerting Framework . . . . . . . . . . . . . .  10
-     6.1.  CA Operator Self-Monitoring . . . . . . . . . . . . . . .  10
+     6.1.  CA Operator Self-Monitoring . . . . . . . . . . . . . . .  11
        6.1.1.  Required Monitoring Metrics . . . . . . . . . . . . .  11
        6.1.2.  Alerting Requirements . . . . . . . . . . . . . . . .  11
      6.2.  Registry Operator Monitoring  . . . . . . . . . . . . . .  11
@@ -104,7 +104,7 @@ Table of Contents
      6.3.  Validator-side Monitoring . . . . . . . . . . . . . . . .  12
        6.3.1.  Recommended Metrics . . . . . . . . . . . . . . . . .  12
        6.3.2.  Community Reporting . . . . . . . . . . . . . . . . .  12
-   7.  CA Lifecycle Management . . . . . . . . . . . . . . . . . . .  12
+   7.  CA Lifecycle Management . . . . . . . . . . . . . . . . . . .  13
      7.1.  Pre-Delegation Requirements . . . . . . . . . . . . . . .  13
 
 
@@ -128,7 +128,7 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
        8.1.1.  Monitoring Infrastructure . . . . . . . . . . . . . .  15
        8.1.2.  Enforcement Escalation  . . . . . . . . . . . . . . .  15
        8.1.3.  Documentation and Communication . . . . . . . . . . .  15
-     8.2.  Support and Community Engagement  . . . . . . . . . . . .  15
+     8.2.  Support and Community Engagement  . . . . . . . . . . . .  16
        8.2.1.  Support Services  . . . . . . . . . . . . . . . . . .  16
        8.2.2.  Community Coordination  . . . . . . . . . . . . . . .  16
    9.  Implementation Considerations . . . . . . . . . . . . . . . .  16
@@ -136,9 +136,9 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
        9.1.1.  Phased Implementation . . . . . . . . . . . . . . . .  16
      9.2.  Tooling and Automation  . . . . . . . . . . . . . . . . .  17
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
-   11. Security Considerations . . . . . . . . . . . . . . . . . . .  17
+   11. Security Considerations . . . . . . . . . . . . . . . . . . .  18
    12. Normative References  . . . . . . . . . . . . . . . . . . . .  18
-   13. Informative References  . . . . . . . . . . . . . . . . . . .  18
+   13. Informative References  . . . . . . . . . . . . . . . . . . .  19
    Appendix A.  GITHUB . . . . . . . . . . . . . . . . . . . . . . .  21
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  21
 
@@ -196,7 +196,9 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   This document uses the following terms:
+   This document uses the following terms; see
+   [I-D.yan-sidrops-rpki-terminology] for a broader RPKI vocabulary
+   reference.
 
    Delegated CA: A certification authority that has been delegated RPKI
    certificate issuance authority by a registry operator, and is
@@ -216,8 +218,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    in operational state, causing instability for relying party
    validators, analogous to route flapping in BGP.
 
-   Dead CA: A delegated CA that is persistently non-functional or
-   unreachable for extended periods [DEAD-CA].
 
 
 
@@ -225,6 +225,9 @@ Sweetser                  Expires 18 March 2027                 [Page 4]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   Dead CA: A delegated CA that is persistently non-functional or
+   unreachable for extended periods [DEAD-CA].
 
    Manifest: An RPKI signed object that lists the contents of a
    publication repository and provides integrity protection [RFC9286],
@@ -269,9 +272,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    Beyond availability, delegated CAs may exhibit poor publication
    practices:
 
-   Stale Manifests: CAs that rarely update their manifests cause
-   validators to repeatedly attempt synchronization of unchanged data,
-   wasting network bandwidth and processing resources.
 
 
 
@@ -281,6 +281,10 @@ Sweetser                  Expires 18 March 2027                 [Page 5]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   Stale Manifests: CAs that rarely update their manifests cause
+   validators to repeatedly attempt synchronization of unchanged data,
+   wasting network bandwidth and processing resources.
 
    Inconsistent Publication: CAs may publish incomplete or inconsistent
    object sets, with manifests referencing objects that are not
@@ -325,10 +329,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
       greater than 99.5%) for all publication points over any 30-day
       period; specific availability targets and their enforcement are a
       registry-operator policy decision.
-   *  CA operators MUST implement redundant publication infrastructure
-      with automatic failover capabilities.
-   *  CA operators MUST provide multiple publication endpoints with
-      geographic diversity to minimize single points of failure.
 
 
 
@@ -338,6 +338,10 @@ Sweetser                  Expires 18 March 2027                 [Page 6]
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
 
+   *  CA operators MUST implement redundant publication infrastructure
+      with automatic failover capabilities.
+   *  CA operators MUST provide multiple publication endpoints with
+      geographic diversity to minimize single points of failure.
    *  CA operators MUST implement comprehensive monitoring with
       automated alerting for all critical infrastructure components.
 
@@ -380,11 +384,7 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
       [I-D.ietf-sidrops-publication-server-bcp].
    *  CA operators MUST maintain consistent object naming and URI
       structure throughout the CA's operational lifetime.
-   *  CA operators SHOULD NOT publish manifest updates more frequently
-      than every 30 minutes without operational justification.  This
-      governs how often a CA regenerates its manifest, distinct from the
-      publication-engine resynchronization and RRDP delta-production
-      limits in [I-D.ietf-sidrops-publication-server-bcp].
+
 
 
 
@@ -394,6 +394,11 @@ Sweetser                  Expires 18 March 2027                 [Page 7]
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
 
+   *  CA operators SHOULD NOT publish manifest updates more frequently
+      than every 30 minutes without operational justification.  This
+      governs how often a CA regenerates its manifest, distinct from the
+      publication-engine resynchronization and RRDP delta-production
+      limits in [I-D.ietf-sidrops-publication-server-bcp].
    *  CA operators SHOULD batch certificate operations to minimize
       publication frequency while maintaining security.
 
@@ -436,12 +441,7 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    problems for RPKI validators.  CA operators and registry operators
    MUST implement measures to detect and prevent flapping behaviors.
 
-5.1.1.  Flapping Patterns
 
-   Common flapping patterns include:
-
-   *  Rapid cycling between online and offline states with periods
-      shorter than typical validator refresh intervals (< 1 hour)
 
 
 
@@ -450,6 +450,12 @@ Sweetser                  Expires 18 March 2027                 [Page 8]
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
 
+5.1.1.  Flapping Patterns
+
+   Common flapping patterns include:
+
+   *  Rapid cycling between online and offline states with periods
+      shorter than typical validator refresh intervals (< 1 hour)
    *  Publication inconsistencies where repositories alternate between
       different content states
    *  Intermittent network connectivity causing sporadic timeouts
@@ -492,12 +498,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
 5.2.2.  Registry Operator Actions
 
-   *  Registry operators MUST implement automated monitoring to detect
-      persistently non-functional CAs.
-   *  Registry operators MUST make reasonable efforts to contact CA
-      operators before taking revocation actions.
-
-
 
 
 
@@ -506,6 +506,10 @@ Sweetser                  Expires 18 March 2027                 [Page 9]
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
 
+   *  Registry operators MUST implement automated monitoring to detect
+      persistently non-functional CAs.
+   *  Registry operators MUST make reasonable efforts to contact CA
+      operators before taking revocation actions.
    *  Registry operators SHOULD revoke delegations for CAs that remain
       non-functional for more than 60-90 days after initial contact
       attempts; adopted regional practice varies within this range, for
@@ -550,10 +554,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
 6.  Monitoring and Alerting Framework
 
-6.1.  CA Operator Self-Monitoring
-
-   Delegated CA operators MUST implement comprehensive monitoring of
-   their infrastructure and operations.
 
 
 
@@ -561,6 +561,11 @@ Sweetser                  Expires 18 March 2027                [Page 10]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+6.1.  CA Operator Self-Monitoring
+
+   Delegated CA operators MUST implement comprehensive monitoring of
+   their infrastructure and operations.
 
 6.1.1.  Required Monitoring Metrics
 
@@ -605,11 +610,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
    *  Availability and response times for all delegated CA publication
       point
-   *  Manifest publication frequency and consistency
-   *  Object validation status and error patterns
-   *  Validator impact metrics (fetch attempts, success rates, timing)
-   *  Compliance with operational guidelines and policies
-
 
 
 
@@ -617,6 +617,11 @@ Sweetser                  Expires 18 March 2027                [Page 11]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   *  Manifest publication frequency and consistency
+   *  Object validation status and error patterns
+   *  Validator impact metrics (fetch attempts, success rates, timing)
+   *  Compliance with operational guidelines and policies
 
 6.2.2.  Automated Detection
 
@@ -662,17 +667,14 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    *  Registry operators SHOULD provide mechanisms for community
       feedback on CA operations.
 
-7.  CA Lifecycle Management
-
-
-
-
 
 
 Sweetser                  Expires 18 March 2027                [Page 12]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+7.  CA Lifecycle Management
 
 7.1.  Pre-Delegation Requirements
 
@@ -719,8 +721,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    *  CA operators MUST implement proactive certificate renewal
       procedures; initiating renewal at least 30 days before expiration
       is RECOMMENDED.
-   *  CA operators MUST follow change management procedures for all
-      infrastructure updates.
 
 
 
@@ -730,6 +730,8 @@ Sweetser                  Expires 18 March 2027                [Page 13]
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
 
+   *  CA operators MUST follow change management procedures for all
+      infrastructure updates.
    *  CA operators MUST maintain incident response plans and
       communication procedures.
 
@@ -775,8 +777,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
       alternative delegation options.
    *  CA operators SHOULD provide technical assistance for resource
       migration where possible.
-   *  Registry operators MUST ensure continuity of service for affected
-      resources during transition.
 
 
 
@@ -785,6 +785,9 @@ Sweetser                  Expires 18 March 2027                [Page 14]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   *  Registry operators MUST ensure continuity of service for affected
+      resources during transition.
 
 7.3.3.  Final Procedures
 
@@ -830,10 +833,7 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    *  Registry operators SHOULD coordinate enforcement actions with
       other registry operators when appropriate.
 
-8.2.  Support and Community Engagement
 
-   Registry operators SHOULD provide comprehensive support for delegated
-   CA operators.
 
 
 
@@ -841,6 +841,11 @@ Sweetser                  Expires 18 March 2027                [Page 15]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+8.2.  Support and Community Engagement
+
+   Registry operators SHOULD provide comprehensive support for delegated
+   CA operators.
 
 8.2.1.  Support Services
 
@@ -885,11 +890,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
    Phase 3: Advanced operational features
 
-   *  Deploy advanced monitoring and analytics
-   *  Implement predictive failure detection
-   *  Establish community reporting and feedback mechanisms
-
-   Coordination Requirements:
 
 
 
@@ -897,6 +897,12 @@ Sweetser                  Expires 18 March 2027                [Page 16]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   *  Deploy advanced monitoring and analytics
+   *  Implement predictive failure detection
+   *  Establish community reporting and feedback mechanisms
+
+   Coordination Requirements:
 
    *  Registry operators SHOULD coordinate implementation timelines with
       CA operators.
@@ -940,12 +946,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
    This document has no IANA actions.
 
-11.  Security Considerations
-
-   Implementation of these operational guidelines has several security
-   implications that MUST be carefully considered.
-
-   Operational Security
 
 
 
@@ -953,6 +953,13 @@ Sweetser                  Expires 18 March 2027                [Page 17]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+11.  Security Considerations
+
+   Implementation of these operational guidelines has several security
+   implications that MUST be carefully considered.
+
+   Operational Security
 
    *  Enhanced monitoring may expose operational details that could be
       useful to attackers.
@@ -995,13 +1002,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-13.  Informative References
-
-
 
 
 
@@ -1009,6 +1009,12 @@ Sweetser                  Expires 18 March 2027                [Page 18]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+13.  Informative References
 
    [APNIC-PROP166]
               APNIC, "prop-166: Revocation of Persistently Non-
@@ -1052,12 +1058,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
               2026, <https://datatracker.ietf.org/doc/html/draft-ietf-
               sidrops-rpki-ccr-11>.
 
-   [RFC3647]  Chokhani, S., Ford, W., Sabett, R., Merrill, C., and S.
-              Wu, "Internet X.509 Public Key Infrastructure Certificate
-              Policy and Certification Practices Framework", RFC 3647,
-              DOI 10.17487/RFC3647, November 2003,
-              <https://www.rfc-editor.org/info/rfc3647>.
-
 
 
 
@@ -1065,6 +1065,19 @@ Sweetser                  Expires 18 March 2027                [Page 19]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   [I-D.yan-sidrops-rpki-terminology]
+              Yan, Z., Bruijnzeels, T., and T. Harrison, "RPKI
+              Terminology", Work in Progress, Internet-Draft, draft-yan-
+              sidrops-rpki-terminology-05, 26 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-yan-sidrops-
+              rpki-terminology-05>.
+
+   [RFC3647]  Chokhani, S., Ford, W., Sabett, R., Merrill, C., and S.
+              Wu, "Internet X.509 Public Key Infrastructure Certificate
+              Policy and Certification Practices Framework", RFC 3647,
+              DOI 10.17487/RFC3647, November 2003,
+              <https://www.rfc-editor.org/info/rfc3647>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -1101,6 +1114,14 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
               DOI 10.17487/RFC7020, August 2013,
               <https://www.rfc-editor.org/info/rfc7020>.
 
+
+
+
+Sweetser                  Expires 18 March 2027                [Page 20]
+
+Internet-Draft      Guidelines for RPKI CA Operators      September 2026
+
+
    [RFC8181]  Weiler, S., Sonalker, A., and R. Austein, "A Publication
               Protocol for the Resource Public Key Infrastructure
               (RPKI)", RFC 8181, DOI 10.17487/RFC8181, July 2017,
@@ -1110,17 +1131,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
               "The RPKI Repository Delta Protocol (RRDP)", RFC 8182,
               DOI 10.17487/RFC8182, July 2017,
               <https://www.rfc-editor.org/info/rfc8182>.
-
-
-
-
-
-
-
-Sweetser                  Expires 18 March 2027                [Page 20]
-
-Internet-Draft      Guidelines for RPKI CA Operators      September 2026
-
 
    [RFC9286]  Austein, R., Huston, G., Kent, S., and M. Lepinski,
               "Manifests for the Resource Public Key Infrastructure
@@ -1157,6 +1167,17 @@ Appendix A.  GITHUB
 
 Author's Address
 
+
+
+
+
+
+
+Sweetser                  Expires 18 March 2027                [Page 21]
+
+Internet-Draft      Guidelines for RPKI CA Operators      September 2026
+
+
    Terence Charles Sweetser
    Internet Engineering & Infrastructure Strategic Initiative
    Wynnum, QLD
@@ -1173,4 +1194,39 @@ Author's Address
 
 
 
-Sweetser                  Expires 18 March 2027                [Page 21]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sweetser                  Expires 18 March 2027                [Page 22]
