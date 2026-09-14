@@ -24,28 +24,70 @@ jobs:
         run: |
           sudo apt-get install -y --no-install-recommends mmark xml2rfc
 
+      - name: Determine current draft version
+        id: draft
+        run: |
+          # Picks the highest-numbered draft-sweetser-bcp-rpki-ca-NN.md in the repo root,
+          # so this workflow doesn't need updating on every renewal.
+          FILE=$(ls draft-sweetser-bcp-rpki-ca-??.md | sort | tail -n1)
+          echo "stem=${FILE%.md}" >> "$GITHUB_OUTPUT"
+
       - name: Convert Markdown to XML (using mmark)
         run: |
-          # Assuming the draft is versioned at 02
-          mmark draft-sweetser-bcp-rpki-ca-02.md > draft-sweetser-bcp-rpki-ca-02.xml
+          mmark ${{ steps.draft.outputs.stem }}.md > ${{ steps.draft.outputs.stem }}.xml
 
       - name: Generate IETF formats (using xml2rfc)
         run: |
-          xml2rfc --text --html --v3 draft-sweetser-bcp-rpki-ca-02.xml
+          xml2rfc --text --html --v3 ${{ steps.draft.outputs.stem }}.xml
 
       - name: Validate XML (maybe add IDNITS later?)
         run: |
-          xml2rfc --strict draft-sweetser-bcp-rpki-ca-02.xml
+          xml2rfc --strict ${{ steps.draft.outputs.stem }}.xml
 
       - name: Safekeeping in artefacts (if we make it this far)
         uses: actions/upload-artifact@v4
         with:
           name: ietf-draft-outputs
           path: |
-            draft-sweetser-bcp-rpki-ca-02.md
-            draft-sweetser-bcp-rpki-ca-02.xml
-            draft-sweetser-bcp-rpki-ca-02.txt
-            draft-sweetser-bcp-rpki-ca-02.html
+            ${{ steps.draft.outputs.stem }}.md
+            ${{ steps.draft.outputs.stem }}.xml
+            ${{ steps.draft.outputs.stem }}.txt
+            ${{ steps.draft.outputs.stem }}.html
+
+      - name: Check whether this version was already submitted
+        id: submitcheck
+        run: |
+          # .ietf-submission-state tracks the last version number we POSTed to the
+          # datatracker, so we only submit again when the frontmatter version
+          # actually increments (not on every content-only push).
+          CURRENT_VERSION=$(echo "${{ steps.draft.outputs.stem }}" | grep -oE '[0-9]+$')
+          LAST_SUBMITTED=""
+          if [ -f .ietf-submission-state ]; then
+            LAST_SUBMITTED=$(cat .ietf-submission-state)
+          fi
+          echo "current=${CURRENT_VERSION}" >> "$GITHUB_OUTPUT"
+          if [ "${CURRENT_VERSION}" != "${LAST_SUBMITTED}" ]; then
+            echo "should_submit=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_submit=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Submit new version to the IETF datatracker
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.submitcheck.outputs.should_submit == 'true'
+        env:
+          DATATRACKER_USER: tcsweetser@gmail.com
+        run: |
+          RESPONSE=$(curl -sS -F "user=${DATATRACKER_USER}" -F "xml=@${{ steps.draft.outputs.stem }}.xml" https://datatracker.ietf.org/api/submission)
+          echo "${RESPONSE}"
+          if echo "${RESPONSE}" | grep -q '"error"'; then
+            echo "::error::Datatracker submission failed: ${RESPONSE}"
+            exit 1
+          fi
+          echo "::notice::Submitted ${{ steps.draft.outputs.stem }} to the datatracker. A confirmation email is on its way to ${DATATRACKER_USER} — the draft is NOT public until that link is clicked; the datatracker requires this for every submission and it cannot be automated."
+
+      - name: Record submitted version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.submitcheck.outputs.should_submit == 'true'
+        run: echo "${{ steps.submitcheck.outputs.current }}" > .ietf-submission-state
 
       - name: Commit those files
         uses: stefanzweifel/git-auto-commit-action@v6

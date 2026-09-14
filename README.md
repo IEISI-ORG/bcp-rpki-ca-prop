@@ -106,14 +106,15 @@ This is an active Internet-Draft under development. Contributions are welcome:
 
 ## Current Status
 
-**Draft Status**: Internet-Draft (work in progress)
+**Draft Status**: draft-sweetser-bcp-rpki-ca-03, renewing after the -01 submission expired on 2026-03-31
 
 **Target**: IETF Best Current Practice (BCP)
 
 **Working Group**: SIDROPS (Secure Inter-Domain Routing Operations)
 
 ### Recent Updates
-- Initial draft incorporating lessons from APNIC prop-166
+- Renewal pass (-03): resolved a mis-citation, removed duplicated content between the Problem Statement and the operational sections, softened hardcoded numeric SLAs (99.5% availability, 10s response time, etc.) to SHOULD/RECOMMENDED so the document doesn't contradict its own "policy stays with RIRs" stance, and aligned the Dead CA revocation timeline to 60 days
+- APNIC prop-166 has since reached consensus at APNIC 60/AGM and is in active implementation (30/50/60-day notify/contact/revoke), now cited in this draft as adopted precedent rather than a pending proposal
 - Comprehensive operational framework covering multiple CA pathologies
 - Balanced approach preserving RIR policy autonomy
 
