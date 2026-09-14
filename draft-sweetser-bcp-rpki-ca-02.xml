@@ -579,6 +579,7 @@ and made available to relying parties <xref target="RFC8181"></xref><xref target
 <li>Revocation procedures <bcp14>MUST NOT</bcp14> be exploitable for denial of service attacks.</li>
 <li>Monitoring systems <bcp14>MUST</bcp14> be protected against false reporting or manipulation.</li>
 <li>Community reporting mechanisms <bcp14>MUST</bcp14> prevent abuse while encouraging legitimate feedback.</li>
+<li>The health indicators in <xref target="core-health-indicators"></xref> are, by design, externally observable, which also makes them externally influenceable: an adversary able to selectively degrade a specific validator's or vantage point's connectivity to a legitimate CA's repository could manufacture a false flapping or dead-CA signal. Registry operators <bcp14>SHOULD</bcp14> corroborate signals from multiple independent vantage points before acting on them, particularly before revocation.</li>
 </ul>
 <t>Privacy Considerations</t>
 
@@ -593,6 +594,7 @@ and made available to relying parties <xref target="RFC8181"></xref><xref target
 <li>Organizations <bcp14>MUST</bcp14> balance operational requirements with security controls.</li>
 <li>Incident response procedures <bcp14>MUST</bcp14> account for potential security implications.</li>
 <li>Regular security reviews <bcp14>SHOULD</bcp14> be conducted for operational systems and procedures.</li>
+<li>Allowing smaller operators to forgo redundant, geographically diverse infrastructure (see <xref target="availability-and-reliability-standards"></xref>) expands the population of delegated CAs that are individually single points of failure. This is a deliberate trade-off between operational flexibility and ecosystem-wide resilience; registry operators <bcp14>SHOULD</bcp14> weigh it when setting their own infrastructure expectations.</li>
 </ul>
 </section>
 

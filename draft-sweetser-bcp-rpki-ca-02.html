@@ -2458,6 +2458,8 @@ and made available to relying parties <span>[<a href="#RFC8181" class="cite xref
 </li>
         <li class="compact" id="section-11-5.3">Community reporting mechanisms <span class="bcp14">MUST</span> prevent abuse while encouraging legitimate feedback.<a href="#section-11-5.3" class="pilcrow">¶</a>
 </li>
+        <li class="compact" id="section-11-5.4">The health indicators in <a href="#core-health-indicators" class="auto internal xref">Section 6.1</a> are, by design, externally observable, which also makes them externally influenceable: an adversary able to selectively degrade a specific validator's or vantage point's connectivity to a legitimate CA's repository could manufacture a false flapping or dead-CA signal. Registry operators <span class="bcp14">SHOULD</span> corroborate signals from multiple independent vantage points before acting on them, particularly before revocation.<a href="#section-11-5.4" class="pilcrow">¶</a>
+</li>
       </ul>
 <p id="section-11-6">Privacy Considerations<a href="#section-11-6" class="pilcrow">¶</a></p>
 <ul class="compact">
@@ -2475,6 +2477,8 @@ and made available to relying parties <span>[<a href="#RFC8181" class="cite xref
         <li class="compact" id="section-11-9.2">Incident response procedures <span class="bcp14">MUST</span> account for potential security implications.<a href="#section-11-9.2" class="pilcrow">¶</a>
 </li>
         <li class="compact" id="section-11-9.3">Regular security reviews <span class="bcp14">SHOULD</span> be conducted for operational systems and procedures.<a href="#section-11-9.3" class="pilcrow">¶</a>
+</li>
+        <li class="compact" id="section-11-9.4">Allowing smaller operators to forgo redundant, geographically diverse infrastructure (see <a href="#availability-and-reliability-standards" class="auto internal xref">Section 4.1</a>) expands the population of delegated CAs that are individually single points of failure. This is a deliberate trade-off between operational flexibility and ecosystem-wide resilience; registry operators <span class="bcp14">SHOULD</span> weigh it when setting their own infrastructure expectations.<a href="#section-11-9.4" class="pilcrow">¶</a>
 </li>
       </ul>
 </section>

@@ -138,10 +138,10 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
      9.2.  Tooling and Automation  . . . . . . . . . . . . . . . . .  18
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
    11. Security Considerations . . . . . . . . . . . . . . . . . . .  19
-   12. Normative References  . . . . . . . . . . . . . . . . . . . .  19
+   12. Normative References  . . . . . . . . . . . . . . . . . . . .  20
    13. Informative References  . . . . . . . . . . . . . . . . . . .  20
-   Appendix A.  GITHUB . . . . . . . . . . . . . . . . . . . . . . .  22
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  22
+   Appendix A.  GITHUB . . . . . . . . . . . . . . . . . . . . . . .  23
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  23
 
 1.  Introduction
 
@@ -1033,6 +1033,14 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
       manipulation.
    *  Community reporting mechanisms MUST prevent abuse while
       encouraging legitimate feedback.
+   *  The health indicators in Section 6.1 are, by design, externally
+      observable, which also makes them externally influenceable: an
+      adversary able to selectively degrade a specific validator's or
+      vantage point's connectivity to a legitimate CA's repository could
+      manufacture a false flapping or dead-CA signal.  Registry
+      operators SHOULD corroborate signals from multiple independent
+      vantage points before acting on them, particularly before
+      revocation.
 
    Privacy Considerations
 
@@ -1051,20 +1059,26 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    *  Regular security reviews SHOULD be conducted for operational
       systems and procedures.
 
-12.  Normative References
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
-
 
 
 Sweetser                  Expires 18 March 2027                [Page 19]
 
 Internet-Draft      Guidelines for RPKI CA Operators      September 2026
 
+
+   *  Allowing smaller operators to forgo redundant, geographically
+      diverse infrastructure (see Section 4.1) expands the population of
+      delegated CAs that are individually single points of failure.
+      This is a deliberate trade-off between operational flexibility and
+      ecosystem-wide resilience; registry operators SHOULD weigh it when
+      setting their own infrastructure expectations.
+
+12.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1100,6 +1114,14 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
    [I-D.ietf-sidrops-publication-server-bcp]
               Bruijnzeels, T., de Kock, T., Hill, F., Harrison, T., and
               J. Snijders, "Best Practices for Operating Resource Public
+
+
+
+Sweetser                  Expires 18 March 2027                [Page 20]
+
+Internet-Draft      Guidelines for RPKI CA Operators      September 2026
+
+
               Key Infrastructure (RPKI) Publication Services", Work in
               Progress, Internet-Draft, draft-ietf-sidrops-publication-
               server-bcp-10, 27 August 2026,
@@ -1113,14 +1135,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
               Internet-Draft, draft-ietf-sidrops-rpki-ccr-11, 1 July
               2026, <https://datatracker.ietf.org/doc/html/draft-ietf-
               sidrops-rpki-ccr-11>.
-
-
-
-
-Sweetser                  Expires 18 March 2027                [Page 20]
-
-Internet-Draft      Guidelines for RPKI CA Operators      September 2026
-
 
    [RFC3647]  Chokhani, S., Ford, W., Sabett, R., Merrill, C., and S.
               Wu, "Internet X.509 Public Key Infrastructure Certificate
@@ -1152,6 +1166,18 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
               (RPKI)", BCP 173, RFC 6484, DOI 10.17487/RFC6484, February
               2012, <https://www.rfc-editor.org/info/rfc6484>.
 
+
+
+
+
+
+
+
+Sweetser                  Expires 18 March 2027                [Page 21]
+
+Internet-Draft      Guidelines for RPKI CA Operators      September 2026
+
+
    [RFC6489]  Huston, G., Michaelson, G., and S. Kent, "Certification
               Authority (CA) Key Rollover in the Resource Public Key
               Infrastructure (RPKI)", BCP 174, RFC 6489,
@@ -1167,16 +1193,6 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
               Protocol for the Resource Public Key Infrastructure
               (RPKI)", RFC 8181, DOI 10.17487/RFC8181, July 2017,
               <https://www.rfc-editor.org/info/rfc8181>.
-
-
-
-
-
-
-Sweetser                  Expires 18 March 2027                [Page 21]
-
-Internet-Draft      Guidelines for RPKI CA Operators      September 2026
-
 
    [RFC8182]  Bruijnzeels, T., Muravskiy, O., Weber, B., and R. Austein,
               "The RPKI Repository Delta Protocol (RRDP)", RFC 8182,
@@ -1210,6 +1226,14 @@ Internet-Draft      Guidelines for RPKI CA Operators      September 2026
               Vulnerability Testing Tool", GitHub Repository rp-cure/rp-
               cure, 2023, <https://github.com/rp-cure/rp-cure>.
 
+
+
+
+Sweetser                  Expires 18 March 2027                [Page 22]
+
+Internet-Draft      Guidelines for RPKI CA Operators      September 2026
+
+
 Appendix A.  GITHUB
 
    This I-D and related documents, code and AI analysis are available at
@@ -1229,4 +1253,36 @@ Author's Address
 
 
 
-Sweetser                  Expires 18 March 2027                [Page 22]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sweetser                  Expires 18 March 2027                [Page 23]

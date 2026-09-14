@@ -519,6 +519,7 @@ Ecosystem Security
    - Revocation procedures **MUST NOT** be exploitable for denial of service attacks.
    - Monitoring systems **MUST** be protected against false reporting or manipulation.
    - Community reporting mechanisms **MUST** prevent abuse while encouraging legitimate feedback.
+   - The health indicators in (#core-health-indicators) are, by design, externally observable, which also makes them externally influenceable: an adversary able to selectively degrade a specific validator's or vantage point's connectivity to a legitimate CA's repository could manufacture a false flapping or dead-CA signal. Registry operators **SHOULD** corroborate signals from multiple independent vantage points before acting on them, particularly before revocation.
 
 Privacy Considerations
 
@@ -531,6 +532,7 @@ Risk Management
    - Organizations **MUST** balance operational requirements with security controls.
    - Incident response procedures **MUST** account for potential security implications.
    - Regular security reviews **SHOULD** be conducted for operational systems and procedures.
+   - Allowing smaller operators to forgo redundant, geographically diverse infrastructure (see (#availability-and-reliability-standards)) expands the population of delegated CAs that are individually single points of failure. This is a deliberate trade-off between operational flexibility and ecosystem-wide resilience; registry operators **SHOULD** weigh it when setting their own infrastructure expectations.
 
 {backmatter}
 
